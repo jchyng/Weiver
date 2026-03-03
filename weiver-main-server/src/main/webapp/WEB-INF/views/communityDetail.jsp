@@ -3,431 +3,317 @@
 <%@ include file="config.jsp" %>
 
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name=“viewport” content=“width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no”>
-    <title>WEIVER - 커뮤니티 페이지</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WIEVER - ${posts.title}</title>
 
-    <!--js-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
-        integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'stage-primary': '#BE123C',
+              'stage-secondary': '#FBBF24',
+              'stage-bg': '#0F172A',
+              'stage-surface': '#1E293B',
+              'stage-text': '#F8FAFC',
+              'stage-text-sub': '#94A3B8',
+            },
+            fontFamily: {
+              sans: ['Pretendard', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+          }
+        }
+      }
+    </script>
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <!--css 연결-->
-    <link rel="stylesheet" href="../css/community.css">
-    <link rel="stylesheet" href="../css/musical.css">
-    <link rel="stylesheet" href="../css/public.css">
-    
-    <script>
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-$(function() {
-    // 댓글 수정 버튼 클릭 이벤트
-    $('.commentEditBtn').click(function() {
-        var commentId = $(this).closest('.commentAndBtn').data('comment-id');
-        var txt = $('#commentContent_' + commentId).text();
-        $('#commentContent_' + commentId).html(
-            "<textarea rows='3' cols='30' id='textarea1_"+commentId+"' style='width: 620px; height: 40px; background-color: #586A85; margin-top: 15px'>"+txt+"</textarea>"
-        );
-    });
-
- 	// 대댓글 수정 버튼 클릭 이벤트
-    $('.recommentEditBtn').click(function() {
-        var recommentId = $(this).closest('.recommentWrap').data('recomment-id');
-        var txt = $('#recommentContent_' + recommentId).text();
-        $('#recommentContent_' + recommentId).html(
-            "<textarea rows='3' cols='30' id='textarea2_"+recommentId+"' style='width: 450px; height: 40px; background-color: #586A85; margin-top: 15px'>"+txt+"</textarea>"
-        );
-    });
-
-    // 댓글 포커스 아웃(blur) 이벤트
-    $(document).on('blur', 'textarea[id^="textarea1_"]', function() {
-        var commentId = $(this).attr('id').split('_')[1];
-        var editedContent = $(this).val();
-        // 편집 작동되는지 콘솔로그로 확인
-        console.log('Edited content for comment ' + commentId + ': ' + editedContent);
-
-        // AJAX로 댓글 업데이트 컨트롤러 실행하기
-        $.ajax({
-            url: '${baseURL}/community/update/reply/' + commentId,
-            type: 'POST',
-            data: {
-                id: commentId,
-                content: editedContent
-            },
-            success: function(response) {
-                // 작동 성공
-                $('#commentContent_' + commentId).html(editedContent);
-            },
-            error: function(xhr) {
-                // 작동 실패
-                console.error('Error updating comment:', xhr.responseText);
-            }
-        });
-    });
-
-    // 대댓글 포커스 아웃(blur) 이벤트
-    $(document).on('blur', 'textarea[id^="textarea2_"]', function() {
-        var recommentId = $(this).attr('id').split('_')[1];
-        var editedContent = $(this).val();
-        // 편집 작동되는지 콘솔로그로 확인
-        console.log('Edited content for recomment ' + recommentId + ': ' + editedContent);
-
-        // AJAX로 대댓글 업데이트 컨트롤러 실행하기
-        $.ajax({
-            url: '${baseURL}/community/update/rereply/' + recommentId,
-            type: 'POST',
-            data: {
-                id: recommentId,
-                content: editedContent
-            },
-            success: function(response) {
-                // 작동 성공
-                $('#recommentContent_' + recommentId).html(editedContent);
-            },
-            error: function(xhr) {
-                // 작동 실패
-                console.error('Error updating recomment:', xhr.responseText);
-            }
-        });
-    });
-});
-
-//게시글 삭제 함수
-function deletePost(postsId) {
-    // 삭제를 확인하는 다이얼로그를 띄우기
-    const isConfirmed = confirm("글을 삭제하시겠습니까?");
-    if (!isConfirmed) {
-        return; // 삭제 취소
-    }
-
-    // AJAX로 댓글 삭제 컨트롤러 실행하기
-    $.ajax({
-        url: '${baseURL}/community/delete/post/' + postsId,
-        type: 'DELETE',
-        success: function(response) {
-            console.log('글이 삭제되었습니다.');
-            window.location.href = '${baseURL}/community';
-        },
-        error: function(xhr) {
-            // 작동 실패
-            console.error('댓글 삭제 실패:', xhr.responseText);
-        }
-    });
-}
-
-//댓글 삭제 함수
-function deleteReply(commentId) {
-    // 삭제를 확인하는 다이얼로그를 띄우기
-    const isConfirmed = confirm("댓글을 삭제하시겠습니까?");
-    if (!isConfirmed) {
-        return; // 삭제 취소
-    }
-
-    // AJAX로 댓글 삭제 컨트롤러 실행하기
-    $.ajax({
-        url: '${baseURL}/community/delete/reply/' + commentId,
-        type: 'DELETE',
-        success: function(response) {
-            console.log('댓글이 삭제되었습니다.');
-            // 댓글 삭제 성공 시 페이지 새로고침
-            location.reload();
-        },
-        error: function(xhr) {
-            // 작동 실패
-            console.error('댓글 삭제 실패:', xhr.responseText);
-        }
-    });
-}
-
-//대댓글 삭제 함수
-function deleteRereply(recommentId) {
-    const isConfirmed = confirm("대댓글을 삭제하시겠습니까?");
-    if (!isConfirmed) {
-        return; // 삭제 취소
-    }
-
-    $.ajax({
-        url: '${baseURL}/community/delete/rereply/' + recommentId,
-        type: 'DELETE',
-        success: function(response) {
-            console.log('대댓글이 삭제되었습니다.');
-            location.reload(); // 대댓글 삭제 성공 시 페이지 새로고침
-        },
-        error: function(xhr) {
-            console.error('대댓글 삭제 실패:', xhr.responseText);
-            location.reload();
-        }
-    });
-}
-
-//댓글 삭제 함수
-function deleteReply(commentId) {
-    // 삭제를 확인하는 다이얼로그를 띄우기
-    const isConfirmed = confirm("댓글을 삭제하시겠습니까?");
-    if (!isConfirmed) {
-        return; // 삭제 취소
-    }
-
-    // AJAX로 댓글 삭제 컨트롤러 실행하기
-    $.ajax({
-        url: '${baseURL}/community/delete/reply/' + commentId,
-        type: 'DELETE',
-        success: function(response) {
-            console.log('댓글이 삭제되었습니다.');
-            // 댓글 삭제 성공 시 페이지 새로고침
-            location.reload();
-        },
-        error: function(xhr) {
-            // 작동 실패
-            console.error('댓글 삭제 실패:', xhr.responseText);
-        }
-    });
-}
-
-//좋아요 삽입
-// 버튼 상태를 토글하고 localStorage에 상태를 저장하는 함수
-function toggleButtonState() {
-    const buttonIcon = $('.icon');
-    buttonIcon.toggleClass('bi-suit-heart bi-suit-heart-fill');
-
-    // 버튼 상태를 localStorage에 저장
-    const buttonState = buttonIcon.hasClass('bi-suit-heart-fill') ? 'liked' : 'not-liked';
-    localStorage.setItem('buttonState', buttonState);
-}
-
-// 버튼 클릭 이벤트를 처리하는 함수
-function handleButtonClick(postsId) {
-    // 서버에 데이터 전송 (AJAX 사용)
-    $.ajax({
-        type: 'GET',
-        url: '${baseURL}/community/postlike/' + postsId,
-        contentType: 'application/json',
-        success: function () {
-            // 버튼 상태를 토글하고 localStorage에 저장
-            toggleButtonState();
-        },
-        error: function (xhr) {
-            console.error('Error adding postlike:', xhr.responseText);
-        }
-    });
-}
-
-// 페이지 로드 시 버튼 상태를 초기화하는 함수
-function addPostlike(postsId) {
-    // 서버에 데이터 전송 (AJAX 사용)
-    $.ajax({
-        type: 'GET',
-        url: '${baseURL}/community/postlike/' + postsId, // postId에 맞게 URL 수정
-        contentType: 'application/json',
-        success: function () {
-            // AJAX 호출이 성공하면, 해당 버튼의 클래스를 토글하여 버튼 아이콘 변경
-            const buttonIcon = $('.icon');
-            buttonIcon.toggleClass('bi-suit-heart bi-suit-heart-fill');
-        },
-        error: function (xhr) {
-            // 오류 처리 (예를 들어, 서버에서 좋아요 처리 실패 시)
-            console.error('Error adding postlike:', xhr.responseText);
-        }
-    });
-}
-
-function resize() {
-    let textarea = document.getElementById("postContent");
-
-    let scrollHeight = textarea.scrollHeight;
-    let style = window.getComputedStyle(textarea);
-    let borderTop = parseInt(style.borderTop);
-    let borderBottom = parseInt(style.borderBottom);
-
-    textarea.style.height = (scrollHeight + borderTop + borderBottom)+"px";
-}
-
-window.addEventListener("load", resize);
-window.onresize = resize;
-
-function checkLogin() {
-    var userId = "${sessionScope.user}";
-
-    if (!userId) {
-        alert("로그인해주세요.");
-        return false;
-    }
-    return true;
-}
-</script>
-
+    <style>
+      .glass-nav {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .post-content-area {
+        line-height: 1.8;
+        letter-spacing: -0.01em;
+      }
+      .comment-card {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .rereply-card {
+        background: rgba(30, 41, 59, 0.2);
+        border-left: 2px solid var(--stage-primary);
+      }
+    </style>
 </head>
 
-<body>
-    <!-- 전체 컨테이너 -->
-    <div class="backgroudBox">
-        <!-- 헤더 -->
-        <header>
-            <img src="../img/logo.png" alt="logo" height="70" width="300" />
-        </header>
+<body class="bg-stage-bg text-stage-text font-sans pb-32">
 
-        <!-- 뒤로가기 버튼 -->
-        <div class="backBtn">
-            <a href="${baseURL}/community">
-                <i class="bi-chevron-left"></i>
-            </a>
-        </div>
-
-        <!-- 게시글 컨테이너 -->
-        <div class="postWrap">
-            <!-- 게시글 헤더 (작성, 제목, 공유하기 버튼) -->
-            <div class="postHeader">
-                <h2>${posts.title}</h2>
-                <!--<i class="bi bi-reply-fill"></i>  -->
-            </div>
-            <hr>
-
-            <!-- 게시글 작성자 -->
-            <div class="postWriter">${posts.user.nickname}</div>
-            <hr>
-
-            <!-- 연결된 작품 -->
-             <c:if test="${posts.type eq 'Review'}">
-			    <div class="currentMusical">
-			        <img src="${reviews.musical.getPosterImage()}" alt="X">
-			        <div class="currentMusicalInfo">
-			            <div class="musicalTitle">${reviews.musical.getTitle()}</div>
-			            <div class="musicalPeriod">${reviews.musical.getStDate()} ~ ${reviews.musical.getEdDate()}</div>
-			        </div>
-			    </div>
-			    <hr>
-			</c:if>
-
-            <!-- 게시글 내용 (텍스트, 이미지) -->
-            <textarea id="postContent" class="postContent" style="font-family: 'Pretendard-Regular', sans-serif;" disabled>${posts.content}</textarea>
-            <c:if test="${not empty posts.image}">
-			    <img class="postImg" src="${posts.image}" alt="게시글 이미지">
-			</c:if>
-
-
-            <!-- 조회, 댓글, 좋아요 아이콘 그룹 -->
-            <div class="iconGroup2">
-                <div>
-                    <i class="bi-eye"></i>
-                    <span>${posts.viewed}</span>
-                </div>
-                <div>
-                    <i class="bi-chat"></i>
-                    <span>${reply.size()}</span>
-                </div>
-                <c:if test="${not empty postLikeCheck}">
-                	<div class="button">
-                		<i class="bi-suit-heart-fill icon" onclick="addPostlike(${posts.id})"style="cursor: pointer;"></i>
-                	</div>	
-                </c:if>
-                <c:if test="${empty postLikeCheck}">
-                	<div class="button">
-				  		<i class="bi-suit-heart icon" onclick="addPostlike(${posts.id})"style="cursor: pointer;"></i>
-					</div>	
-                </c:if>
-            </div>
-        </div>
-
-        <!-- 게시글 수정하기, 삭제하기 버튼 -->
-        <c:if test="${user != null && user == posts.user.id}">
-  			  <!-- 게시글 수정하기, 삭제하기 버튼 -->
-		    <div class="postBtnGroup">
-		        <input type="submit" value="수정하기" class="postModifyBtn" onclick="location.href='${baseURL}/community/update/${posts.id}'">
-		        <input type="submit" value="삭제하기" class="postDeleteBtn" onclick="deletePost(${posts.id})">
-		    </div>
-		</c:if>
-
-        <!-- 댓글 컨테이너 -->
-        <div class="commentWrap">
-            <!-- 총 댓글 수 조회 -->
-            <div class="totalComment">총 댓글 수 : <span>${reply.size()}</span></div>
-
-            <!-- 작성된 댓글 (아이디, 댓글, 좋아요 아이콘, 대댓글 링크, 버튼) -->
-            <hr>
-            <c:forEach var="reply" items="${reply}">
-                <div class="commentAndBtn" data-comment-id="${reply.id}">
-		        <div class="commentIDAndContent">
-		            <div class="commentID">${reply.user.nickname}</div>
-		            <div class="commentContent" id="commentContent_${reply.id}">${reply.content}</div>
-		            <div class="likeAndRecomment">
-		                <!-- <i class="bi-suit-heart" onclick="changeHeartIcon('reply', ${reply.id}, this)"></i>
-		                <span>${reply.id}</span> -->
-		                <a href="${baseURL}/community/${posts.id}/reply/${reply.id}" style="text-decoration: none;">
-		                    <span class="recommentBtn">대댓글</span>
-		                </a>
-                        </div>
-                    </div>
-
-                    <!-- 댓글 수정, 삭제 버튼 -->
-                    <c:if test="${user != null && user == reply.user.id}">
-                    <div class="commentBtnGroup">
-                        <button class="commentEditBtn">수정</button>
-                        <button onclick="deleteReply(${reply.id})">삭제</button>
-                    </div>
-                    </c:if>
-                </div>
-                
-
-                <!-- 대댓글 컨테이너 -->
-                <c:forEach var="rereply" items="${rereply}">
-                    <c:if test="${rereply.reply.id == reply.id}">
-                        <div class="recommentWrap" data-recomment-id="${rereply.id}">
-                            <div class="recommentGroup">
-                                <i class="bi-arrow-return-right"></i>
-                                <div class="recommentInfo">
-                                    <div class="recommentID">${rereply.user.nickname}</div>
-                                    <div class="recommentContent" id="recommentContent_${rereply.id}">${rereply.content}</div>
-                                    <div class="likeAndRecomment">
-                                       <!-- <i class="bi-suit-heart" onclick="changeHeartIcon('rereply', ${rereply.id}, this)"></i>
-                                        <span>${rerepliesForReply.size()}</span>  -->
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <c:if test="${user != null && user == rereply.user.id}">
-                            <div class="recommentBtnGroup">
-                                <button type="button" class="recommentEditBtn">수정</button>
-                                <button onclick="deleteRereply(${rereply.id})">삭제</button>
-                            </div>
-                            </c:if>
-                            
-                        </div>
-                    </c:if>
-                </c:forEach>
-                <hr>
-            </c:forEach>
-        </div>
-
-        <!-- 댓글 입력 창 -->
-        <div class="commentInputGroup">
-        	<form action="/community/insert/reply/${posts.id}" method="post" onsubmit="return checkLogin()">
-	            <input name="content" class="commentInput" type="text" required>
-    	        <input class="commentInputBtn" type="submit">
-        	</form>
-        </div>
-
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full z-50 glass-nav">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="${baseURL}/community" class="text-2xl hover:text-stage-secondary transition-colors">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+      <span class="text-xl font-serif text-stage-primary tracking-tighter">WIEVER</span>
+      <div class="w-8"></div>
     </div>
+  </header>
 
-    <footer>Copyright Weiver 2023 All Rights Reserved</footer>
-    <nav>
-        <a href="${baseURL}/main"><i class="bi bi-house-door-fill"></i>
-            <div>HOME</div>
-        </a>
-        <a href="${baseURL}/community"><i class="bi bi-chat-dots-fill"></i>
-            <div>COMMUNITY</div>
-        </a>
-        <a href="${baseURL}/mypage/myinfo"><i class="bi bi-person-fill"></i>
-            <div>MY PAGE</div>
-        </a>
-    </nav>
+  <main class="max-w-4xl mx-auto px-4 pt-24 space-y-8">
     
+    <!-- Post Article -->
+    <article class="space-y-6">
+      <!-- Article Header -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-stage-primary/20 text-[10px] font-bold text-stage-primary uppercase tracking-wider">${posts.type == 'Review' ? 'REVIEW' : 'CHAT'}</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold leading-tight">${posts.title}</h1>
+        <div class="flex items-center justify-between py-4 border-y border-slate-800 text-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
+              <i class="bi bi-person text-lg text-stage-text-sub"></i>
+            </div>
+            <span class="font-bold">@${posts.user.nickname}</span>
+          </div>
+          <div class="flex items-center gap-4 text-stage-text-sub text-xs">
+            <span><i class="bi bi-eye mr-1"></i> ${posts.viewed}</span>
+            <span><i class="bi bi-chat-dots mr-1"></i> ${reply.size()}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linked Musical (Optional) -->
+      <c:if test="${posts.type eq 'Review'}">
+        <div class="bg-stage-surface/50 border border-slate-700 p-4 rounded-2xl flex items-center gap-4">
+          <img src="${reviews.musical.posterImage}" class="w-16 aspect-[3/4] object-cover rounded-lg shadow-lg" alt="poster">
+          <div class="flex-1">
+            <p class="text-[10px] text-stage-secondary font-bold uppercase tracking-widest mb-1">Related Musical</p>
+            <h4 class="font-bold text-lg leading-tight mb-1">${reviews.musical.title}</h4>
+            <p class="text-xs text-stage-text-sub">${reviews.musical.theater}</p>
+          </div>
+          <a href="${baseURL}/musicalDetail/${reviews.musical.id}" class="text-xs font-bold hover:text-stage-secondary underline underline-offset-4 decoration-slate-700 transition-colors">상세보기</a>
+        </div>
+      </c:if>
+
+      <!-- Article Body -->
+      <div class="post-content-area text-lg whitespace-pre-wrap py-6">
+        ${posts.content}
+      </div>
+
+      <c:if test="${not empty posts.image}">
+        <div class="rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+          <img src="${posts.image}" class="w-full h-auto" alt="post content">
+        </div>
+      </c:if>
+
+      <!-- Interaction Bar -->
+      <div class="flex items-center justify-center gap-6 py-10">
+        <button onclick="handleButtonClick(${posts.id})" class="flex flex-col items-center gap-2 group transition-all active:scale-90">
+          <div class="w-16 h-16 rounded-full border-2 border-slate-800 flex items-center justify-center group-hover:border-stage-primary transition-all shadow-xl">
+            <i class="bi ${not empty postLikeCheck ? 'bi-heart-fill text-stage-primary' : 'bi-heart'} text-2xl icon"></i>
+          </div>
+          <span class="text-[10px] font-bold text-stage-text-sub uppercase tracking-widest">LIKE</span>
+        </button>
+      </div>
+
+      <!-- Post Controls (Owner Only) -->
+      <c:if test="${user != null && user == posts.user.id}">
+        <div class="flex justify-end gap-3 pb-10 border-b border-slate-800">
+          <a href="${baseURL}/community/update/${posts.id}" class="text-xs font-bold px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors">수정하기</a>
+          <button onclick="deletePost(${posts.id})" class="text-xs font-bold px-4 py-2 rounded-lg bg-rose-900/20 text-rose-500 hover:bg-rose-900/40 transition-colors">삭제하기</button>
+        </div>
+      </c:if>
+    </article>
+
+    <!-- Comments Section -->
+    <section class="space-y-8 pt-10">
+      <h3 class="text-xl font-bold flex items-center gap-2">
+        댓글 <span class="text-stage-primary">${reply.size()}</span>
+      </h3>
+
+      <div class="space-y-6">
+        <c:forEach var="replyItem" items="${reply}">
+          <div class="space-y-4">
+            <!-- Reply Card -->
+            <div class="comment-card p-5 rounded-2xl space-y-3" data-comment-id="${replyItem.id}">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-sm text-stage-secondary">@${replyItem.user.nickname}</span>
+                <c:if test="${user != null && user == replyItem.user.id}">
+                  <div class="flex gap-2 text-[10px] font-bold text-stage-text-sub uppercase tracking-wider">
+                    <button class="commentEditBtn hover:text-stage-text">EDIT</button>
+                    <button onclick="deleteReply(${replyItem.id})" class="text-rose-500 hover:text-rose-400">DELETE</button>
+                  </div>
+                </c:if>
+              </div>
+              <p class="text-sm leading-relaxed" id="commentContent_${replyItem.id}">${replyItem.content}</p>
+              <div class="flex justify-end">
+                <a href="${baseURL}/community/${posts.id}/reply/${replyItem.id}" class="text-[10px] font-bold text-stage-text-sub hover:text-stage-secondary underline decoration-slate-700 underline-offset-4">REPLY</a>
+              </div>
+            </div>
+
+            <!-- Rereply Loop -->
+            <div class="pl-6 space-y-4">
+              <c:forEach var="rereplyItem" items="${rereply}">
+                <c:if test="${rereplyItem.reply.id == replyItem.id}">
+                  <div class="rereply-card p-4 rounded-xl space-y-2" data-recomment-id="${rereplyItem.id}">
+                    <div class="flex justify-between items-center">
+                      <span class="font-bold text-xs text-stage-primary/80">@${rereplyItem.user.nickname}</span>
+                      <c:if test="${user != null && user == rereplyItem.user.id}">
+                        <div class="flex gap-2 text-[10px] font-bold text-stage-text-sub uppercase">
+                          <button class="recommentEditBtn hover:text-stage-text">EDIT</button>
+                          <button onclick="deleteRereply(${rereplyItem.id})" class="text-rose-500">DELETE</button>
+                        </div>
+                      </c:if>
+                    </div>
+                    <p class="text-xs leading-relaxed" id="recommentContent_${rereplyItem.id}">${rereplyItem.content}</p>
+                  </div>
+                </c:if>
+              </c:forEach>
+            </div>
+          </div>
+        </c:forEach>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Comment Input (Fixed Bottom) -->
+  <div class="fixed bottom-16 left-0 w-full glass-nav px-4 py-4 z-40 border-t border-slate-800">
+    <div class="max-w-4xl mx-auto">
+      <form action="/community/insert/reply/${posts.id}" method="post" onsubmit="return checkLogin()" class="flex gap-3">
+        <input name="content" type="text" placeholder="작품에 대한 생각을 나눠보세요..." required
+          class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl py-3 px-4 focus:outline-none focus:border-stage-secondary transition-all text-sm">
+        <button type="submit" class="bg-stage-primary hover:bg-rose-700 text-white px-6 rounded-xl font-bold text-sm transition-all shadow-lg shadow-rose-900/20 shrink-0">
+          등록
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 left-0 w-full glass-nav z-50">
+    <div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between text-stage-text-sub text-[10px] font-bold">
+      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
+        <i class="bi bi-house-door text-xl"></i>
+        <span>HOME</span>
+      </a>
+      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-primary">
+        <i class="bi bi-chat-dots-fill text-xl"></i>
+        <span>COMMUNITY</span>
+      </a>
+      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
+        <i class="bi bi-person text-xl"></i>
+        <span>MY PAGE</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- JS Scripts (Keep original logic but adapt to new classes if needed) -->
+  <script>
+    $(function() {
+      $('.commentEditBtn').click(function() {
+        var commentId = $(this).closest('.comment-card').data('comment-id');
+        var txt = $('#commentContent_' + commentId).text();
+        $('#commentContent_' + commentId).html(
+          "<textarea rows='3' id='textarea1_"+commentId+"' class='w-full bg-slate-800 p-3 rounded-lg mt-2 text-sm focus:outline-none focus:border-stage-secondary border border-slate-700'>"+txt+"</textarea>"
+        );
+      });
+
+      $('.recommentEditBtn').click(function() {
+        var recommentId = $(this).closest('.rereply-card').data('recomment-id');
+        var txt = $('#recommentContent_' + recommentId).text();
+        $('#recommentContent_' + recommentId).html(
+          "<textarea rows='3' id='textarea2_"+recommentId+"' class='w-full bg-slate-800 p-3 rounded-lg mt-2 text-xs focus:outline-none focus:border-stage-secondary border border-slate-700'>"+txt+"</textarea>"
+        );
+      });
+
+      $(document).on('blur', 'textarea[id^="textarea1_"]', function() {
+        var commentId = $(this).attr('id').split('_')[1];
+        var editedContent = $(this).val();
+        $.ajax({
+          url: '${baseURL}/community/update/reply/' + commentId,
+          type: 'POST',
+          data: { id: commentId, content: editedContent },
+          success: function() { $('#commentContent_' + commentId).html(editedContent); }
+        });
+      });
+
+      $(document).on('blur', 'textarea[id^="textarea2_"]', function() {
+        var recommentId = $(this).attr('id').split('_')[1];
+        var editedContent = $(this).val();
+        $.ajax({
+          url: '${baseURL}/community/update/rereply/' + recommentId,
+          type: 'POST',
+          data: { id: recommentId, content: editedContent },
+          success: function() { $('#recommentContent_' + recommentId).html(editedContent); }
+        });
+      });
+    });
+
+    function deletePost(postsId) {
+      if (confirm("글을 삭제하시겠습니까?")) {
+        $.ajax({
+          url: '${baseURL}/community/delete/post/' + postsId,
+          type: 'DELETE',
+          success: function() { window.location.href = '${baseURL}/community'; }
+        });
+      }
+    }
+
+    function deleteReply(commentId) {
+      if (confirm("댓글을 삭제하시겠습니까?")) {
+        $.ajax({
+          url: '${baseURL}/community/delete/reply/' + commentId,
+          type: 'DELETE',
+          success: function() { location.reload(); }
+        });
+      }
+    }
+
+    function deleteRereply(recommentId) {
+      if (confirm("대댓글을 삭제하시겠습니까?")) {
+        $.ajax({
+          url: '${baseURL}/community/delete/rereply/' + recommentId,
+          type: 'DELETE',
+          success: function() { location.reload(); }
+        });
+      }
+    }
+
+    function handleButtonClick(postsId) {
+      $.ajax({
+        type: 'GET',
+        url: '${baseURL}/community/postlike/' + postsId,
+        success: function () {
+          const icon = $('.icon');
+          icon.toggleClass('bi-heart bi-heart-fill text-stage-primary');
+        }
+      });
+    }
+
+    function checkLogin() {
+      var userId = "${sessionScope.userId}";
+      if (!userId) { alert("로그인해주세요."); return false; }
+      return true;
+    }
+  </script>
 
 </body>
-
-
-
 </html>

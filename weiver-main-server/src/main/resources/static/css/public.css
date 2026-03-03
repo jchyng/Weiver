@@ -1,78 +1,67 @@
-/* ´«´© ÆùÆ® */
+/* í°íŠ¸ ì‹œìŠ¤í…œ êµ¬ì¶• */
+/* 1. Pretendard (Main Sans-serif) - ê°€ë…ì„± ì¤‘ì‹¬ */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css");
+
+/* 2. Playfair Display (Accent Serif) - ì˜ˆìˆ ì  ê°ì„± */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap");
+
+/* 3. Gmarket Sans (Impact Bold) - ê°•ì¡°ìš© */
 @font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
+    font-family: 'GmarketSansBold';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
-/* ºÎÆ®½ºÆ®·¦ ¾ÆÀÌÄÜ */
+
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
 
-body {
-  background-color: #101322;
-  font-family: 'Pretendard-Regular';
-  padding-bottom: 40px;
-  z-index: 1;
-  background-color: #101322;
-  width: 700px;
-  margin: 20px auto;
-  position: relative;
-  padding: 0 20px;
+:root {
+  --stage-primary: #BE123C;
+  --stage-secondary: #FBBF24;
+  --stage-bg: #0F172A;
+  --stage-surface: #1E293B;
+  --stage-text: #F8FAFC;
+  --stage-text-sub: #94A3B8;
+  
+  /* Typography Scale */
+  --font-main: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  --font-accent: 'Playfair Display', serif;
+  --font-impact: 'GmarketSansBold', sans-serif;
 }
 
-header {
-  display: flex;
-  flex-direction: column;
-  color: white;
-  padding-bottom: 30px;
+body {
+  background-color: var(--stage-bg);
+  color: var(--stage-text);
+  font-family: var(--font-main);
+  line-height: 1.6;
+  letter-spacing: -0.02em; /* í˜„ëŒ€ì ì´ê³  ì •ëˆëœ ëŠë‚Œì„ ìœ„í•´ ìê°„ ì¶•ì†Œ */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  word-break: keep-all; /* í•œê¸€ ê°€ë…ì„± í–¥ìƒ */
 }
+
+/* íƒ€ì´í‹€ í´ë˜ìŠ¤ ë¶„í™” */
+h1, h2, h3, .font-serif {
+  font-family: var(--font-accent);
+}
+
+.font-impact {
+  font-family: var(--font-impact);
+}
+
+/* ìœ í‹¸ë¦¬í‹° í´ë˜ìŠ¤ */
+.hidden { display: none; }
+input, textarea, button { font-family: inherit; }
 
 footer {
-  margin: 50px 0;
+  padding: 60px 0;
   width: 100%;
-  color: #A4A2A2;
-  font-size: 12px;
+  color: var(--stage-text-sub);
+  font-size: 13px;
   text-align: center;
-}
-
-nav {
-  width: 700px;
-  background-color: #101322;
-  position: fixed;
-  bottom: 0;
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  list-style: none;
-  color: #D4D9E1;
-  z-index: 9999;
-}
-
-nav a {
-  text-decoration: none;
-  color: #98A4B7;
-}
-nav i {
-  font-size: 24px;
-}
-nav div{
-  font-size: 10px;
-}
-
-.bi-chevron-left {
-  position: absolute;
-  left: 30px;
-  margin-top: 30px;
-  font-size: 30px;
-  color: #D4D9E1;
-}
-
-/* ¸ğµç È÷µç Å¬·¡½º´Â °¨Ãã */
-.hidden{
-  display: none;
-}
-/* ¸ğµç ÀÎÇ² ÅÂ±×ÀÇ Å×µÎ¸® ¼± »èÁ¦ */
-input {
-  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }

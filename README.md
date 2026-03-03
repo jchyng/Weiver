@@ -125,6 +125,48 @@
 
 <br><br>
 
+## 🚀 Local Development Setup
+
+이 프로젝트를 로컬 환경에서 실행하기 위한 절차입니다.
+
+### 1. 필수 요구 사항 (Prerequisites)
+- **Java 11** 설치
+- **Oracle Database** (XE 11g 이상 권장) 또는 Docker
+- **Maven** (프로젝트 내 `mvnw` 포함됨)
+
+### 2. 데이터베이스 설정 (Database Setup)
+1. 로컬 Oracle DB에 접속합니다.
+2. `scott` 스키마(사용자)를 생성하거나 기존 사용자를 이용합니다.
+3. 프로젝트 루트의 `ddl.sql` 파일을 실행하여 테이블과 시퀀스를 생성합니다.
+4. `weiver-main-server/src/main/resources/application.properties`에서 DB 접속 정보를 수정합니다.
+   ```properties
+   spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+   spring.datasource.username=YOUR_USERNAME
+   spring.datasource.password=YOUR_PASSWORD
+   ```
+
+### 3. 외부 API 설정 (External API Setup)
+프로젝트 구동을 위해 다음 키들이 필요합니다. `application.properties`에 직접 입력하거나 환경 변수로 설정하세요.
+- **AWS S3:** 이미지 업로드용 (AccessKey, SecretKey)
+- **Kakao Login:** 카카오 로그인용 (RestAPI Key, Redirect URL)
+
+### 4. 애플리케이션 실행 (How to Run)
+터미널에서 `weiver-main-server` 디렉토리로 이동한 후 다음 명령어를 실행합니다.
+
+```bash
+# Maven을 이용한 실행
+./mvnw spring-boot:run
+```
+실행 후 브라우저에서 `http://localhost:8081`로 접속하세요. (포트 번호는 `application.properties`의 `server.port` 설정을 따릅니다.)
+
+### 5. 데이터 수집 (Data Crawling) - 선택 사항
+뮤지컬 및 배우 데이터가 없는 경우 `data-crawling-sever`를 실행하여 데이터를 수집할 수 있습니다.
+1. `data-crawling-sever` 디렉토리로 이동
+2. `./mvnw spring-boot:run` 실행
+3. 크롤링 서비스 호출 (필요 시 테스트 코드를 활용하세요)
+
+<br><br>
+
 ## ❗️ 힘들었던 점
 세 번의 DB 변경
 ![image](https://github.com/Weiver-project/Weiver/assets/129250941/670269c8-1450-4acd-a550-69c1d3c4f010)

@@ -40,18 +40,20 @@ public class MusicalController {
 		//댓글 개수 가져오기
 		model.addAttribute("bestPost", bestPostList);
 
+        // 오늘의 배우 뮤지컬 정보.
         try {
-			// 오늘의 배우 뮤지컬 정보.
-			Actor randomActor = actorService.getRandomActor();
-			List<PerformingMusical> musicalList = actorService.getMusicalListByActorId(randomActor.getId());
-			List<PerformingMusical> limitedMusicalList = musicalList.subList(0, Math.min(musicalList.size(), 8));
-			System.out.println("size : " + limitedMusicalList.size());
-
-			model.addAttribute("randomActor", randomActor);
-			model.addAttribute("limitedMusicalList", limitedMusicalList);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+            Actor randomActor = actorService.getRandomActor();
+            if (randomActor != null) {
+                List<PerformingMusical> musicalList = actorService.getMusicalListByActorId(randomActor.getId());
+                if (musicalList != null) {
+                    List<PerformingMusical> limitedMusicalList = musicalList.subList(0, Math.min(musicalList.size(), 8));
+                    model.addAttribute("limitedMusicalList", limitedMusicalList);
+                }
+                model.addAttribute("randomActor", randomActor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 		//인기 뮤지컬 추가

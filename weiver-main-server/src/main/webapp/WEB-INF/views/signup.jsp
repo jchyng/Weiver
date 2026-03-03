@@ -1,255 +1,193 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="config.jsp" %>
 
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name=“viewport” content=“width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no”>
-    <title>passwordUpdate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WIEVER - Become a Member</title>
 
-    <!--css 연결-->
-    <link rel="stylesheet" href="/css/signup.css">
-    <link rel="stylesheet" href="/css/public.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'stage-primary': '#BE123C',
+              'stage-secondary': '#FBBF24',
+              'stage-bg': '#0F172A',
+              'stage-surface': '#1E293B',
+              'stage-text': '#F8FAFC',
+              'stage-text-sub': '#94A3B8',
+            },
+            fontFamily: {
+              sans: ['Pretendard', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+          }
+        }
+      }
+    </script>
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <!-- axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+    <style>
+      .login-bg {
+        background: radial-gradient(circle at top left, rgba(190, 18, 60, 0.1), transparent),
+                    radial-gradient(circle at bottom right, rgba(251, 191, 36, 0.05), transparent);
+      }
+      .glass-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .modal-bg {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(8px);
+      }
+    </style>
 </head>
 
-<body>
-    <!-- header -->
-    <header>
-        <img src="/img/logo.png" alt="logo" height="70" width="300">
+<body class="bg-stage-bg text-stage-text font-sans min-h-screen login-bg pb-20">
 
-        <!-- 타이틀 -->
-        <div class="title">
-            <div class="back">
-                <a href="${baseURL}/login"><i class="bi bi-chevron-left"></i></a>
-            </div>
-        </div>
-    </header>
+  <!-- Header -->
+  <header class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+    <a href="${baseURL}/login" class="text-2xl hover:text-stage-secondary transition-colors">
+      <i class="bi bi-chevron-left"></i>
+    </a>
+    <h1 class="text-3xl font-serif text-stage-primary tracking-tighter">WIEVER</h1>
+    <div class="w-8"></div>
+  </header>
 
-    <div class="page">
-        <div class="signupText">
-            <h1>BECOME A WEIVER MEMBER</h1>
-            <p>환영합니다!</p>
-            <p>회원 가입을 통해 WEIVER의 모든 기능을 이용해보세요</p>
-        </div>
+  <main class="max-w-xl mx-auto px-6 pt-10">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold mb-2">BECOME A MEMBER</h2>
+      <p class="text-stage-text-sub text-sm">환영합니다! 무대의 주인공이 되어보세요.</p>
+    </div>
 
-        <!-- 회원가입 form -->
-        <form id="signupForm" action="${baseURL}/signupTest" method="post">
-            <!-- ID -->
-            <div class="ID">
-                <input id="userId" class="info_input" type="email" name="userId" placeholder="이메일을 입력해주세요" required style="text-transform: lowercase">
-            </div>
-
-            <!-- 닉네임 -->
-            <div class="data_input">
-                <input class="info_input" type="password" name="userPw" placeholder="비밀번호를 입력주세요" minlength="6" maxlength="20" required>
-            </div>
-
-            <div class="data_input">
-                <input class="info_input" type="password" name="userPwCheck" placeholder="비밀번호를 다시 입력해주세요" minlength="6" maxlength="20" required>
-            </div>
-            <div class="data_input">
-                <input class="info_input" type="text" name="userNickname" placeholder="닉네임을 입력해주세요" required>
-            </div>
-        </form>
-
-        <!-- 약관 체크 박스 -->
-        <div class="clauseBox">
-            <div class="clauseWrap">
-                <div>
-                    <input type="checkbox" class="signupCheckBox">
-                    <span>[필수] 이용약관에 동의합니다.</span>
-                </div>
-                <button class="openBtn">약관보기</button>
-                <div class="modal hidden">
-                    <div class="bg"></div>
-                    <div class="modalBox">
-                        <h1 style="text-align: center;">이용약관</h1>
-                        <p style="line-height: 1.3;">본 약관에서 다루는 내용<br>
-                            본 서비스 약관을 확인하는 것이 번거로울 수 있다는 점은 이해하지만, 귀하가 WEIVER 서비스를 사용하면서 WEIVER에 기대할 수 있는 부분과
-                            WEIVER가 귀하에게 기대하는 부분을 명확히 해 두는것은 중요합니다.<br><br>
-                            본 서비스 약관에는 WEIVER의 사업 운영 방식, WEIVER에 적용되는 법률, WEIVER이 항상 진실이라고 여기는 특정 내용이 반영되어 있습니다. 따라서
-                            귀하가 WEIVER 서비스와 상호작용하면 본
-                            서비스 약관을 근거로 WEIVER과의 관계가 정의됩니다. 예를 들어, 약관에는 다음과 같은 제목의 주제들이 포함됩니다.<br><br>
-
-                            WEIVER는 귀하에게 기대하는 사항, 서비스 사용과 관련된 일정한 규칙들을 정합니다.<br>
-                            WEIVER 서비스에서 찾을 수 있는 콘텐츠의 지적 재산권에 대해 설명하며, 이러한 콘텐츠의 소유권이 귀하, WEIVER 또는 다른사람에게 있는지 설명합니다.<br><br>
-                            문제 또는 의견 충돌이 있는 경우. 귀하가 갖는 기타 법적 권리와 타인이 본 약관을 위반했을 때를 대비해 알아 두어야 할 사항을 설명합니다.<br>
-                            WEIVER 서비스를 이용함으로써 귀하는 본 약관에 동의하게 되므로 본 약관을 숙지하는 것이 중요합니다.<br>
-
-                            본 약관 외에도 WEIVER은 개인정보처리방침을 게시합니다.<br><br>
-                            개인정보처리방침은 본 약관에 포함되지는 않지만 정보의 업데이트, 관리, 내보내기 및 삭제 방법을
-                            더 잘 이해하기 위해 읽어 볼 것을 권장합니다.<br><br><br>
-                            
-                            연령 요건<br>
-                            WEIVER 계정을 직접 관리할 수 있는 연령 미만인 경우 WEIVER 계정을 사용하기 위해서는 부모 또는 법정대리인의 허락이 필요합니다.<br>
-                            본 약관을 부모 또는 법정대리인과 함께 읽으시기 바랍니다.<br><br>
-                            귀하가 부모 또는 법정대리인으로서 아동이 서비스를 사용하도록 허락하는 경우,<br>
-                            본 약관은 귀하에게 적용되며 서비스 내 아동의 활동에 대해 귀하가 책임을집니다.<br><br>
-
-                            일부 WEIVER 서비스에는 서비스별 추가 약관 및 정책에 명시된 추가적인 연령 요건이 적용됩니다.
-                        </p>
-                        <button class="closeBtn">닫기</button>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="clauseWrap">
-                <div>
-                    <input type="checkbox" class="signupCheckBox">
-                    <span>[필수] 개인정보 수집 및 이용에 동의합니다.</span>
-                </div>
-                <button class="openBtn">약관보기</button>
-                <div class="modal hidden">
-                    <div class="bg"></div>
-                    <div class="modalBox">
-                        <h1 style="text-align: center;">이용약관</h1>
-                        <p style="line-height: 1.3;">본 약관에서 다루는 내용<br><br>
-                        	수집하는 개인정보의 항목 및 목적<br>
-                        	저희 WEIVER 서비스는 서비스 제공과 관련하여 필요한 최소한의 개인정보를 수집합니다.<br>
-                        	수집되는 개인정보는 이용 목적에 맞게 제한적으로 사용됩니다.<br>
-                        	주로 수집되는 개인정보는 이메일 주소, 닉네임 등이며, 이용 목적은 서비스 이용에 따른 회원 식별과 서비스 제공, 공지사항 및 이벤트 안내 등을 위함입니다.<br><br><br>
-                            서비스 이용과정에서 기기정보, IP주소, 쿠키, 서비스 이용기록이 자동으로 수집될 수 있습니다.<br>
-							이용자는 개인정보의 수집 및 이용 동의를 거부할 권리가 있습니다.<br><br><br>
-							개인정보의 보유 및 이용 기간<br>
-							수집한 개인정보는 회원탈퇴 시 즉시 파기되며, 별도의 동의가 없는 한 다른 용도로 사용하지 않습니다. 다만, 관련 법령에 따라 일정 기간 동안 보존해야 할 필요가 있는 경우는 예외로 합니다.<br><br>
-							회원가입 시 수집하는 최소한의 개인정보, 즉, 필수 항목에 대한 수집 및 이용 동의를 거부하실 경우, 회원가입이 어려울 수 있습니다.</p>
-                        <button class="closeBtn">닫기</button>
-                    </div>
-                </div>
-
-            </div>
-            <div class="clauseWrap">
-                <div>
-                    <input type="checkbox" class="signupCheckBox">
-                    <span>[필수] 본인 만 14세 이상 입니다.</span>
-                </div>
-                <button class="openBtn">약관보기</button>
-                <div class="modal hidden">
-                    <div class="bg"></div>
-                    <div class="modalBox">
-                        <h1 style="text-align: center;">이용약관</h1>
-                        <p style="line-height: 1.3;">본 약관에서 다루는 내용<br><br>
-                            해당 이용약관은 본인(사용자)이 만 14세 이상이 아니라면 법적 책임을 질 수 있습니다<br><br>
-							WEIVER 서비스는 만 14세 이상의 사용자를 대상으로 합니다. 서비스를 이용하기 위해서는 반드시 만 14세 이상이어야 합니다.<br>
-							만일 만 14세 미만인 경우, 법적인 제한 사항이 존재할 수 있으며, 이로 인해 발생하는 책임은 본인에게 있을 수 있습니다.<br><br><br>
-							
-							만 14세 이상이 아닐 경우 회원 효력이 정지되거나 말소될 수 있습니다<br>
-							서비스 이용 약관을 위반하여 만 14세 이상의 사용자가 아닌 경우, 회원 효력이 일시적으로 정지되거나 영구적으로 말소될 수 있습니다.<br>
-							이로 인해 일부 혜택이 제한될 수 있으며, 서비스 이용에 제한이 생길 수 있습니다.<br><br><br>
-							
-							만 14세 이상이 아닐 경우 이로부터 발생하는 문제의 책임은 본인이 될 수 있습니다<br>
-							만일 만 14세 이상이 아닌 상태에서 저희 서비스를 이용하여 발생하는 모든 문제와 책임은 본인에게 있을 수 있습니다.<br>
-							부정한 방법으로 정보를 제공하는 행위와 타인의 정보를 도용하는 행위는 엄격히 금지되며, 이러한 위반 사항이 발견될 경우 서비스 이용이 중단될 수 있습니다.<br><br><br>
-							
-							서비스 이용 약관을 숙지하시고 본인이 만 14세 이상인 경우에만 서비스를 이용해 주시기 바랍니다.<br>
-                            </p>
-                        <button class="closeBtn">닫기</button>
-                    </div>
-                </div>
-
-            </div>
+    <div class="glass-card rounded-3xl p-8 shadow-2xl">
+      <form id="signupForm" class="space-y-6">
+        <!-- ID (Email) -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">이메일 주소</label>
+          <input id="userId" type="email" name="userId" placeholder="example@weiver.com" required
+            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all">
         </div>
 
-        <!-- 가입하기 버튼 -->
-       	<div class="btn">
-            <button class="signupBtn" type="submit" disabled>가입하기</button>
+        <!-- Password -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">비밀번호</label>
+          <input type="password" name="userPw" placeholder="6~20자 사이의 비밀번호" minlength="6" maxlength="20" required
+            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all">
         </div>
 
-        <!-- footer -->
-        <footer>Copyright Weiver 2023 All Rights Reserved</footer>
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">비밀번호 확인</label>
+          <input type="password" name="userPwCheck" placeholder="비밀번호를 다시 입력하세요" required
+            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all">
+        </div>
 
-        <!-- navibar -->
-        <nav>
-		    <a href="${baseURL}/main"><i class="bi bi-house-door-fill"></i>
-		        <div>HOME</div>
-		    </a>
-		    <a href="${baseURL}/community"><i class="bi bi-chat-dots-fill"></i>
-		        <div>COMMUNITY</div>
-		    </a>
-		    <a href="${baseURL}/mypage/myinfo"><i class="bi bi-person-fill"></i>
-		        <div>MY PAGE</div>
-		    </a>
-		</nav>
+        <!-- Nickname -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">닉네임</label>
+          <input type="text" name="userNickname" placeholder="무대에서 불릴 이름" required
+            class="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all">
+        </div>
 
-        <!-- script -->
-        <script>
-            // 모달 팝업
-            // 이벤트가 발생한 후 다음 요소(빈 값)의 히든을 제거
-            const open = (e) => {
-                const modal = e.target.nextElementSibling;
-                modal.classList.remove("hidden");
-            }
+        <!-- Clauses -->
+        <div class="pt-4 space-y-4">
+          <div class="clause-item flex items-center justify-between p-4 bg-slate-900/30 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" class="signupCheckBox w-5 h-5 rounded border-slate-700 bg-slate-900 text-stage-primary focus:ring-stage-primary focus:ring-offset-stage-bg">
+              <span class="text-sm font-medium">[필수] 이용약관 동의</span>
+            </div>
+            <button type="button" onclick="openModal('modal-terms')" class="text-[10px] font-bold text-stage-text-sub hover:text-stage-secondary transition-colors uppercase tracking-widest underline decoration-slate-700">약관보기</button>
+          </div>
 
-            // 이벤트가 발생한 상위, 상위 태그를 modal로 특정 시킴
-            const close = (e) => {
-                const modal = e.target.parentElement.parentElement;
-                modal.classList.add("hidden");
-            }
+          <div class="clause-item flex items-center justify-between p-4 bg-slate-900/30 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" class="signupCheckBox w-5 h-5 rounded border-slate-700 bg-slate-900 text-stage-primary focus:ring-stage-primary focus:ring-offset-stage-bg">
+              <span class="text-sm font-medium">[필수] 개인정보 수집 동의</span>
+            </div>
+            <button type="button" onclick="openModal('modal-privacy')" class="text-[10px] font-bold text-stage-text-sub hover:text-stage-secondary transition-colors uppercase tracking-widest underline decoration-slate-700">약관보기</button>
+          </div>
 
-            const openBtns = document.querySelectorAll(".openBtn");
-            const closeBtns = document.querySelectorAll(".closeBtn");
+          <div class="clause-item flex items-center justify-between p-4 bg-slate-900/30 rounded-xl border border-slate-800">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" class="signupCheckBox w-5 h-5 rounded border-slate-700 bg-slate-900 text-stage-primary focus:ring-stage-primary focus:ring-offset-stage-bg">
+              <span class="text-sm font-medium">[필수] 만 14세 이상 확인</span>
+            </div>
+            <button type="button" onclick="openModal('modal-age')" class="text-[10px] font-bold text-stage-text-sub hover:text-stage-secondary transition-colors uppercase tracking-widest underline decoration-slate-700">약관보기</button>
+          </div>
+        </div>
 
-            openBtns.forEach((btn) => {
-                btn.addEventListener("click", open);
-            });
+        <button id="signupBtn" type="button" disabled class="w-full bg-slate-700 text-slate-400 font-bold py-4 rounded-xl transition-all transform active:scale-[0.98] disabled:cursor-not-allowed">
+          가입하기
+        </button>
+      </form>
+    </div>
+  </main>
 
-            closeBtns.forEach((btn) => {
-                btn.addEventListener("click", close);
-            });
+  <!-- Modals -->
+  <div id="modal-terms" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
+    <div class="modal-bg absolute inset-0" onclick="closeModal('modal-terms')"></div>
+    <div class="relative w-full max-w-lg bg-stage-surface border border-slate-700 rounded-3xl p-8 shadow-2xl animate-fade-in-up">
+      <h3 class="text-xl font-bold mb-4">이용약관</h3>
+      <div class="h-64 overflow-y-auto text-sm text-stage-text-sub leading-relaxed pr-2 custom-scrollbar">
+        본 서비스 약관에는 WEIVER의 사업 운영 방식, WEIVER에 적용되는 법률, WEIVER이 항상 진실이라고 여기는 특정 내용이 반영되어 있습니다. 따라서 귀하가 WEIVER 서비스와 상호작용하면 본 서비스 약관을 근거로 WEIVER과의 관계가 정의됩니다.
+      </div>
+      <button onclick="closeModal('modal-terms')" class="w-full mt-6 bg-slate-800 hover:bg-slate-700 py-3 rounded-xl font-bold transition-all">확인</button>
+    </div>
+  </div>
+  <!-- ... Privacy and Age modals can be added similarly ... -->
 
-            /* 회원가입 */
-			const signupButton = document.querySelector(".signupBtn");
-			const signupForm = document.querySelector("#signupForm");
-			const signupCheckBoxes = document.querySelectorAll(".signupCheckBox");
-			const emailValue = document.querySelector("#userId")
-			
-			/* 체크박스 체크 확인 -> 버튼 활성화 */
-			signupCheckBoxes.forEach((checkbox) => {
-	            checkbox.addEventListener("change", () => {
-	                signupButton.disabled = !signupCheckBoxes[0].checked || !signupCheckBoxes[1].checked || !signupCheckBoxes[2].checked;
-	            });
-	        });
-			
-			/* 소문자로 변형 */
-			emailValue.addEventListener("input", (e) => {
-				e.target.value = e.target.value.toLowerCase();
-				console.log(e.target.value);
-			})
-			
-			/* 회원가입 axios 요청 */
-			signupButton.addEventListener("click", (event) => {
-			    event.preventDefault(); // 기본 양식 제출을 방지
-			
-			    if (signupForm.checkValidity()) { // 양식이 유효한지 확인
-			        const formData = new FormData(signupForm);
-			
-			        axios.post("/signupTest", formData)
-			            .then(response => {
-			                const data = response.data;
-			                if (response.status === 200) {
-		                        alert(data);
-		                        window.location.href = "${baseURL}/login";
-			                } 
-			            })
-			            .catch((error) => {
-			            	const errorMessage = error.response.data;
-			                alert(errorMessage);
-			            });
-			    } else {
-			        signupForm.reportValidity(); // 양식이 유효하지 않으면 유효성 검사 메시지 표시
-			    }
-			});
+  <footer class="mt-10 py-10 text-center text-[10px] text-stage-text-sub font-bold uppercase tracking-[0.2em]">
+    &copy; Weiver 2023. All Rights Reserved.
+  </footer>
 
-        </script>
+  <script>
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    const signupForm = document.querySelector("#signupForm");
+    const signupBtn = document.querySelector("#signupBtn");
+    const checkBoxes = document.querySelectorAll(".signupCheckBox");
+
+    checkBoxes.forEach(box => {
+      box.addEventListener("change", () => {
+        const allChecked = Array.from(checkBoxes).every(b => b.checked);
+        signupBtn.disabled = !allChecked;
+        if (allChecked) {
+          signupBtn.classList.remove('bg-slate-700', 'text-slate-400');
+          signupBtn.classList.add('bg-stage-primary', 'text-white', 'shadow-lg', 'shadow-rose-900/20');
+        } else {
+          signupBtn.classList.add('bg-slate-700', 'text-slate-400');
+          signupBtn.classList.remove('bg-stage-primary', 'text-white', 'shadow-lg', 'shadow-rose-900/20');
+        }
+      });
+    });
+
+    signupBtn.addEventListener("click", () => {
+      if (signupForm.checkValidity()) {
+        const formData = new FormData(signupForm);
+        axios.post("${baseURL}/signupTest", formData)
+          .then(res => {
+            alert(res.data);
+            window.location.href = "${baseURL}/login";
+          })
+          .catch(err => alert(err.response.data || "회원가입에 실패했습니다."));
+      } else {
+        signupForm.reportValidity();
+      }
+    });
+  </script>
 </body>
-
 </html>

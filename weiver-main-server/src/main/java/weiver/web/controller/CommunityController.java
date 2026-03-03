@@ -1,12 +1,10 @@
 package weiver.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import weiver.domain.entity.*;
 import weiver.web.dto.PostDTO;
 import weiver.web.dto.PostReplyLikeDTO;
@@ -14,29 +12,25 @@ import weiver.service.AwsS3Service;
 import weiver.service.CommunityService;
 import weiver.service.MusicalService;
 import weiver.service.UserService;
-
 import javax.servlet.http.HttpSession;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 @Controller
 @RequiredArgsConstructor
 public class CommunityController {
-	private final CommunityService communityService;
+    private final CommunityService communityService;
     private final UserService userService;
     private final MusicalService musicalService;
     private final AwsS3Service awsS3Service;
     
-    
    @PostMapping("/upload")
-   public void uploadFile(
-      @RequestPart(value = "file") MultipartFile multipartFile) throws FileUploadException, FileNotFoundException {
-	   System.out.println(multipartFile.getOriginalFilename());    //받아온 파일 이름 test용
-	   System.out.println(awsS3Service.uploadFileV1(multipartFile));    //S3에 저장한 이미지 url 값
+   public void uploadFile(@RequestPart(value = "file") MultipartFile multipartFile) {
+       System.out.println(multipartFile.getOriginalFilename());
+       System.out.println(awsS3Service.uploadFileV1(multipartFile));
    }
+
 
 
 

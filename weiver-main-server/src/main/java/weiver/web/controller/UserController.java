@@ -1,6 +1,6 @@
 package weiver.web.controller;
 
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,14 +20,15 @@ import weiver.service.SubscribeService;
 import weiver.service.UserService;
 
 import javax.servlet.http.HttpSession;
-import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequestMapping(value = "mypage")
 public class UserController {
+
 
 	@Autowired
 	private UserService userservice;
@@ -124,34 +125,26 @@ public class UserController {
 		boolean existName = loginService.checkUserNicknameExists(nickname);
 
 
-		if( !nickname.equals(prevName) && !existName ) {
-			boolean result = false;
-			try {
-				result = userservice.updateName(nickname, id);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+        if (!nickname.equals(prevName) && !existName) {
+            try {
+                userservice.updateName(nickname, id);
+            } catch (Exception e) {
+                log.error("닉네임 업데이트 중 오류: {}", e.getMessage());
+            }
+        }
 
-		try {
-			String url = awsS3Service.uploadFileV1(profileImg);
-			if( !url.isEmpty() && !url.equals(prevImg)) {
-				boolean result = false;
-				try {
-					result = userservice.updateImg(url, id);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (FileUploadException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+        String url = awsS3Service.uploadFileV1(profileImg);
+        if (url != null && !url.isEmpty() && !url.equals(prevImg)) {
+            try {
+                userservice.updateImg(url, id);
+            } catch (Exception e) {
+                log.error("프로필 이미지 업데이트 중 오류: {}", e.getMessage());
+            }
+        }
 
+        return "redirect:/mypage/profileUpdate";
+    }
 
-		return "redirect:/mypage/profileUpdate";
-	}
 
 	// 설정 페이지
 	@GetMapping("/setting")

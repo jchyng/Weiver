@@ -1,90 +1,125 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="config.jsp" %>
 
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name=“viewport” content=“width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no”>
-  <title>Weiver</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WIEVER - Login</title>
 
-  <!--css 연결-->
-  <link rel="stylesheet" href="/css/public.css">
-  <link rel="stylesheet" href="/css/login.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'stage-primary': '#BE123C',
+              'stage-secondary': '#FBBF24',
+              'stage-bg': '#0F172A',
+              'stage-surface': '#1E293B',
+              'stage-text': '#F8FAFC',
+              'stage-text-sub': '#94A3B8',
+            },
+            fontFamily: {
+              sans: ['Pretendard', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+          }
+        }
+      }
+    </script>
 
-  <!-- axios -->
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <!-- axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+      .login-bg {
+        background: radial-gradient(circle at top right, rgba(190, 18, 60, 0.15), transparent),
+                    radial-gradient(circle at bottom left, rgba(251, 191, 36, 0.05), transparent);
+      }
+      .glass-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .input-field:focus + label,
+      .input-field:not(:placeholder-shown) + label {
+        transform: translateY(-24px) scale(0.85);
+        color: var(--stage-secondary);
+      }
+    </style>
 </head>
 
-<body class="container">
-  <header><a><i></i></a></header>
-  <article>
-    <img id="logo" src="/img/logo.png" alt="logo" height="100" width="450">
-    <div class="login-title">로그인</div>
-    <!-- 로그인 입력 폼 -->
-    <form id="login-form" action="${baseURL}/loginTest" method="post">
-      <input type="email" name="userId" placeholder=" 이메일을 입력하세요" >
-      <input type="password" name="userPw" placeholder=" 비밀번호를 입력하세요" >
-      <input class="submit" type="submit" value="Login" style="cursor: pointer;">
-    </form>
-    <!-- 회원가입, 비번 찾기 -->
-    <div class="login-support">
-      <a href="${baseURL}/signup">회원가입</a>
-      <a href="#">비밀번호를 잊으셨나요?</a>
+<body class="bg-stage-bg text-stage-text font-sans min-h-screen flex flex-col login-bg">
+
+  <main class="flex-1 flex items-center justify-center p-6">
+    <div class="w-full max-w-md animate-fade-in">
+      
+      <!-- Logo Section -->
+      <div class="text-center mb-10">
+        <h1 class="text-5xl font-serif text-stage-primary tracking-tighter mb-2">WIEVER</h1>
+        <p class="text-stage-text-sub text-sm font-medium tracking-widest uppercase">The Stage is Yours</p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="glass-card rounded-3xl p-8 shadow-2xl">
+        <h2 class="text-2xl font-bold mb-8 text-center">로그인</h2>
+        
+        <form id="login-form" class="space-y-6">
+          <div class="relative">
+            <input type="email" name="userId" placeholder=" " required
+              class="input-field w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all peer">
+            <label class="absolute left-4 top-4 text-stage-text-sub pointer-events-none transition-all duration-200 origin-left">이메일 주소</label>
+          </div>
+
+          <div class="relative">
+            <input type="password" name="userPw" placeholder=" " required
+              class="input-field w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all peer">
+            <label class="absolute left-4 top-4 text-stage-text-sub pointer-events-none transition-all duration-200 origin-left">비밀번호</label>
+          </div>
+
+          <button type="submit" class="w-full bg-stage-primary hover:bg-rose-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-rose-900/20 transition-all transform active:scale-[0.98]">
+            공연장 입장하기
+          </button>
+        </form>
+
+        <div class="mt-6 flex items-center justify-between text-xs text-stage-text-sub font-medium">
+          <a href="${baseURL}/signup" class="hover:text-stage-secondary transition-colors underline decoration-slate-700 underline-offset-4">회원가입</a>
+          <a href="#" class="hover:text-stage-secondary transition-colors">비밀번호 찾기</a>
+        </div>
+      </div>
     </div>
-    <!-- 간편로그인 구분 선 -->
-    <div class="dividing-line">
-      <span>간편 로그인</span>
-    </div>
-    <!-- 간편 로그인 -->
-    <div id="simple-login">
-      <a href="#"><img class="google-login" src="/img/google_icon.png" alt="구글"></a>
-      <a href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${kakaoAPIKey}&redirect_uri=${kakaoRedirectUrl}"><img class="kakao-login" src="/img/kakako-icon.png" alt="카카오"></a>
-      <a href="#"><img class="naver-login" src="/img/naver-icon.png" alt="네이버"></a>
-    </div>
-  </article>
-<footer>Copyright Weiver 2023 All Rights Reserved</footer>
-<nav>
-    <a href="${baseURL}/main"><i class="bi bi-house-door-fill"></i>
-        <div>HOME</div>
-    </a>
-    <a href="${baseURL}/community"><i class="bi bi-chat-dots-fill"></i>
-        <div>COMMUNITY</div>
-    </a>
-    <a href="${baseURL}/mypage/myinfo"><i class="bi bi-person-fill"></i>
-        <div>MY PAGE</div>
-    </a>
-</nav>
+  </main>
+
+
+  <footer class="py-10 text-center text-[10px] text-stage-text-sub font-bold uppercase tracking-[0.2em]">
+    &copy; Weiver 2023. All Rights Reserved.
+  </footer>
 
   <script>
   	const loginForm = document.querySelector("#login-form");
-  	const userId = document.getElementsByName("userId")[0];
-    const userPw = document.getElementsByName("userPw")[0];
     
-    /* 폼 제출 이벤트 핸들러 */
     loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
         const formData = new FormData(loginForm);
     
-    	event.preventDefault(); // 기본 제출 동작 방지
-    	
-    	/* 로그인 axios 요청 */
         axios.post("${baseURL}/loginTest", formData)
         		.then(response => {
-        			const data = response.data;
         			if(response.status === 200) {
-        				alert(data);
         				window.location.href = "${baseURL}/main";
         			}
   	   			})
   	   			.catch((error) => {
-  	   				const errorMessage = error.response.data;
-  	   				alert(errorMessage);
+  	   				alert(error.response.data || "로그인에 실패했습니다.");
   	   			});
    	});
   </script>
 </body>
-
 </html>

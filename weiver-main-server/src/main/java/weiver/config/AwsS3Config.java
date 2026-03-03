@@ -1,33 +1,12 @@
 package weiver.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.S3Client;
-
-@Configuration 
+/**
+ * AWS S3 설정을 비활성화합니다.
+ * 로컬 업로드 방식을 사용하므로 더 이상 S3 전용 Bean이 필요하지 않습니다.
+ */
+@Configuration
 public class AwsS3Config {
-
-    @Value("${cloud.aws.region.static}")
-    private String awsRegion;
-
-    @Value("${cloud.aws.credentials.accessKey}")
-    private String awsAccessKey;
-
-    @Value("${cloud.aws.credentials.secretKey}")
-    private String awsSecretKey;
-
-    @Bean
-    public S3Client s3Client() {
-        AwsCredentials credentials = AwsBasicCredentials.create(awsAccessKey, awsSecretKey);
-
-        return S3Client.builder()
-                .region(Region.of(awsRegion))
-                .credentialsProvider(() -> credentials)
-                .build();
-    }
+    // S3 관련 빈 설정을 모두 제거했습니다.
 }

@@ -2,383 +2,295 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="config.jsp" %>
 
-
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name=“viewport” content=“width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no”>
-    <title>WEIVER - 커뮤니티 메인 페이지</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WIEVER COMMUNITY - The Stage</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
-        integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
-        crossorigin="anonymous"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'stage-primary': '#BE123C',
+              'stage-secondary': '#FBBF24',
+              'stage-bg': '#0F172A',
+              'stage-surface': '#1E293B',
+              'stage-text': '#F8FAFC',
+              'stage-text-sub': '#94A3B8',
+            },
+            fontFamily: {
+              sans: ['Pretendard', 'sans-serif'],
+              serif: ['Playfair Display', 'serif'],
+            },
+          }
+        }
+      }
+    </script>
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-    <!-- SWIPER 외부 라이브러리 연결-->
+    <!-- SWIPER -->
     <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
-
-    <!--css 연결-->
-    <link rel="stylesheet" href="/css/community.css">
-    <link rel="stylesheet" href="/css/searchAll.css">
-    <link rel="stylesheet" href="/css/swiper.css">
-    <link rel="stylesheet" href="/css/public.css">
-
-    <script>
- // 인기 게시글 슬라이드 기능
-    document.addEventListener('DOMContentLoaded', function () {
-        var swiperOptions = {
-            slidesPerView: 'auto',
-            spaceBetween: 5,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            scrollbar: {
-                el: '.swiper-scrollbar',
-                hide: true,
-            },
-            observer: true,
-            observeParents: true
-        };
-
-        var swiperPopularCommunity = new Swiper('.popular_community .swiper-container', swiperOptions);
-      
-        
-        swiperPopularCommunity.init();  // Swiper 인스턴스 초기화
-    });
- 
-    function checkLogin() {
-        // 로그인 상태를 확인하는 변수 선언
-        var loggedIn = ${not empty user};
-
-        if (loggedIn) {
-            location.href = '${baseURL}/community/board'; // 로그인한 경우 링크로 이동
-        } else {
-            alert('로그인 해주세요.'); // 로그인하지 않은 경우 팝업 메시지 띄우기
-        }
-    }
-    </script>
     
+    <!-- jquery -->
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+    <style>
+      .glass-nav {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .spotlight-glow:hover {
+        box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+        border-color: rgba(251, 191, 36, 0.3);
+      }
+      .post-card:hover .post-title {
+        color: var(--stage-secondary);
+      }
+      .active-tab {
+        background-color: var(--stage-primary);
+        color: white;
+      }
+    </style>
 </head>
 
-<body>
-    <div class="backgroudBox">
-        <header>
-            <img src="/img/logo.png" alt="logo" height="70" width="300" />
-        </header>
-        <div class="pageName" style="margin-bottom: 15px;">커뮤니티</div>
-        <div>
-            <form class="communittySearch" action="${baseURL}/community/search" method="get">
-			    <input type="text" name="keyword">
-			    <button type="submit">검색</button>
-			</form>
+<body class="bg-stage-bg text-stage-text font-sans pb-24">
 
-        </div>
-        <p style="font-weight:bold; font-size: 17px;">인기글🔥</p>
-        <div class="popular_community">
-		    <div class="swiper-container">
-		        <div class="swiper-wrapper">
-		            <div class="swiper-slide">
-		                <div class="card-container">
-		                    <c:forEach var="card" items="${bestPost}" varStatus="status">
-		                        <c:if test="${status.index < 3}">
-		                            <a href="${baseURL}/community/${card.id}">
-		                                <div class="card">
-		                                    <div class="card-header">
-		                                        <h3 class="card-title">${card.title}</h3>
-		                                    </div>
-		                                    <div class="card-footer">
-		                                        <span class="author">${card.user.nickname}</span>
-		                                    </div>
-		                                </div>
-		                            </a>
-		                        </c:if>
-		                    </c:forEach>
-		                </div>
-		            </div>
-		            <div class="swiper-slide">
-		                <div class="card-container">
-		                    <c:forEach var="card" items="${bestPost}" varStatus="status">
-		                        <c:if test="${status.index >= 3 and status.index < 6}">
-		                            <a href="${baseURL}/community/${card.id}">
-		                                <div class="card">
-		                                    <div class="card-header">
-		                                        <h3 class="card-title">${card.title}</h3>
-		                                    </div>
-		                                    <div class="card-footer">
-		                                        <span class="author">${card.user.nickname}</span>
-		                                    </div>
-		                                </div>
-		                            </a>
-		                        </c:if>
-		                    </c:forEach>
-		                </div>
-		            </div>
-		            <div class="swiper-slide">
-		                <div class="card-container">
-		                    <c:forEach var="card" items="${bestPost}" varStatus="status">
-		                        <c:if test="${status.index >= 6}">
-		                            <a href="${baseURL}/community/${card.id}">
-		                                <div class="card">
-		                                    <div class="card-header">
-		                                        <h3 class="card-title">${card.title}</h3>
-		                                    </div>
-		                                    <div class="card-footer">
-		                                        <span class="author">${card.user.nickname}</span>
-		                                    </div>
-		                                </div>
-		                            </a>
-		                        </c:if>
-		                    </c:forEach>
-		                </div>
-		            </div>
-		        </div>
-		        <!-- Add Pagination -->
-		        <div class="swiper-pagination"></div>
-		        <!-- Add Navigation -->
-		        <div class="swiper-button-next"></div>
-		        <div class="swiper-button-prev"></div>
-		    </div>
-		</div>
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full z-50 glass-nav">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl font-serif text-stage-primary tracking-tighter">WIEVER</span>
+        <span class="hidden md:block text-xs text-stage-text-sub font-bold tracking-widest ml-2 uppercase">Community</span>
+      </div>
+      
+      <!-- Search Bar -->
+      <form action="${baseURL}/community/search" method="get" class="flex-1 max-w-md mx-4 relative hidden sm:block">
+        <input type="text" name="keyword" placeholder="게시글 검색..." class="w-full bg-stage-surface/50 border border-slate-700 text-sm rounded-full py-2 px-10 focus:outline-none focus:border-stage-secondary transition-all">
+        <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-stage-text-sub"></i>
+      </form>
 
-
-        <hr style="margin-top: 22px; margin-bottom: 22px; color: #D4D9E1;">
-
-		<!-- 카테고리 그룹 -->
-        <p style="font-weight:bold; font-size: 17px; margin-bottom: 12px;">카테고리</p>
-        <div>
-            <div class="btnGroup">
-                <div class="categoryGroup">
-                    <button style="background-color: #4263EB; cursor: pointer;" onclick="showPostList('전체', this)">전체</button>
-                    <button style="background-color: #466093; cursor: pointer;" onclick="showPostList('리뷰', this)">리뷰</button>
-                    <button style="background-color: #466093; cursor: pointer;" onclick="showPostList('잡담', this)">잡담</button>
-                </div>
-                <button class="writeBtn" onclick="checkLogin()">글 작성하기</button>
-            </div>
-            <!-- 전체 태그일 때 게시글 -->
-            <div class="postAndUserInfo">
-                <div id="postListAll" class="postList">
-                    <c:forEach var="postWithReplyAndLikeCount" items="${postWithReplyCountList}">
-                    <a href="${baseURL}/community/${postWithReplyAndLikeCount.post.id}">
-                        <div class="postWrap-main">
-							    <p class="post-nickname">${postWithReplyAndLikeCount.post.user.nickname}</p>
-							    <h2 class="post-title">${postWithReplyAndLikeCount.post.title}</h2>
-							    <div class="post-content">
-								    ${postWithReplyAndLikeCount.post.content}
-								</div>
-							    <%-- <p class="post-content">${post.content}</p> --%>
-								 <c:if test="${not empty postWithReplyAndLikeCount.post.image}">
-								    <img src="${postWithReplyAndLikeCount.post.image}" alt="게시글 이미지" class="post-image">
-								</c:if>
-								<c:if test="${empty postWithReplyAndLikeCount.post.image}">
-								    <img src="" alt="게시글 이미지" class="post-image" style="visibility: hidden;">
-								</c:if>
-                            <div class="iconGroup">
-                                <div>
-                                    <i class="bi-eye"></i>
-                                </div>
-                                <div style="margin: 4px 0px 0px -15px;">
-                                	${postWithReplyAndLikeCount.post.viewed}
-                                </div>
-                                <div>
-                                    <i class="bi-suit-heart"></i>
-                                </div>
-                                <div style="margin: 4px 0px 0px -15px;">
-                                	${postWithReplyAndLikeCount.likeCount}
-                                </div>
-                                <div>
-                                    <i class="bi-chat"></i>
-                                </div>
-                                <div style="margin: 4px 0px 0px -15px;">
-                                	${postWithReplyAndLikeCount.replyCount}
-                                </div>
-                            </div>
-                        </div>
-                        </a>
-                    </c:forEach>
-                </div>
-                <div id="postListReview" class="postList" style="display: none;">
-                    <c:forEach var="postWithReplyAndLikeCount" items="${postWithReplyCountList}">
-                        <c:if test="${postWithReplyAndLikeCount.post.type == 'Review'}">
-                        <a href="${baseURL}/community/${postWithReplyAndLikeCount.post.id}">
-                            <div class="postWrap-main">
-							    <p class="post-nickname">${postWithReplyAndLikeCount.post.user.nickname}</p>
-							    <h2 class="post-title">${postWithReplyAndLikeCount.post.title}</h2>
-							     <div class="post-content">
-								    ${postWithReplyAndLikeCount.post.content}
-								</div>
-							    <c:if test="${not empty postWithReplyAndLikeCount.post.image}">
-								    <img src="${postWithReplyAndLikeCount.post.image}" alt="게시글 이미지" class="post-image">
-								</c:if>
-								<c:if test="${empty postWithReplyAndLikeCount.post.image}">
-								    <img src="" alt="게시글 이미지" class="post-image" style="visibility: hidden;">
-								</c:if>
-                                <div class="iconGroup">
-                                    <div>
-                                        <i class="bi-eye"></i>
-                                    </div>
-                                    <div style="margin: 4px 0px 0px -15px;">
-                                		${postWithReplyAndLikeCount.post.viewed}
-                                	</div>
-                                    <div>
-                                        <i class="bi-suit-heart"></i>
-                                    </div>
-                                    <div style="margin: 4px 0px 0px -15px;">
-                                		${postWithReplyAndLikeCount.likeCount}
-                                	</div>
-                                	<div>
-	                                    <i class="bi-chat"></i>
-	                                </div>
-	                                <div style="margin: 4px 0px 0px -15px;">
-	                                	${postWithReplyAndLikeCount.replyCount}
-	                                </div>
-                                </div>
-                            </div>
-                             </a>
-                        </c:if>
-                    </c:forEach>
-                </div>
-                <div id="postListChat" class="postList" style="display: none;">
-                    <c:forEach var="postWithReplyAndLikeCount" items="${postWithReplyCountList}">
-                        <c:if test="${postWithReplyAndLikeCount.post.type == 'Chat'}">
-                        <a href="${baseURL}/community/${postWithReplyAndLikeCount.post.id}">
-                            <div class="postWrap-main">
-                            
-							    <p class="post-nickname">${postWithReplyAndLikeCount.post.user.nickname}</p>
-							    <h2 class="post-title">${postWithReplyAndLikeCount.post.title}</h2>
-							    <div class="post-content">
-								    ${postWithReplyAndLikeCount.post.content}
-								</div>
-							    <c:if test="${not empty postWithReplyAndLikeCount.post.image}">
-								    <img src="${postWithReplyAndLikeCount.post.image}" alt="게시글 이미지" class="post-image">
-								</c:if>
-								<c:if test="${empty postWithReplyAndLikeCount.post.image}">
-								    <img src="" alt="게시글 이미지" class="post-image" style="visibility: hidden;">
-								</c:if>
-                                <div class="iconGroup">
-                                    <div>
-                                        <i class="bi-eye"></i>
-                                    </div>
-                                    <div style="margin: 4px 0px 0px -15px;">
-                                		${postWithReplyAndLikeCount.post.viewed}
-                                	</div>
-                                    <div>
-                                        <i class="bi-suit-heart"></i>
-                                    </div>
-                                    <div style="margin: 4px 0px 0px -15px;">
-                                		${postWithReplyAndLikeCount.likeCount}
-                                	</div>
-                                	<div>
-	                                    <i class="bi-chat"></i>
-	                                </div>
-	                                <div style="margin: 4px 0px 0px -15px;">
-	                                	${postWithReplyAndLikeCount.replyCount}
-	                                </div>
-                                </div>
-                            </div>
-                            </a>
-                        </c:if>
-                    </c:forEach>
-                </div>
-                <div class="sideGroup">
-                    <div class="userInfoAndLoginBtn">
-                        <c:choose>
-                            <c:when test="${empty user}">
-                                <a href="${baseURL}/login"><button style="cursor: pointer;" class="loginBtn">로그인</button></a>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="userInfo">
-                                    <p class="userInfoID">${user}</p>
-                                    <div class="myWrited">
-                                        <div class="myPost">
-                                            <p>내가 쓴 글</p>
-                                            <p><a href="${baseURL}/mypage/myBoard" style="text-decoration: none;">${postCount}</a></p>
-                                        </div>
-                                        <div class="myComment">
-                                            <p>내가 쓴 댓글</p>
-                                            <p><a href="${baseURL}/mypage/myComment" style="text-decoration: none;">${replyCount}</a></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div class="flex items-center gap-4">
+        <c:choose>
+          <c:when test="${empty user}">
+            <a href="${baseURL}/login" class="text-sm font-bold hover:text-stage-secondary transition-colors">LOGIN</a>
+          </c:when>
+          <c:otherwise>
+            <a href="${baseURL}/mypage/myinfo" class="w-8 h-8 rounded-full bg-stage-surface border border-slate-700 flex items-center justify-center hover:border-stage-secondary transition-all">
+              <i class="bi bi-person text-lg"></i>
+            </a>
+          </c:otherwise>
+        </c:choose>
+      </div>
     </div>
+  </header>
 
-    <footer>&copy; Weiver 2023 All Rights Reserved</footer>
-    <nav>
-        <a href="${baseURL}/main"><i class="bi bi-house-door-fill"></i>
-            <div>HOME</div>
-        </a>
-        <a href="${baseURL}/community"><i class="bi bi-chat-dots-fill"></i>
-            <div>COMMUNITY</div>
-        </a>
-        <a href="${baseURL}/mypage/myinfo"><i class="bi bi-person-fill"></i>
-            <div>MY PAGE</div>
-        </a>
-    </nav>
+  <main class="max-w-7xl mx-auto px-4 pt-24 space-y-12">
+    
+    <!-- Hero / Best Posts Slider -->
+    <section>
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold flex items-center gap-2">인기 게시글 <span class="text-stage-secondary">🔥</span></h2>
+      </div>
+      <div class="swiper bestSwiper overflow-visible">
+        <div class="swiper-wrapper">
+          <c:forEach var="card" items="${bestPost}">
+            <div class="swiper-slide w-[300px]">
+              <a href="${baseURL}/community/${card.id}" class="block group h-full">
+                <div class="bg-stage-surface/50 border border-slate-700/50 p-6 rounded-2xl backdrop-blur-sm spotlight-glow transition-all h-full flex flex-col justify-between">
+                  <div>
+                    <span class="text-[10px] text-stage-primary font-bold uppercase tracking-widest mb-2 block">BEST POST</span>
+                    <h3 class="font-bold text-lg line-clamp-2 group-hover:text-stage-secondary transition-colors leading-snug">${card.title}</h3>
+                  </div>
+                  <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-700/50">
+                    <span class="text-sm text-stage-text-sub italic">@${card.user.nickname}</span>
+                    <div class="flex items-center gap-3 text-stage-text-sub text-xs">
+                      <span><i class="bi bi-eye"></i> ${card.viewed}</span>
+                      <span><i class="bi bi-heart-fill text-stage-primary"></i> 24</span> <!-- Dummy heart count -->
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </c:forEach>
+        </div>
+      </div>
+    </section>
 
-    <script>
-        function showPostList(category, button) {
-            var postListAll = document.getElementById("postListAll");
-            var postListReview = document.getElementById("postListReview");
-            var postListChat = document.getElementById("postListChat");
+    <!-- Main Content Area: Category + List + Profile -->
+    <div class="flex flex-col lg:flex-row gap-8">
+      
+      <!-- Left: Post List -->
+      <div class="flex-1 space-y-6">
+        <!-- Category Tabs -->
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4 overflow-x-auto gap-4">
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="showPostList('전체', this)" class="category-btn active-tab px-5 py-2 rounded-full text-sm font-bold transition-all">전체</button>
+            <button onclick="showPostList('리뷰', this)" class="category-btn bg-stage-surface hover:bg-slate-700 px-5 py-2 rounded-full text-sm font-bold transition-all">리뷰</button>
+            <button onclick="showPostList('잡담', this)" class="category-btn bg-stage-surface hover:bg-slate-700 px-5 py-2 rounded-full text-sm font-bold transition-all">잡담</button>
+          </div>
+          <button onclick="checkLogin()" class="bg-stage-primary hover:bg-rose-700 text-white px-6 py-2 rounded-lg text-sm font-bold transition-all transform active:scale-95 shrink-0">
+            <i class="bi bi-pencil-square mr-2"></i> 글 작성하기
+          </button>
+        </div>
 
-            if (category === '전체') {
-                postListAll.style.display = "block";
-                postListReview.style.display = "none";
-                postListChat.style.display = "none";
-            } else if (category === '리뷰') {
-                postListAll.style.display = "none";
-                postListReview.style.display = "block";
-                postListChat.style.display = "none";
-            } else if (category === '잡담') {
-                postListAll.style.display = "none";
-                postListReview.style.display = "none";
-                postListChat.style.display = "block";
-            }
+        <!-- Post List Containers -->
+        <div id="post-list-container" class="space-y-4">
+          <!-- Iterate All Posts (Initially Visible) -->
+          <c:forEach var="item" items="${postWithReplyCountList}">
+            <div class="post-item ${item.post.type}" data-type="${item.post.type}">
+              <a href="${baseURL}/community/${item.post.id}" class="post-card block bg-stage-surface/30 border border-slate-800 hover:border-slate-700 p-5 rounded-2xl transition-all">
+                <div class="flex justify-between items-start gap-4">
+                  <div class="space-y-2 flex-1">
+                    <div class="flex items-center gap-3 mb-1">
+                      <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-bold text-stage-text-sub uppercase tracking-wider">${item.post.type == 'Review' ? '리뷰' : '잡담'}</span>
+                      <span class="text-xs text-stage-text-sub">@${item.post.user.nickname}</span>
+                    </div>
+                    <h3 class="post-title font-bold text-xl transition-colors line-clamp-1">${item.post.title}</h3>
+                    <p class="text-stage-text-sub text-sm line-clamp-2 leading-relaxed">${item.post.content.replaceAll('<[^>]*>', '')}</p>
+                    <div class="flex items-center gap-4 pt-2 text-xs text-stage-text-sub">
+                      <span class="flex items-center gap-1"><i class="bi bi-eye"></i> ${item.post.viewed}</span>
+                      <span class="flex items-center gap-1"><i class="bi bi-heart-fill text-stage-primary/70"></i> ${item.likeCount}</span>
+                      <span class="flex items-center gap-1"><i class="bi bi-chat-text"></i> ${item.replyCount}</span>
+                    </div>
+                  </div>
+                  <c:if test="${not empty item.post.image}">
+                    <div class="w-24 h-24 rounded-xl overflow-hidden shrink-0 border border-slate-700">
+                      <img src="${item.post.image}" class="w-full h-full object-cover" alt="thumb">
+                    </div>
+                  </c:if>
+                </div>
+              </a>
+            </div>
+          </c:forEach>
+        </div>
+      </div>
 
-            // 버튼 스타일 변경
-            var buttons = document.querySelectorAll(".categoryGroup button");
-            buttons.forEach(function (btn) {
-                btn.style.backgroundColor = "#466093";
-            });
-            button.style.backgroundColor = "#4263EB";
+      <!-- Right: Side Info -->
+      <aside class="w-full lg:w-80 space-y-6">
+        <c:choose>
+          <c:when test="${not empty user}">
+            <!-- User Profile Card -->
+            <div class="bg-stage-surface border border-slate-700 p-6 rounded-2xl space-y-4">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-full bg-stage-primary/20 flex items-center justify-center border border-stage-primary/30">
+                  <i class="bi bi-person-fill text-2xl text-stage-primary"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-stage-text-sub font-bold uppercase tracking-widest leading-none mb-1">Welcome back</p>
+                  <h4 class="font-bold text-lg">${user}</h4>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <a href="${baseURL}/mypage/myBoard" class="bg-slate-800/50 hover:bg-slate-800 p-3 rounded-xl text-center transition-colors">
+                  <p class="text-[10px] text-stage-text-sub font-bold uppercase mb-1">My Posts</p>
+                  <p class="text-xl font-bold font-serif">${postCount}</p>
+                </a>
+                <a href="${baseURL}/mypage/myComment" class="bg-slate-800/50 hover:bg-slate-800 p-3 rounded-xl text-center transition-colors">
+                  <p class="text-[10px] text-stage-text-sub font-bold uppercase mb-1">Comments</p>
+                  <p class="text-xl font-bold font-serif">${replyCount}</p>
+                </a>
+              </div>
+              <a href="${baseURL}/mypage/myinfo" class="block w-full text-center py-2.5 rounded-xl border border-slate-700 text-sm font-bold hover:bg-slate-800 transition-all">MY PAGE</a>
+            </div>
+          </c:when>
+          <c:otherwise>
+            <div class="bg-stage-surface border border-slate-700 p-6 rounded-2xl text-center space-y-4">
+              <i class="bi bi-door-open text-4xl text-stage-text-sub"></i>
+              <p class="text-sm text-stage-text-sub font-medium">로그인하고 더 많은<br>커뮤니티 기능을 즐겨보세요!</p>
+              <a href="${baseURL}/login" class="block w-full bg-stage-primary hover:bg-rose-700 py-3 rounded-xl text-sm font-bold text-white transition-all">로그인 / 회원가입</a>
+            </div>
+          </c:otherwise>
+        </c:choose>
+        
+        <!-- Community Rules / Info -->
+        <div class="bg-slate-900/50 border border-slate-800/50 p-6 rounded-2xl">
+          <h4 class="text-sm font-bold mb-4 flex items-center gap-2"><i class="bi bi-info-circle text-stage-secondary"></i> 커뮤니티 가이드</h4>
+          <ul class="text-xs text-stage-text-sub space-y-3">
+            <li class="flex gap-2"><span>1.</span> 공연 관련 정보를 자유롭게 공유하세요.</li>
+            <li class="flex gap-2"><span>2.</span> 배우와 관객에 대한 예우를 갖춰주세요.</li>
+            <li class="flex gap-2"><span>3.</span> 스포일러는 반드시 주의해 주세요!</li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Navigation Bar (Fixed Bottom) -->
+  <nav class="fixed bottom-0 left-0 w-full glass-nav z-50">
+    <div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between text-stage-text-sub text-[10px] font-bold">
+      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
+        <i class="bi bi-house-door text-xl"></i>
+        <span>HOME</span>
+      </a>
+      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-primary">
+        <i class="bi bi-chat-dots-fill text-xl"></i>
+        <span>COMMUNITY</span>
+      </a>
+      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
+        <i class="bi bi-person text-xl"></i>
+        <span>MY PAGE</span>
+      </a>
+    </div>
+  </nav>
+
+  <footer class="mt-20">
+    <p>&copy; Weiver 2023. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    // Swiper Init
+    var swiper = new Swiper(".bestSwiper", {
+      slidesPerView: "auto",
+      spaceBetween: 20,
+      freeMode: true,
+    });
+
+    // Category Filtering
+    function showPostList(category, button) {
+      const items = document.querySelectorAll('.post-item');
+      const buttons = document.querySelectorAll('.category-btn');
+      
+      buttons.forEach(btn => btn.classList.remove('active-tab', 'bg-stage-primary'));
+      buttons.forEach(btn => btn.classList.add('bg-stage-surface', 'hover:bg-slate-700'));
+      button.classList.add('active-tab');
+      button.classList.remove('bg-stage-surface', 'hover:bg-slate-700');
+
+      items.forEach(item => {
+        if (category === '전체') {
+          item.style.display = 'block';
+        } else if (category === '리뷰' && item.dataset.type === 'Review') {
+          item.style.display = 'block';
+        } else if (category === '잡담' && item.dataset.type === 'Chat') {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
         }
-		
-        function changeHeartIcon(type, id, heartIcon) {
-            // 서버로 보낼 데이터 준비
-            const data = {
-                type: type, // 'post', 'reply', 'rereply' 중 하나
-                id: id // 게시글, 댓글 또는 대댓글의 ID 값
-            };
+      });
+    }
 
-            // 서버에 데이터 전송 (AJAX 사용)
-            $.ajax({
-                type: 'POST',
-                url: '${baseURL}/community/insert/postlike/' + id, // 좋아요 처리를 담당하는 컨트롤러 URL
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function (response) {
-                    // 서버에서 응답을 받으면 좋아요 개수를 업데이트
-                    const likesCount = response.likesCount;
-                    $(heartIcon).next().text(likesCount);
-                },
-                error: function (error) {
-                    // 에러 처리
-                    console.error('Error occurred:', error);
-                }
-            });
-        }
-
-    </script>
+    function checkLogin() {
+      var loggedIn = ${not empty user ? "true" : "false"};
+      if (loggedIn) {
+        location.href = '${baseURL}/community/board';
+      } else {
+        alert('로그인 해주세요.');
+        location.href = '${baseURL}/login';
+      }
+    }
+  </script>
 
 </body>
-
 </html>
