@@ -2,11 +2,16 @@ package weiver.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import weiver.config.interceptor.SessionInterceptor;
+
+import java.io.File;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -44,5 +49,22 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/upload/**")
                 .addResourceLocations("file:" + uploadPath);
+    }
+
+    @Bean
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatDocumentRoot() {
+        return factory -> {
+            File webappDir = new File("src/main/webapp");
+            if (!webappDir.isAbsolute()) {
+                // classpath로 절대경로 추적
+                String classPath = WebConfig.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+                // target/classes → 프로젝트 루트
+                File projectRoot = new File(classPath).getParentFile().getParentFile();
+                webappDir = new File(projectRoot, "src/main/webapp");
+            }
+            if (webappDir.exists()) {
+                factory.setDocumentRoot(webappDir);
+            }
+        };
     }
 }

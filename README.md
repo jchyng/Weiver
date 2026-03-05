@@ -4,6 +4,14 @@
 
 <br>
 
+## 📚 문서
+
+| 문서 | 설명 |
+|---|---|
+| [운영 가이드](docs/operations.md) | 크롤링 설정·모니터링, 관리자 페이지, 배포(CI/CD) |
+
+<br><br>
+
 ## ✨Overview
 뮤지컬 정보, 현재 진행중인 뮤지컬, 배우가 참여한 뮤지컬과 같은 정보를 얻을 수 있고
 
@@ -116,6 +124,7 @@
 + 전체 배우, 뮤지컬 정보 조회
 + 유저, 게시글, 문의 조회 및 삭제
 + 문의글 답변
++ 크롤링 실시간 상태 모니터링 (`/admin/crawling`)
 <div>
   <img src="https://github.com/Weiver-project/Weiver/assets/78299214/439607a3-d431-43c3-bd03-fb52dad71411" width="800">
   <br>
@@ -160,10 +169,15 @@
 실행 후 브라우저에서 `http://localhost:8081`로 접속하세요. (포트 번호는 `application.properties`의 `server.port` 설정을 따릅니다.)
 
 ### 5. 데이터 수집 (Data Crawling) - 선택 사항
-뮤지컬 및 배우 데이터가 없는 경우 `data-crawling-sever`를 실행하여 데이터를 수집할 수 있습니다.
-1. `data-crawling-sever` 디렉토리로 이동
-2. `./mvnw spring-boot:run` 실행
-3. 크롤링 서비스 호출 (필요 시 테스트 코드를 활용하세요)
+뮤지컬 및 배우 데이터가 없는 경우 `application.properties`에서 크롤링을 활성화하여 초기 데이터를 수집합니다.
+
+```properties
+crawling.startup.enabled=true   # 서버 기동 시 즉시 전체 수집
+crawling.schedule.enabled=true  # 이후 7일마다 예정 공연 자동 갱신
+```
+
+서버 기동 후 브라우저에서 `/admin/crawling` 페이지에서 실시간 진행 상태를 확인할 수 있습니다.
+자세한 설정 방법은 [운영 가이드 — 크롤링 운영](docs/operations.md#크롤링-운영)을 참고하세요.
 
 <br><br>
 

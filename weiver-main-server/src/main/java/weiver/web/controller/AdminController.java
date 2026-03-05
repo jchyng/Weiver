@@ -8,8 +8,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import weiver.domain.entity.*;
 import weiver.service.AdminService;
+import weiver.service.CrawlingStatus;
+
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,10 +26,35 @@ import javax.servlet.http.HttpSession;
 public class AdminController {
 
     private final AdminService adminService;
+    private final CrawlingStatus crawlingStatus;
     @RequestMapping(value = "/main", method = RequestMethod.GET)
     public String getAdminMainPage(Model model) {
         model.addAttribute("inquiries", adminService.getAllInquirys());
         return "adminInquiries";
+    }
+
+    /*============================        Crawling         ===================================*/
+
+    @RequestMapping(value = "/crawling", method = RequestMethod.GET)
+    public String getCrawlingPage() {
+        return "adminCrawling";
+    }
+
+    @RequestMapping(value = "/crawling/status", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getCrawlingStatus() {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("running", crawlingStatus.isRunning());
+        map.put("crawlingType", crawlingStatus.getCrawlingType());
+        map.put("currentGenre", crawlingStatus.getCurrentGenre());
+        map.put("genreIndex", crawlingStatus.getGenreIndex());
+        map.put("genreTotal", crawlingStatus.getGenreTotal());
+        map.put("startedAt", crawlingStatus.getStartedAt() != null ? crawlingStatus.getStartedAt().format(fmt) : "-");
+        map.put("finishedAt", crawlingStatus.getFinishedAt() != null ? crawlingStatus.getFinishedAt().format(fmt) : "-");
+        long dur = crawlingStatus.getLastDurationSeconds();
+        map.put("lastDuration", dur > 0 ? String.format("%dh %dm %ds", dur / 3600, (dur % 3600) / 60, dur % 60) : "-");
+        return map;
     }
 
     /*============================        Admin         ===================================*/
