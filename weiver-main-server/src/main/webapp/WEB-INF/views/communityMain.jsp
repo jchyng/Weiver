@@ -16,16 +16,17 @@
         theme: {
           extend: {
             colors: {
+              'stage-gold-glow': '#FFD700',
               'stage-primary': '#BE123C',
-              'stage-secondary': '#FBBF24',
-              'stage-bg': '#0F172A',
-              'stage-surface': '#1E293B',
+              'stage-secondary': '#D4AF37',
+              'stage-bg': '#0a0a0a',
+              'stage-surface': '#1a1a1a',
               'stage-text': '#F8FAFC',
-              'stage-text-sub': '#94A3B8',
+              'stage-text-sub': '#a1a1aa',
             },
             fontFamily: {
               sans: ['Pretendard', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
+              serif: ['Cinzel', 'Playfair Display', 'serif'],
             },
           }
         }
@@ -34,7 +35,7 @@
 
     <!-- Fonts & Icons -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <!-- SWIPER -->
@@ -46,14 +47,14 @@
 
     <style>
       .glass-nav {
-        background: rgba(15, 23, 42, 0.7);
+        background: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
       }
       .spotlight-glow:hover {
-        box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
-        border-color: rgba(251, 191, 36, 0.3);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); border-color: rgba(212, 175, 55, 0.5);
+        
       }
       .post-card:hover .post-title {
         color: var(--stage-secondary);
@@ -65,19 +66,19 @@
     </style>
 </head>
 
-<body class="bg-stage-bg text-stage-text font-sans pb-24">
+<body class="bg-stage-bg text-stage-text font-sans pb-24" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
 
   <!-- Header -->
   <header class="fixed top-0 left-0 w-full z-50 glass-nav">
     <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <span class="text-2xl font-serif text-stage-primary tracking-tighter">WIEVER</span>
+        <span class="text-2xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
         <span class="hidden md:block text-xs text-stage-text-sub font-bold tracking-widest ml-2 uppercase">Community</span>
       </div>
       
       <!-- Search Bar -->
       <form action="${baseURL}/community/search" method="get" class="flex-1 max-w-md mx-4 relative hidden sm:block">
-        <input type="text" name="keyword" placeholder="게시글 검색..." class="w-full bg-stage-surface/50 border border-slate-700 text-sm rounded-full py-2 px-10 focus:outline-none focus:border-stage-secondary transition-all">
+        <input type="text" name="keyword" placeholder="게시글 검색..." class="w-full bg-stage-surface/50 border border-white/20 text-sm rounded-full py-2 px-10 focus:outline-none focus:border-stage-secondary transition-all">
         <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-stage-text-sub"></i>
       </form>
 
@@ -87,7 +88,7 @@
             <a href="${baseURL}/login" class="text-sm font-bold hover:text-stage-secondary transition-colors">LOGIN</a>
           </c:when>
           <c:otherwise>
-            <a href="${baseURL}/mypage/myinfo" class="w-8 h-8 rounded-full bg-stage-surface border border-slate-700 flex items-center justify-center hover:border-stage-secondary transition-all">
+            <a href="${baseURL}/mypage/myinfo" class="w-8 h-8 rounded-full bg-stage-surface border border-white/20 flex items-center justify-center hover:border-stage-secondary transition-all">
               <i class="bi bi-person text-lg"></i>
             </a>
           </c:otherwise>
@@ -108,12 +109,12 @@
           <c:forEach var="card" items="${bestPost}">
             <div class="swiper-slide w-[300px]">
               <a href="${baseURL}/community/${card.id}" class="block group h-full">
-                <div class="bg-stage-surface/50 border border-slate-700/50 p-6 rounded-2xl backdrop-blur-sm spotlight-glow transition-all h-full flex flex-col justify-between">
+                <div class="bg-stage-surface/50 border border-white/10 p-6 rounded-2xl backdrop-blur-sm spotlight-glow transition-all h-full flex flex-col justify-between">
                   <div>
                     <span class="text-[10px] text-stage-primary font-bold uppercase tracking-widest mb-2 block">BEST POST</span>
                     <h3 class="font-bold text-lg line-clamp-2 group-hover:text-stage-secondary transition-colors leading-snug">${card.title}</h3>
                   </div>
-                  <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-700/50">
+                  <div class="mt-6 flex items-center justify-between pt-4 border-t border-white/10">
                     <span class="text-sm text-stage-text-sub italic">@${card.user.nickname}</span>
                     <div class="flex items-center gap-3 text-stage-text-sub text-xs">
                       <span><i class="bi bi-eye"></i> ${card.viewed}</span>
@@ -134,11 +135,11 @@
       <!-- Left: Post List -->
       <div class="flex-1 space-y-6">
         <!-- Category Tabs -->
-        <div class="flex items-center justify-between border-b border-slate-800 pb-4 overflow-x-auto gap-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4 overflow-x-auto gap-4">
           <div class="flex items-center gap-2 shrink-0">
             <button onclick="showPostList('전체', this)" class="category-btn active-tab px-5 py-2 rounded-full text-sm font-bold transition-all">전체</button>
-            <button onclick="showPostList('리뷰', this)" class="category-btn bg-stage-surface hover:bg-slate-700 px-5 py-2 rounded-full text-sm font-bold transition-all">리뷰</button>
-            <button onclick="showPostList('잡담', this)" class="category-btn bg-stage-surface hover:bg-slate-700 px-5 py-2 rounded-full text-sm font-bold transition-all">잡담</button>
+            <button onclick="showPostList('리뷰', this)" class="category-btn bg-stage-surface hover:bg-white/10 px-5 py-2 rounded-full text-sm font-bold transition-all">리뷰</button>
+            <button onclick="showPostList('잡담', this)" class="category-btn bg-stage-surface hover:bg-white/10 px-5 py-2 rounded-full text-sm font-bold transition-all">잡담</button>
           </div>
           <button onclick="checkLogin()" class="bg-stage-primary hover:bg-rose-700 text-white px-6 py-2 rounded-lg text-sm font-bold transition-all transform active:scale-95 shrink-0">
             <i class="bi bi-pencil-square mr-2"></i> 글 작성하기
@@ -150,11 +151,11 @@
           <!-- Iterate All Posts (Initially Visible) -->
           <c:forEach var="item" items="${postWithReplyCountList}">
             <div class="post-item ${item.post.type}" data-type="${item.post.type}">
-              <a href="${baseURL}/community/${item.post.id}" class="post-card block bg-stage-surface/30 border border-slate-800 hover:border-slate-700 p-5 rounded-2xl transition-all">
+              <a href="${baseURL}/community/${item.post.id}" class="post-card block bg-stage-surface/30 border border-white/10 hover:border-white/20 p-5 rounded-2xl transition-all">
                 <div class="flex justify-between items-start gap-4">
                   <div class="space-y-2 flex-1">
                     <div class="flex items-center gap-3 mb-1">
-                      <span class="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-bold text-stage-text-sub uppercase tracking-wider">${item.post.type == 'Review' ? '리뷰' : '잡담'}</span>
+                      <span class="px-2 py-0.5 rounded bg-stage-surface text-[10px] font-bold text-stage-text-sub uppercase tracking-wider">${item.post.type == 'Review' ? '리뷰' : '잡담'}</span>
                       <span class="text-xs text-stage-text-sub">@${item.post.user.nickname}</span>
                     </div>
                     <h3 class="post-title font-bold text-xl transition-colors line-clamp-1">${item.post.title}</h3>
@@ -166,7 +167,7 @@
                     </div>
                   </div>
                   <c:if test="${not empty item.post.image}">
-                    <div class="w-24 h-24 rounded-xl overflow-hidden shrink-0 border border-slate-700">
+                    <div class="w-24 h-24 rounded-xl overflow-hidden shrink-0 border border-white/20">
                       <img src="${item.post.image}" class="w-full h-full object-cover" alt="thumb">
                     </div>
                   </c:if>
@@ -182,7 +183,7 @@
         <c:choose>
           <c:when test="${not empty user}">
             <!-- User Profile Card -->
-            <div class="bg-stage-surface border border-slate-700 p-6 rounded-2xl space-y-4">
+            <div class="bg-stage-surface border border-white/20 p-6 rounded-2xl space-y-4">
               <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-stage-primary/20 flex items-center justify-center border border-stage-primary/30">
                   <i class="bi bi-person-fill text-2xl text-stage-primary"></i>
@@ -193,20 +194,20 @@
                 </div>
               </div>
               <div class="grid grid-cols-2 gap-2">
-                <a href="${baseURL}/mypage/myBoard" class="bg-slate-800/50 hover:bg-slate-800 p-3 rounded-xl text-center transition-colors">
+                <a href="${baseURL}/mypage/myBoard" class="bg-stage-surface/80 hover:bg-stage-surface p-3 rounded-xl text-center transition-colors">
                   <p class="text-[10px] text-stage-text-sub font-bold uppercase mb-1">My Posts</p>
                   <p class="text-xl font-bold font-serif">${postCount}</p>
                 </a>
-                <a href="${baseURL}/mypage/myComment" class="bg-slate-800/50 hover:bg-slate-800 p-3 rounded-xl text-center transition-colors">
+                <a href="${baseURL}/mypage/myComment" class="bg-stage-surface/80 hover:bg-stage-surface p-3 rounded-xl text-center transition-colors">
                   <p class="text-[10px] text-stage-text-sub font-bold uppercase mb-1">Comments</p>
                   <p class="text-xl font-bold font-serif">${replyCount}</p>
                 </a>
               </div>
-              <a href="${baseURL}/mypage/myinfo" class="block w-full text-center py-2.5 rounded-xl border border-slate-700 text-sm font-bold hover:bg-slate-800 transition-all">MY PAGE</a>
+              <a href="${baseURL}/mypage/myinfo" class="block w-full text-center py-2.5 rounded-xl border border-white/20 text-sm font-bold hover:bg-stage-surface transition-all">MY PAGE</a>
             </div>
           </c:when>
           <c:otherwise>
-            <div class="bg-stage-surface border border-slate-700 p-6 rounded-2xl text-center space-y-4">
+            <div class="bg-stage-surface border border-white/20 p-6 rounded-2xl text-center space-y-4">
               <i class="bi bi-door-open text-4xl text-stage-text-sub"></i>
               <p class="text-sm text-stage-text-sub font-medium">로그인하고 더 많은<br>커뮤니티 기능을 즐겨보세요!</p>
               <a href="${baseURL}/login" class="block w-full bg-stage-primary hover:bg-rose-700 py-3 rounded-xl text-sm font-bold text-white transition-all">로그인 / 회원가입</a>
@@ -215,7 +216,7 @@
         </c:choose>
         
         <!-- Community Rules / Info -->
-        <div class="bg-slate-900/50 border border-slate-800/50 p-6 rounded-2xl">
+        <div class="bg-black/60 border border-white/5 p-6 rounded-2xl">
           <h4 class="text-sm font-bold mb-4 flex items-center gap-2"><i class="bi bi-info-circle text-stage-secondary"></i> 커뮤니티 가이드</h4>
           <ul class="text-xs text-stage-text-sub space-y-3">
             <li class="flex gap-2"><span>1.</span> 공연 관련 정보를 자유롭게 공유하세요.</li>
@@ -235,7 +236,7 @@
         <i class="bi bi-house-door text-xl"></i>
         <span>HOME</span>
       </a>
-      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-primary">
+      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-secondary">
         <i class="bi bi-chat-dots-fill text-xl"></i>
         <span>COMMUNITY</span>
       </a>
@@ -246,8 +247,8 @@
     </div>
   </nav>
 
-  <footer class="mt-20">
-    <p>&copy; Weiver 2023. All Rights Reserved.</p>
+  <footer class="mt-20 mb-10 text-center">
+    <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">&copy; Weiver 2023. THE STAGE IS YOURS.</p>
   </footer>
 
   <script>
@@ -264,9 +265,9 @@
       const buttons = document.querySelectorAll('.category-btn');
       
       buttons.forEach(btn => btn.classList.remove('active-tab', 'bg-stage-primary'));
-      buttons.forEach(btn => btn.classList.add('bg-stage-surface', 'hover:bg-slate-700'));
+      buttons.forEach(btn => btn.classList.add('bg-stage-surface', 'hover:bg-white/10'));
       button.classList.add('active-tab');
-      button.classList.remove('bg-stage-surface', 'hover:bg-slate-700');
+      button.classList.remove('bg-stage-surface', 'hover:bg-white/10');
 
       items.forEach(item => {
         if (category === '전체') {

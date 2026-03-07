@@ -16,16 +16,17 @@
         theme: {
           extend: {
             colors: {
+              'stage-gold-glow': '#FFD700',
               'stage-primary': '#BE123C',
-              'stage-secondary': '#FBBF24',
-              'stage-bg': '#0F172A',
-              'stage-surface': '#1E293B',
+              'stage-secondary': '#D4AF37',
+              'stage-bg': '#0a0a0a',
+              'stage-surface': '#1a1a1a',
               'stage-text': '#F8FAFC',
-              'stage-text-sub': '#94A3B8',
+              'stage-text-sub': '#a1a1aa',
             },
             fontFamily: {
               sans: ['Pretendard', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
+              serif: ['Cinzel', 'Playfair Display', 'serif'],
             },
           }
         }
@@ -33,8 +34,8 @@
     </script>
 
     <!-- Fonts & Icons -->
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <!-- JS -->
@@ -42,27 +43,27 @@
 
     <style>
       .glass-nav {
-        background: rgba(15, 23, 42, 0.7);
+        background: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
       }
       .post-content-area {
         line-height: 1.8;
         letter-spacing: -0.01em;
       }
       .comment-card {
-        background: rgba(30, 41, 59, 0.4);
+        background: rgba(26, 26, 26, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.05);
       }
       .rereply-card {
-        background: rgba(30, 41, 59, 0.2);
+        background: rgba(26, 26, 26, 0.2);
         border-left: 2px solid var(--stage-primary);
       }
     </style>
 </head>
 
-<body class="bg-stage-bg text-stage-text font-sans pb-32">
+<body class="bg-stage-bg text-stage-text font-sans pb-32" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
 
   <!-- Header -->
   <header class="fixed top-0 left-0 w-full z-50 glass-nav">
@@ -70,7 +71,7 @@
       <a href="${baseURL}/community" class="text-2xl hover:text-stage-secondary transition-colors">
         <i class="bi bi-chevron-left"></i>
       </a>
-      <span class="text-xl font-serif text-stage-primary tracking-tighter">WIEVER</span>
+      <span class="text-xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
       <div class="w-8"></div>
     </div>
   </header>
@@ -85,9 +86,9 @@
           <span class="px-2 py-0.5 rounded bg-stage-primary/20 text-[10px] font-bold text-stage-primary uppercase tracking-wider">${posts.type == 'Review' ? 'REVIEW' : 'CHAT'}</span>
         </div>
         <h1 class="text-3xl md:text-4xl font-bold leading-tight">${posts.title}</h1>
-        <div class="flex items-center justify-between py-4 border-y border-slate-800 text-sm">
+        <div class="flex items-center justify-between py-4 border-y border-white/10 text-sm">
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700">
+            <div class="w-8 h-8 rounded-full bg-stage-surface flex items-center justify-center border border-white/20">
               <i class="bi bi-person text-lg text-stage-text-sub"></i>
             </div>
             <span class="font-bold">@${posts.user.nickname}</span>
@@ -101,14 +102,14 @@
 
       <!-- Linked Musical (Optional) -->
       <c:if test="${posts.type eq 'Review'}">
-        <div class="bg-stage-surface/50 border border-slate-700 p-4 rounded-2xl flex items-center gap-4">
+        <div class="bg-stage-surface/50 border border-white/20 p-4 rounded-2xl flex items-center gap-4">
           <img src="${reviews.musical.posterImage}" class="w-16 aspect-[3/4] object-cover rounded-lg shadow-lg" alt="poster">
           <div class="flex-1">
             <p class="text-[10px] text-stage-secondary font-bold uppercase tracking-widest mb-1">Related Musical</p>
             <h4 class="font-bold text-lg leading-tight mb-1">${reviews.musical.title}</h4>
             <p class="text-xs text-stage-text-sub">${reviews.musical.theater}</p>
           </div>
-          <a href="${baseURL}/musicalDetail/${reviews.musical.id}" class="text-xs font-bold hover:text-stage-secondary underline underline-offset-4 decoration-slate-700 transition-colors">상세보기</a>
+          <a href="${baseURL}/musical-detail/${reviews.musical.id}" class="text-xs font-bold hover:text-stage-secondary underline underline-offset-4 decoration-stage-secondary/50 transition-colors">상세보기</a>
         </div>
       </c:if>
 
@@ -118,7 +119,7 @@
       </div>
 
       <c:if test="${not empty posts.image}">
-        <div class="rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+        <div class="rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
           <img src="${posts.image}" class="w-full h-auto" alt="post content">
         </div>
       </c:if>
@@ -126,7 +127,7 @@
       <!-- Interaction Bar -->
       <div class="flex items-center justify-center gap-6 py-10">
         <button onclick="handleButtonClick(${posts.id})" class="flex flex-col items-center gap-2 group transition-all active:scale-90">
-          <div class="w-16 h-16 rounded-full border-2 border-slate-800 flex items-center justify-center group-hover:border-stage-primary transition-all shadow-xl">
+          <div class="w-16 h-16 rounded-full border-2 border-white/10 flex items-center justify-center group-hover:border-stage-primary transition-all shadow-xl">
             <i class="bi ${not empty postLikeCheck ? 'bi-heart-fill text-stage-primary' : 'bi-heart'} text-2xl icon"></i>
           </div>
           <span class="text-[10px] font-bold text-stage-text-sub uppercase tracking-widest">LIKE</span>
@@ -135,8 +136,8 @@
 
       <!-- Post Controls (Owner Only) -->
       <c:if test="${user != null && user == posts.user.id}">
-        <div class="flex justify-end gap-3 pb-10 border-b border-slate-800">
-          <a href="${baseURL}/community/update/${posts.id}" class="text-xs font-bold px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-colors">수정하기</a>
+        <div class="flex justify-end gap-3 pb-10 border-b border-white/10">
+          <a href="${baseURL}/community/update/${posts.id}" class="text-xs font-bold px-4 py-2 rounded-lg bg-stage-surface hover:bg-white/10 transition-colors">수정하기</a>
           <button onclick="deletePost(${posts.id})" class="text-xs font-bold px-4 py-2 rounded-lg bg-rose-900/20 text-rose-500 hover:bg-rose-900/40 transition-colors">삭제하기</button>
         </div>
       </c:if>
@@ -164,7 +165,7 @@
               </div>
               <p class="text-sm leading-relaxed" id="commentContent_${replyItem.id}">${replyItem.content}</p>
               <div class="flex justify-end">
-                <a href="${baseURL}/community/${posts.id}/reply/${replyItem.id}" class="text-[10px] font-bold text-stage-text-sub hover:text-stage-secondary underline decoration-slate-700 underline-offset-4">REPLY</a>
+                <a href="${baseURL}/community/${posts.id}/reply/${replyItem.id}" class="text-[10px] font-bold text-stage-text-sub hover:text-stage-secondary underline decoration-stage-secondary/50 underline-offset-4">REPLY</a>
               </div>
             </div>
 
@@ -195,11 +196,11 @@
   </main>
 
   <!-- Comment Input (Fixed Bottom) -->
-  <div class="fixed bottom-16 left-0 w-full glass-nav px-4 py-4 z-40 border-t border-slate-800">
+  <div class="fixed bottom-16 left-0 w-full glass-nav px-4 py-4 z-40 border-t border-white/10">
     <div class="max-w-4xl mx-auto">
       <form action="/community/insert/reply/${posts.id}" method="post" onsubmit="return checkLogin()" class="flex gap-3">
         <input name="content" type="text" placeholder="작품에 대한 생각을 나눠보세요..." required
-          class="flex-1 bg-slate-900/50 border border-slate-700 rounded-xl py-3 px-4 focus:outline-none focus:border-stage-secondary transition-all text-sm">
+          class="flex-1 bg-black/60 border border-white/20 rounded-xl py-3 px-4 focus:outline-none focus:border-stage-secondary transition-all text-sm">
         <button type="submit" class="bg-stage-primary hover:bg-rose-700 text-white px-6 rounded-xl font-bold text-sm transition-all shadow-lg shadow-rose-900/20 shrink-0">
           등록
         </button>
@@ -214,7 +215,7 @@
         <i class="bi bi-house-door text-xl"></i>
         <span>HOME</span>
       </a>
-      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-primary">
+      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-secondary">
         <i class="bi bi-chat-dots-fill text-xl"></i>
         <span>COMMUNITY</span>
       </a>
@@ -225,6 +226,10 @@
     </div>
   </nav>
 
+  <footer class="mt-20 mb-10 text-center">
+    <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">&copy; Weiver 2023. THE STAGE IS YOURS.</p>
+  </footer>
+
   <!-- JS Scripts (Keep original logic but adapt to new classes if needed) -->
   <script>
     $(function() {
@@ -232,7 +237,7 @@
         var commentId = $(this).closest('.comment-card').data('comment-id');
         var txt = $('#commentContent_' + commentId).text();
         $('#commentContent_' + commentId).html(
-          "<textarea rows='3' id='textarea1_"+commentId+"' class='w-full bg-slate-800 p-3 rounded-lg mt-2 text-sm focus:outline-none focus:border-stage-secondary border border-slate-700'>"+txt+"</textarea>"
+          "<textarea rows='3' id='textarea1_"+commentId+"' class='w-full bg-stage-surface p-3 rounded-lg mt-2 text-sm focus:outline-none focus:border-stage-secondary border border-white/20'>"+txt+"</textarea>"
         );
       });
 
@@ -240,7 +245,7 @@
         var recommentId = $(this).closest('.rereply-card').data('recomment-id');
         var txt = $('#recommentContent_' + recommentId).text();
         $('#recommentContent_' + recommentId).html(
-          "<textarea rows='3' id='textarea2_"+recommentId+"' class='w-full bg-slate-800 p-3 rounded-lg mt-2 text-xs focus:outline-none focus:border-stage-secondary border border-slate-700'>"+txt+"</textarea>"
+          "<textarea rows='3' id='textarea2_"+recommentId+"' class='w-full bg-stage-surface p-3 rounded-lg mt-2 text-xs focus:outline-none focus:border-stage-secondary border border-white/20'>"+txt+"</textarea>"
         );
       });
 

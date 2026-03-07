@@ -246,6 +246,12 @@ public class CrawlingService {
 
             for (int i = 0; i < profileImages.size(); i++) {
                 String src = profileImages.get(i).attr("src");
+                
+                // 썸네일(_s.jpg)을 원본 고화질 이미지(.jpg)로 변환
+                if (src != null && src.contains("_s.")) {
+                    src = src.replace("_s.", ".");
+                }
+                
                 String id = IdAndName.get(i).attr("href").split("=")[1];
                 String name = IdAndName.get(i).text();
 

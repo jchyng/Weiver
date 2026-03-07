@@ -58,8 +58,13 @@ public class CommunityController {
        String userName = (String) session.getAttribute("userNickname");
 
        String userId = (String) session.getAttribute("userId");
-       int postCount = userService.countPostsByUserId(userId);
-       int replyCount = userService.countRepliesByUserId(userId);
+       int postCount = 0;
+       int replyCount = 0;
+       
+       if (userId != null) {
+           postCount = userService.countPostsByUserId(userId);
+           replyCount = userService.countRepliesByUserId(userId);
+       }
 
 
 	   session.setAttribute("user", userName);

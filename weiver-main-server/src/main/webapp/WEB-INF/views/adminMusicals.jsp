@@ -3,150 +3,153 @@
 <%@ include file="config.jsp" %>
 
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Admin - Musical</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link href="../css/styles.css" rel="stylesheet" />
-        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    </head>
-    <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="/admin/main"><img src="../img/image-removebg-preview.png" width="200px" height="70px"></a>
-            <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-            <!-- Navbar Search-->
-            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-                </div>
-            </form>
-            <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">안녕하세요 ${sessionScope.adminName }님  <i class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="${baseURL}/admin/logout">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-        <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Addons</div>
-                            <a class="nav-link" href="${baseURL}/admin/getAllActors">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                배우
-                            </a>
-                            <a class="nav-link" href="${baseURL}/admin/getAllMusicals">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                뮤지컬
-                            </a>
-                            <a class="nav-link" href="${baseURL}/admin/getAllUsers">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                               유저
-                            </a>
-                            <a class="nav-link" href="${baseURL}/admin/getAllAdmins">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                관리자
-                            </a>
-                            <a class="nav-link" href="${baseURL}/admin/getAllPosts">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                               게시글
-                            </a>
-                            <a class="nav-link" href="${baseURL}/admin/getAllInquirys">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                문의
-                            </a>
-                        </div>
-                    </div>
-                    <div class="sb-sidenav-footer">
-                        <div class="small">Logged in as:</div>
-                        ${sessionScope.adminId}
-                    </div>
-                </nav>
-            </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div style="height:10px"></div>
-                    <div class="container-fluid px-4">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i>
-                                	뮤지컬 정보
-                            </div>
-                            <div class="card-body">
-                                <table id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>이미지</th>
-                                            <th>ID</th>
-                                            <th>제목</th>
-                                            <th>극장</th>
-                                            <th>기간</th>
-                                            <th>제한 연령</th>
-                                            <th>상영 시간</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>이미지</th>
-                                            <th>ID</th>
-                                            <th>제목</th>
-                                            <th>극장</th>
-                                            <th>기간</th>
-                                            <th>제한 연령</th>
-                                            <th>상영 시간</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                    	<c:forEach var="musical" items="${musicals}">
-                                    		<tr>
-                                    			<td><img src="${musical.posterImage }" height="150" width="120"></td>
-                                    			<td>${musical.id}</td>
-                                    			<td>${musical.title }</td>
-                                    			<td>${musical.theater }</td>
-                                    			<td>${musical.stDate } ~ ${musical.edDate }</td>
-                                    			<td>${musical.viewAge }</td>
-                                    			<td>${musical.runningTime }</td>
-                                    		</tr>
-                                    	</c:forEach>                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </main>
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
-            </div>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>WIEVER Admin - 뮤지컬</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+              'stage-gold-glow': '#FFD700',
+            'stage-primary': '#BE123C',
+            'stage-secondary': '#D4AF37',
+            'stage-bg': '#0a0a0a',
+            'stage-surface': '#1a1a1a',
+            'stage-text': '#F8FAFC',
+            'stage-text-sub': '#a1a1aa',
+          },
+          fontFamily: { sans: ['Pretendard', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
+
+  <style>
+    body { display: flex; min-height: 100vh; }
+    #sidebar { width: 240px; min-height: 100vh; flex-shrink: 0; }
+    #main-content { flex: 1; min-height: 100vh; overflow-x: auto; }
+    .nav-link-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; color: #94A3B8; transition: all 0.15s; margin: 2px 8px; }
+    .nav-link-item:hover { background: rgba(255,255,255,0.06); color: #F8FAFC; border-left: 3px solid rgba(212,175,55,0.3); }
+    .nav-link-item.active { background: rgba(190,18,60,0.15); color: #BE123C; border-left: 3px solid #D4AF37; }
+    /* DataTables override */
+    .dataTable-wrapper { color: #F8FAFC; }
+    .dataTable-wrapper .dataTable-search input,
+    .dataTable-wrapper .dataTable-selector { background: #1E293B; border: 1px solid #334155; color: #F8FAFC; border-radius: 8px; padding: 6px 12px; }
+    .dataTable-table { width: 100%; border-collapse: collapse; }
+    .dataTable-table th { background: #1E293B; color: #94A3B8; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 12px 16px; border-bottom: 1px solid #334155; }
+    .dataTable-table td { padding: 12px 16px; border-bottom: 1px solid rgba(51,65,85,0.5); font-size: 14px; vertical-align: middle; }
+    .dataTable-table tr:hover td { background: rgba(255,255,255,0.03); }
+    .dataTable-pagination-list li a { color: #94A3B8; border-radius: 6px; }
+    .dataTable-pagination-list .active a { background: #BE123C; color: #fff; }
+  </style>
+</head>
+
+<body class="bg-stage-bg text-stage-text font-sans" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="bg-stage-surface border-r border-white/10 flex flex-col">
+    <!-- Logo -->
+    <div class="px-6 py-6 border-b border-stage-secondary/30">
+      <h1 class="text-2xl font-serif text-stage-primary tracking-tighter">WIEVER</h1>
+      <p class="text-[10px] text-stage-text-sub font-bold tracking-widest uppercase mt-0.5">Admin Dashboard</p>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 py-4 overflow-y-auto">
+      <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest px-6 mb-3 mt-2">데이터 관리</p>
+      <a href="${baseURL}/admin/getAllActors" class="nav-link-item"><i class="bi bi-person-video3"></i> 배우</a>
+      <a href="${baseURL}/admin/getAllMusicals" class="nav-link-item active"><i class="bi bi-music-note-beamed"></i> 뮤지컬</a>
+      <a href="${baseURL}/admin/getAllUsers" class="nav-link-item"><i class="bi bi-people"></i> 유저</a>
+      <a href="${baseURL}/admin/getAllAdmins" class="nav-link-item"><i class="bi bi-shield-check"></i> 관리자</a>
+      <a href="${baseURL}/admin/getAllPosts" class="nav-link-item"><i class="bi bi-journals"></i> 게시글</a>
+      <a href="${baseURL}/admin/getAllInquirys" class="nav-link-item"><i class="bi bi-question-circle"></i> 문의</a>
+      <a href="${baseURL}/admin/crawling" class="nav-link-item"><i class="bi bi-arrow-repeat"></i> 크롤링 상태</a>
+    </nav>
+
+    <!-- Admin Info -->
+    <div class="px-4 py-4 border-t border-stage-secondary/20">
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-black/60">
+        <div class="w-8 h-8 rounded-full bg-stage-primary/20 flex items-center justify-center border border-stage-primary/30 flex-shrink-0">
+          <i class="bi bi-person-fill text-stage-primary text-sm"></i>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="../js/scripts.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-        <script src="../js/datatables-simple-demo.js"></script>
-    </body>
+        <div class="overflow-hidden">
+          <p class="text-[10px] text-stage-text-sub font-bold uppercase leading-none mb-0.5">Logged in</p>
+          <p class="text-sm font-bold truncate">${sessionScope.adminId}</p>
+        </div>
+      </div>
+      <a href="${baseURL}/admin/logout" class="flex items-center gap-2 mt-3 px-3 py-2 rounded-xl text-stage-text-sub hover:text-rose-400 hover:bg-rose-900/10 transition-all text-sm font-bold">
+        <i class="bi bi-box-arrow-right"></i> 로그아웃
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div id="main-content" class="flex flex-col">
+    <!-- Top Bar -->
+    <header class="h-16 bg-stage-surface/50 border-b border-stage-secondary/20 flex items-center justify-between px-6 flex-shrink-0">
+      <div class="flex items-center gap-3">
+        <i class="bi bi-music-note-beamed text-stage-secondary text-xl"></i>
+        <div>
+          <h2 class="text-lg font-bold leading-none">뮤지컬 목록</h2>
+          <p class="text-[11px] text-stage-text-sub mt-0.5">Musical Management</p>
+        </div>
+      </div>
+      <span class="text-sm text-stage-text-sub font-bold">안녕하세요, <span class="text-stage-text">${sessionScope.adminName}</span>님</span>
+    </header>
+
+    <!-- Table Content -->
+    <main class="flex-1 p-6">
+      <div class="bg-stage-surface/40 border border-white/10 rounded-2xl overflow-hidden">
+        <div class="p-5 border-b border-white/10">
+          <span class="text-xs font-bold text-stage-text-sub uppercase tracking-widest">Total Musicals</span>
+        </div>
+        <div class="p-5 overflow-x-auto">
+          <table id="datatablesSimple">
+            <thead>
+              <tr>
+                <th>이미지</th>
+                <th>ID</th>
+                <th>제목</th>
+                <th>극장</th>
+                <th>기간</th>
+                <th>관람 연령</th>
+                <th>러닝 타임</th>
+              </tr>
+            </thead>
+            <tbody>
+              <c:forEach var="musical" items="${musicals}">
+                <tr>
+                  <td><img src="${musical.posterImage}" class="rounded-lg object-cover" height="90" width="65" alt="poster"></td>
+                  <td class="text-stage-text-sub text-xs">${musical.id}</td>
+                  <td class="font-bold">${musical.title}</td>
+                  <td class="text-stage-text-sub text-sm">${musical.theater}</td>
+                  <td class="text-sm text-stage-text-sub whitespace-nowrap">${musical.stDate} ~ ${musical.edDate}</td>
+                  <td class="text-sm">${musical.viewAge}</td>
+                  <td class="text-sm">${musical.runningTime}</td>
+                </tr>
+              </c:forEach>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+
+    <footer class="py-4 px-6 text-center text-[10px] text-stage-text-sub font-bold uppercase tracking-[0.15em] border-t border-stage-secondary/20">
+      &copy; Weiver 2023. Admin Panel.
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
+  <script>
+    const dataTable = new simpleDatatables.DataTable("#datatablesSimple", { searchable: true, fixedHeight: false });
+  </script>
+</body>
 </html>

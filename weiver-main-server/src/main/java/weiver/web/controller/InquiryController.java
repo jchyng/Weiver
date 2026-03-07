@@ -23,14 +23,21 @@ public class InquiryController {
 
     @Autowired
     private InquiryService inquiryService;
+    
+    @Autowired
     private AdminService adminService;
 
     // 문의하기
     @GetMapping("/inquiryMain")
     public String inquiry(HttpSession session, Model model) {
     	String userId = (String) session.getAttribute("userId");
-        List<Inquiry> inquiryList = inquiryService.findByUserId(userId);
-        model.addAttribute(inquiryList);
+    	List<Inquiry> inquiryList = null;
+    	
+    	if (userId != null) {
+    		inquiryList = inquiryService.findByUserId(userId);
+    	}
+    	
+        model.addAttribute("inquiryList", inquiryList);
 
         return "inquiry";
     }

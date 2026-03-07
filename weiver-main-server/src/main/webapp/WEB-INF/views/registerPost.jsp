@@ -3,323 +3,265 @@
 <%@ include file="config.jsp" %>
 
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
-	<meta charset="UTF-8">
-	<meta name=“viewport” content=“width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no”>
-	<title>글 작성 페이지</title>
-	
-	<!--css 연결-->
-	<link rel="stylesheet" href="/css/posting.css">
-    <link rel="stylesheet" href="/css/public.css">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WIEVER - 글 작성</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+              'stage-gold-glow': '#FFD700',
+            'stage-primary': '#BE123C',
+            'stage-secondary': '#D4AF37',
+            'stage-bg': '#0a0a0a',
+            'stage-surface': '#1a1a1a',
+            'stage-text': '#F8FAFC',
+            'stage-text-sub': '#a1a1aa',
+          },
+          fontFamily: {
+            sans: ['Pretendard', 'sans-serif'],
+            serif: ['Cinzel', 'Playfair Display', 'serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  <style>
+    .glass-nav {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+    .input-base {
+      width: 100%;
+      background: rgba(10, 10, 10, 0.5);
+      border: 1px solid rgb(51, 65, 85);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      color: #F8FAFC;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-base:focus {
+      border-color: #FBBF24;
+    }
+    .musical-item:hover {
+      background: rgba(26, 26, 26, 0.8);
+    }
+  </style>
 </head>
 
-<body>
-<script type="text/javascript">
+<body class="bg-stage-bg text-stage-text font-sans pb-24 min-h-screen" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
 
-var musicalsData = [
-    <c:forEach var="musical" items="${musicals}">
+  <script type="text/javascript">
+    var musicalsData = [
+      <c:forEach var="musical" items="${musicals}">
         {
-            id: '${musical.id}',
-            title: `${musical.title.replace('\\',"")}`,
-            theater: '${musical.theater}',
-            posterImage: '${musical.posterImage}',
-            stDate: '${musical.stDate}',
-            edDate: '${musical.edDate}'
+          id: '${musical.id}',
+          title: `${musical.title.replace('\\',"")}`,
+          theater: '${musical.theater}',
+          posterImage: '${musical.posterImage}',
+          stDate: '${musical.stDate}',
+          edDate: '${musical.edDate}'
         },
-    </c:forEach>
-];
+      </c:forEach>
+    ];
 
-function loadFile(input) {
-	var file = input.files[0];	//선택된 파일 가져오기
-
-	//미리 만들어 놓은 div에 text(파일 이름) 추가
-	var name = document.getElementById('fileName');
-	name.textContent = file.name;
-
-	//새로운 이미지 div 추가
-	var newImage = document.createElement("img");
-	newImage.setAttribute("class", 'img');
-
-	//이미지 source 가져오기
-	newImage.src = URL.createObjectURL(file);
-
-	newImage.style.width = "70%";
-	newImage.style.height = "70%";
-	newImage.style.visibility = "hidden";   //버튼을 누르기 전까지는 이미지를 숨긴다
-	newImage.style.objectFit = "contain";
-
-	//이미지를 image-show div에 추가
-	var container = document.getElementById('image-show');
-	container.appendChild(newImage);
-}
-
-function handleMusicalItemClick(musicalId) {
-    console.log("Clicked on musical with ID:", musicalId);
-
-    // Hide the search box and musical list container
-    var searchBox = document.getElementById("searchBox");
-    searchBox.style.display = "none";
-
-    var musicalInfoContainer = document.getElementById("musicalInfoContainer");
-    musicalInfoContainer.style.display = "none";
-
-    // Show the musical information container
-    var musicalDetailContainer = document.getElementById("musicalDetailContainer");
-    musicalDetailContainer.style.display = "block";
-    musicalDetailContainer.style.backgroundColor = "#172036";
-    musicalDetailContainer.style.padding = "20px";
-    musicalDetailContainer.style.borderRadius = "10px";
-    musicalDetailContainer.style.marginTop = "10px";
-    musicalDetailContainer.style.color = "#fff";
-    musicalDetailContainer.style.fontSize = "18px";
-    musicalDetailContainer.style.textAlign = "center";
-
-    // Find the selected musical by its ID in the musicalsData array
-    var selectedMusical = musicalsData.find(function (musical) {
-        return musical.id === musicalId;
-    });
-
-    console.log("selectedMusical: ", selectedMusical);
-
-    // Populate the musical information container with the details
-    if (selectedMusical) {
-    
-        var musicalPosterElement = document.createElement("img");
-        musicalPosterElement.src = selectedMusical.posterImage;
-        musicalPosterElement.alt = "Musical Poster";
-        musicalPosterElement.style.height = "120px";
-        musicalPosterElement.style.width = "85px";
-
-        var musicalTitleElement = document.createElement("h2");
-        musicalTitleElement.textContent = selectedMusical.title;
-        musicalTitleElement.style.fontSize = "25px";
-        musicalTitleElement.style.backgroundColor = "#172036";
-        musicalTitleElement.style.textAlign = "center";
-        musicalTitleElement.style.marginTop = "-5px";
-
-        var musicalTheaterElement = document.createElement("p");
-        musicalTheaterElement.textContent = selectedMusical.theater;
-        musicalTheaterElement.style.backgroundColor = "#172036";
-        musicalTheaterElement.style.fontSize = "15px";
-        musicalTheaterElement.style.textAlign = "center";
-
-        // Append the elements to the musicalDetailContainer
-        musicalDetailContainer.innerHTML = ""; // Clear previous content
-        musicalDetailContainer.appendChild(musicalTitleElement);
-        musicalDetailContainer.appendChild(musicalTheaterElement);
-        musicalDetailContainer.appendChild(musicalPosterElement);
-
-        // Set the selected musical's ID to the hidden input
-        var musicalIdInput = document.getElementById("musicalIdInput");
-        musicalIdInput.value = musicalId;
+    function loadFile(input) {
+      var file = input.files[0];
+      var name = document.getElementById('fileName');
+      name.textContent = file.name;
+      var preview = document.getElementById('image-preview');
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove('hidden');
     }
-}
 
+    function handleMusicalItemClick(musicalId) {
+      document.getElementById("searchBox").value = "";
+      document.getElementById("searchBox").style.display = "none";
+      document.getElementById("musicalInfoContainer").style.display = "none";
+
+      var selectedMusical = musicalsData.find(function(m) { return m.id === musicalId; });
+      if (selectedMusical) {
+        document.getElementById("musicalDetailContainer").style.display = "flex";
+        document.getElementById("selected-poster").src = selectedMusical.posterImage;
+        document.getElementById("selected-title").textContent = selectedMusical.title;
+        document.getElementById("selected-theater").textContent = selectedMusical.theater;
+        document.getElementById("musicalIdInput").value = musicalId;
+
+        // Re-show search box for changing selection
+        document.getElementById("searchBox").style.display = "block";
+      }
+    }
 
     function handleSearchBoxChange() {
-        var searchTerm = document.getElementById("searchBox").value;
+      var searchTerm = document.getElementById("searchBox").value;
+      var filteredMusicals = musicalsData.filter(function(m) {
+        return m.title.toLowerCase().includes(searchTerm.toLowerCase());
+      });
 
-        // 뮤지컬 키워드에 해당하는 뮤지컬 리스트 필터링
-        var filteredMusicals = musicalsData.filter(function (musical) {
-            return musical.title.toLowerCase().includes(searchTerm.toLowerCase());
-        });
+      var container = document.getElementById("musicalInfoContainer");
+      container.innerHTML = "";
 
-        // 검색 리스트 초기화 후 새로운 검색 결과로 다시 채우기
-        var musicalInfoContainer = document.getElementById("musicalInfoContainer");
-        musicalInfoContainer.innerHTML = "";
+      if (searchTerm.length === 0) {
+        container.style.display = "none";
+        return;
+      }
 
-        filteredMusicals.forEach(function (musical) {
-            var musicalElement = document.createElement("li");
+      filteredMusicals.forEach(function(musical) {
+        var item = document.createElement("div");
+        item.className = "musical-item flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all";
+        item.innerHTML = '<img src="' + musical.posterImage + '" class="w-12 h-16 object-cover rounded-lg flex-shrink-0" alt="poster">' +
+          '<div><p class="font-bold text-sm">' + musical.title + '</p><p class="text-xs text-stage-text-sub">' + musical.theater + '</p></div>';
+        item.addEventListener("click", function() { handleMusicalItemClick(musical.id); });
+        container.appendChild(item);
+      });
 
-            var imgElement = document.createElement("img");
-            imgElement.src = musical.posterImage;
-            imgElement.alt = "poster";
-            imgElement.style.marginRight = "20px";
-            imgElement.style.height = "120px";
-            imgElement.style.width = "85px";
-            imgElement.style.float = "left";
-
-            var h2Element = document.createElement("h2");
-            h2Element.textContent = musical.title;
-            h2Element.style.padding = "0";
-            h2Element.style.marginTop = "10px";
-            h2Element.style.textAlign = "left";
-            h2Element.style.fontSize = "20px";
-            h2Element.style.backgroundColor = "#172036";
-
-            var spanElement = document.createElement("span");
-            spanElement.textContent = musical.stDate + " ~ " + musical.edDate;
-            spanElement.style.backgroundColor = "#172036";
-            spanElement.style.fontSize = "15px";
-
-            musicalElement.appendChild(imgElement);
-            musicalElement.appendChild(h2Element);
-            musicalElement.appendChild(spanElement);
-
-            musicalElement.style.backgroundColor = "#172036";
-            musicalElement.style.height = "120px";
-            musicalElement.style.padding = "10px";
-            musicalElement.style.borderRadius = "10px";
-            musicalElement.style.marginBottom = "10px";
-            musicalElement.style.marginTop = "10px";
-
-            musicalElement.addEventListener("click", function () {
-                handleMusicalItemClick(musical.id);
-            });
-
-            musicalInfoContainer.appendChild(musicalElement);
-        });
-
-        musicalInfoContainer.style.display = "block";
+      container.style.display = "block";
     }
 
     function postTypeChange() {
-        let selectFormType = document.getElementById("selectFormType");
-
-        let formType = selectFormType.options[selectFormType.selectedIndex].value;
-        if (formType === 'Review') {
-            document.getElementById("reviewForm").style.display = "";
-            document.getElementById("reviewPerformance").required = "required";
-            console.log("Review");
-        } else if (formType === 'Chat') {
-            document.getElementById("reviewForm").style.display = "none";
-            document.getElementById("reviewPerformance").required = "";
-            console.log("Chat");
-        }
+      var formType = document.getElementById("selectFormType").value;
+      var reviewForm = document.getElementById("reviewForm");
+      var reviewPerformance = document.getElementById("reviewPerformance");
+      if (formType === 'Review') {
+        reviewForm.style.display = "block";
+        reviewPerformance.required = true;
+      } else {
+        reviewForm.style.display = "none";
+        reviewPerformance.required = false;
+      }
     }
+  </script>
 
-   
-</script>
+  <!-- Header -->
+  <header class="fixed top-0 left-0 w-full z-50 glass-nav">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="${baseURL}/community" class="text-2xl hover:text-stage-secondary transition-colors">
+        <i class="bi bi-chevron-left"></i>
+      </a>
+      <span class="text-xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
+      <div class="w-8"></div>
+    </div>
+  </header>
 
+  <main class="max-w-2xl mx-auto px-4 pt-24 pb-10">
 
-	<!-- 전체 컨테이너 -->
-    <div class="backgroudBox">
+    <!-- Page Title -->
+    <div class="mb-8">
+      <span class="text-stage-secondary font-bold tracking-[0.2em] uppercase text-xs">Community</span>
+      <h1 class="text-3xl font-bold mt-1">글 작성하기</h1>
+    </div>
 
-        <!-- 헤더 -->
-        <header>
-            <img src="/img/logo.png" alt="logo" height="70" width="300" />
-        </header>
+    <form action="${baseURL}/community/board" method="post" enctype="multipart/form-data" class="space-y-6">
 
-        <!-- 뒤로가기 버튼 -->
-        <div class="backBtn">
-            <a href="${baseURL}/community">
-                <i class="bi-chevron-left"></i>
-            </a>
-			<div class="nameTag">
-				<h1>글 작성하기</h1>
-			</div>
+      <!-- Post Type Select -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">글 종류</label>
+        <div class="relative">
+          <select id="selectFormType" name="type" onchange="postTypeChange()"
+            class="w-full bg-black/60 border border-white/20 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all appearance-none text-stage-text">
+            <option value="select" disabled selected>글 종류를 선택하세요</option>
+            <option value="Chat">잡담</option>
+            <option value="Review">리뷰</option>
+          </select>
+          <i class="bi bi-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-stage-text-sub pointer-events-none"></i>
         </div>
+      </div>
 
-	    <br>
+      <!-- Musical Search (Review only) -->
+      <div id="reviewForm" style="display: none" class="space-y-3">
+        <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">작품명</label>
+        <div class="relative">
+          <input type="text" id="searchBox" placeholder="뮤지컬 제목을 검색하세요..." autocomplete="off" oninput="handleSearchBoxChange()"
+            class="w-full bg-black/60 border border-white/20 rounded-xl py-4 px-4 pl-10 focus:outline-none focus:border-stage-secondary transition-all placeholder-stage-text-sub">
+          <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-stage-text-sub"></i>
+        </div>
+        <input type="hidden" name="musicalId" id="reviewPerformance">
 
-		<form action="${baseURL}/community/board" method="post" enctype="multipart/form-data">
-				<div class="selectbtn">	
-					<!-- 셀렉트 버튼(리뷰, 잡담) -->
-					<select id="selectFormType" name="type" onchange="postTypeChange()">
-						<option value="select" disabled>글 종류</option>
-                        <option value="Chat">잡담</option>
-                        <option value="Review">리뷰</option>
-					</select>
-				</div>
+        <!-- Search Results Dropdown -->
+        <div id="musicalInfoContainer" class="bg-stage-surface border border-white/20 rounded-2xl p-2 space-y-1 max-h-64 overflow-y-auto" style="display: none"></div>
 
-				<br>
-				
-				<!-- 제목 작성 칸-->
-				<span>제목</span>
-				<div>
-					<textarea class="title" name="title" id="title" required></textarea>
-				</div>
+        <!-- Selected Musical Preview -->
+        <div id="musicalDetailContainer" class="hidden bg-stage-surface/50 border border-white/20 p-4 rounded-2xl items-center gap-4">
+          <img id="selected-poster" src="" class="w-16 aspect-[3/4] object-cover rounded-lg shadow-lg" alt="poster">
+          <div>
+            <p class="text-[10px] text-stage-secondary font-bold uppercase tracking-widest mb-1">Selected</p>
+            <h4 id="selected-title" class="font-bold text-lg leading-tight"></h4>
+            <p id="selected-theater" class="text-xs text-stage-text-sub"></p>
+          </div>
+        </div>
+        <input type="hidden" name="musicalId" id="musicalIdInput" value="">
+      </div>
 
+      <!-- Title -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">제목</label>
+        <input type="text" name="title" required placeholder="글 제목을 입력하세요"
+          class="w-full bg-black/60 border border-white/20 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all placeholder-stage-text-sub">
+      </div>
 
-				<!-- 작품 명 작성칸 -->
-				<div align="left" id="reviewForm" style="display:none">
-				    <br>
-				    작품명
-				    <div>
-				        <input
-				            type="text"
-				            id="searchBox"
-				            placeholder="작품명을 입력해주세요."
-				            autocomplete="off"
-				            oninput="handleSearchBoxChange()"
-				        />
-				    </div>
-				    <div id="musicalInfoContainer">
-				    </div>
-				    <div id="musicalDetailContainer"  style="display: none;">
-					</div>
-				</div>
-				
-				
-				<br>
+      <!-- Content -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">내용</label>
+        <textarea name="content" id="editor" rows="10" placeholder="내용을 입력하세요..."
+          class="w-full bg-black/60 border border-white/20 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all placeholder-stage-text-sub resize-none leading-relaxed"></textarea>
+      </div>
 
-				<!-- 내용 작성칸 -->
-				<span>내용</span>
-				
-					<!-- 내용 작성칸(편집 버튼: 굵기, 이탤릭, 언더라인 등) -->
-					<!--  <div class="editor-menu">
-						<button id="btn-bold" name="reviewTool" type="button">
-							<b>B</b>
-						</button>
-						<button id="btn-italic" name="reviewTool" type="button">
-							<i>I</i>
-						</button>
-						<button id="btn-underline" name="reviewTool" type="button">
-							<u>U</u>
-						</button>
-						<button id="btn-strike" name="reviewTool" type="button">
-							<s>S</s>
-						</button>
-						<button id="btn-ordered-list" name="reviewTool" type="button">
-							OL
-						</button>
-						<button id="btn-unordered-list" name="reviewTool" type="button">
-							UL
-						</button>
-						<button id="btn-image" name="reviewTool" type="button">
-							IMG
-						</button>
-					</div>-->
+      <!-- Image Upload -->
+      <div class="space-y-2">
+        <label class="text-xs font-bold text-stage-text-sub uppercase tracking-widest ml-1">이미지 첨부</label>
+        <label for="imageUpload" class="flex items-center gap-4 bg-black/60 border border-white/20 border-dashed rounded-xl py-5 px-4 cursor-pointer hover:border-stage-secondary transition-all">
+          <i class="bi bi-image text-2xl text-stage-text-sub"></i>
+          <div>
+            <p id="fileName" class="text-sm font-medium text-stage-text-sub">클릭하여 이미지를 선택하세요</p>
+            <p class="text-[10px] text-stage-text-sub/60">PNG, JPG, GIF 지원</p>
+          </div>
+        </label>
+        <input type="file" id="imageUpload" name="file" accept="image/*" required class="hidden" onchange="loadFile(this)">
+        <img id="image-preview" src="" class="hidden w-full rounded-2xl mt-3 border border-white/20" alt="preview">
+      </div>
 
-					
-						<!-- 내용칸 -->
-					<div>
-						<textarea name="content" type="text" class="content" id="editor"></textarea>
-					</div>
-					
-					<input type="hidden" name="musicalId" id="musicalIdInput" value="">
+      <!-- Submit -->
+      <button type="submit" class="w-full bg-stage-primary hover:bg-rose-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-rose-900/20 transition-all transform active:scale-[0.98]">
+        <i class="bi bi-pencil-square mr-2"></i>작성하기
+      </button>
 
-					<%--이미지 파일 업로드--%>
-					<input type="file" id="imageUpload" name="file" required onchange="loadFile(this)">
-				<br>
-				<!-- 작성하기 버튼 -->
-				<div class="nameTag">
-				
-					<input type="submit" value="작성하기" class="submit-btn">
-				
-				</div>
-			</form>
+    </form>
+  </main>
 
-			
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 left-0 w-full glass-nav z-50">
+    <div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between text-stage-text-sub text-[10px] font-bold">
+      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
+        <i class="bi bi-house-door text-xl"></i>
+        <span>HOME</span>
+      </a>
+      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-secondary">
+        <i class="bi bi-chat-dots-fill text-xl"></i>
+        <span>COMMUNITY</span>
+      </a>
+      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
+        <i class="bi bi-person text-xl"></i>
+        <span>MY PAGE</span>
+      </a>
+    </div>
+  </nav>
 
-<footer>Copyright Weiver 2023 All Rights Reserved</footer>
+  <footer class="mt-10 mb-10 text-center text-[10px] text-center">
+    <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">&copy; Weiver 2023. THE STAGE IS YOURS.</p>
+  </footer>
 
-<nav>
-    <a href="${baseURL}/main"><i class="bi bi-house-door-fill"></i>
-        <div>HOME</div>
-    </a>
-    <a href="${baseURL}/community"><i class="bi bi-chat-dots-fill"></i>
-        <div>COMMUNITY</div>
-    </a>
-    <a href="${baseURL}/mypage/myinfo"><i class="bi bi-person-fill"></i>
-        <div>MY PAGE</div>
-    </a>
-</nav>
-
-</div>
 </body>
-
 </html>

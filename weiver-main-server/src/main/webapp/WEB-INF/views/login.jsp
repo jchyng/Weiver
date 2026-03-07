@@ -15,16 +15,17 @@
         theme: {
           extend: {
             colors: {
+              'stage-gold-glow': '#FFD700',
               'stage-primary': '#BE123C',
-              'stage-secondary': '#FBBF24',
-              'stage-bg': '#0F172A',
-              'stage-surface': '#1E293B',
+              'stage-secondary': '#D4AF37',
+              'stage-bg': '#0a0a0a',
+              'stage-surface': '#1a1a1a',
               'stage-text': '#F8FAFC',
-              'stage-text-sub': '#94A3B8',
+              'stage-text-sub': '#a1a1aa',
             },
             fontFamily: {
               sans: ['Pretendard', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
+              serif: ['Cinzel', 'Playfair Display', 'serif'],
             },
           }
         }
@@ -33,7 +34,7 @@
 
     <!-- Fonts & Icons -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <!-- axios -->
@@ -42,12 +43,13 @@
     <style>
       .login-bg {
         background: radial-gradient(circle at top right, rgba(190, 18, 60, 0.15), transparent),
-                    radial-gradient(circle at bottom left, rgba(251, 191, 36, 0.05), transparent);
+                    radial-gradient(circle at bottom left, rgba(212, 175, 55, 0.05), transparent);
       }
       .glass-card {
-        background: rgba(30, 41, 59, 0.7);
+        background: rgba(26, 26, 26, 0.7);
         backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+        box-shadow: 0 0 40px rgba(0,0,0,0.8), 0 0 15px rgba(212, 175, 55, 0.05);
       }
       .input-field:focus + label,
       .input-field:not(:placeholder-shown) + label {
@@ -57,14 +59,14 @@
     </style>
 </head>
 
-<body class="bg-stage-bg text-stage-text font-sans min-h-screen flex flex-col login-bg">
+<body class="bg-stage-bg text-stage-text font-sans min-h-screen flex flex-col login-bg" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
 
   <main class="flex-1 flex items-center justify-center p-6">
     <div class="w-full max-w-md animate-fade-in">
       
       <!-- Logo Section -->
       <div class="text-center mb-10">
-        <h1 class="text-5xl font-serif text-stage-primary tracking-tighter mb-2">WIEVER</h1>
+        <h1 class="text-5xl font-serif text-stage-secondary tracking-tighter mb-2 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">WIEVER</h1>
         <p class="text-stage-text-sub text-sm font-medium tracking-widest uppercase">The Stage is Yours</p>
       </div>
 
@@ -75,13 +77,13 @@
         <form id="login-form" class="space-y-6">
           <div class="relative">
             <input type="email" name="userId" placeholder=" " required
-              class="input-field w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all peer">
+              class="input-field w-full bg-black/60 border border-stage-secondary/40 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all peer">
             <label class="absolute left-4 top-4 text-stage-text-sub pointer-events-none transition-all duration-200 origin-left">이메일 주소</label>
           </div>
 
           <div class="relative">
             <input type="password" name="userPw" placeholder=" " required
-              class="input-field w-full bg-slate-900/50 border border-slate-700 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all peer">
+              class="input-field w-full bg-black/60 border border-stage-secondary/40 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all peer">
             <label class="absolute left-4 top-4 text-stage-text-sub pointer-events-none transition-all duration-200 origin-left">비밀번호</label>
           </div>
 
@@ -91,7 +93,7 @@
         </form>
 
         <div class="mt-6 flex items-center justify-between text-xs text-stage-text-sub font-medium">
-          <a href="${baseURL}/signup" class="hover:text-stage-secondary transition-colors underline decoration-slate-700 underline-offset-4">회원가입</a>
+          <a href="${baseURL}/signup" class="hover:text-stage-secondary transition-colors underline decoration-stage-secondary/50 underline-offset-4">회원가입</a>
           <a href="#" class="hover:text-stage-secondary transition-colors">비밀번호 찾기</a>
         </div>
       </div>
@@ -99,8 +101,8 @@
   </main>
 
 
-  <footer class="py-10 text-center text-[10px] text-stage-text-sub font-bold uppercase tracking-[0.2em]">
-    &copy; Weiver 2023. All Rights Reserved.
+  <footer class="py-10 text-center">
+    <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">&copy; Weiver 2023. THE STAGE IS YOURS.</p>
   </footer>
 
   <script>

@@ -66,39 +66,46 @@ public class MusicalController {
     
     @GetMapping("/musical-detail/{id}")
     public String getMusicalDetail(@PathVariable String id, Model model, HttpSession session){
-		Optional<Musical> musical =  musicalService.getMusicalById(id);
+    Optional<Musical> musical =  musicalService.getMusicalById(id);
 
-		if(musical.isPresent()) {
-			model.addAttribute("musical", musical.get());
-			List<ResponseCastingDTO> castingList = actorService.getCastingByMusicalId(musical.get().getId());
-            
+    if(musical.isPresent()) {
+    model.addAttribute("musical", musical.get());
+    List<ResponseCastingDTO> castingList = actorService.getCastingByMusicalId(musical.get().getId());
+
             if (castingList != null) {
                 List<ResponseCastingDTO> limitedCastingList = castingList.subList(0, Math.min(castingList.size(), 10));
                 model.addAttribute("castingList", limitedCastingList);
             }
-		}
 
-		if(session.getAttribute("userId") != null) {
-			Subscribe subscribeJjim = subscribeService.getSubscribe(session.getAttribute("userId").toString(), id, "찜했어요");
-			model.addAttribute("subscribeJjim", subscribeJjim);
-			Subscribe subscribeWatched = subscribeService.getSubscribe(session.getAttribute("userId").toString(), id, "봤어요");
-			model.addAttribute("subscribeWatched", subscribeWatched);
-		}
-//    	ResponseCastingDTO casting = actorService.getCastingByMusicalId(musical.get().getId());
-//    	if (casting != null){
-//    		model.addAttribute("casting", casting);
-//    	}
+            // Youtube API 가져오기
+            try {
+                String title = musical.get().getTitle();
+                // 제목에서 괄호 및 특수문자 제거하여 검색 정확도 향상
+                String searchQuery = title.replaceAll("\\(.*?\\)", "").trim();
+                // 제목이 이미 "뮤지컬"로 시작하지 않는 경우에만 접두어 추가
+                if (!searchQuery.startsWith("뮤지컬")) {
+                    searchQuery = "뮤지컬 " + searchQuery;
+                }
+                List<String> clips = GoogleAPIService.search(searchQuery);
+                model.addAttribute("clips", clips);
 
-		// Youtube API 가져오기
-		try {
-			List<String> clips = GoogleAPIService.search("뮤지컬" + musical.get().getTitle());
-			model.addAttribute("clips", clips);
+            } catch (Exception e) {
+                // YouTube API 실패 시에도 페이지는 정상 로드
+                e.printStackTrace();
+                model.addAttribute("clips", new java.util.ArrayList<String>());
+            }
+    } else {
+            return "redirect:/main";
+        }
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    if(session.getAttribute("userId") != null) {
+    Subscribe subscribeJjim = subscribeService.getSubscribe(session.getAttribute("userId").toString(), id, "찜했어요");
+    model.addAttribute("subscribeJjim", subscribeJjim);
+    Subscribe subscribeWatched = subscribeService.getSubscribe(session.getAttribute("userId").toString(), id, "봤어요");
+    model.addAttribute("subscribeWatched", subscribeWatched);
+    }
 
-		return "musicalDetail";
+    return "musicalDetail";
     }
     
     @GetMapping("/musical-search")

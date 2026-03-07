@@ -16,16 +16,17 @@
         theme: {
           extend: {
             colors: {
+              'stage-gold-glow': '#FFD700',
               'stage-primary': '#BE123C',
-              'stage-secondary': '#FBBF24',
-              'stage-bg': '#0F172A',
-              'stage-surface': '#1E293B',
+              'stage-secondary': '#D4AF37',
+              'stage-bg': '#0a0a0a',
+              'stage-surface': '#1a1a1a',
               'stage-text': '#F8FAFC',
-              'stage-text-sub': '#94A3B8',
+              'stage-text-sub': '#a1a1aa',
             },
             fontFamily: {
               sans: ['Pretendard', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
+              serif: ['Cinzel', 'Playfair Display', 'serif'],
             },
           }
         }
@@ -34,18 +35,18 @@
 
     <!-- Fonts & Icons -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <style>
       .glass-nav {
-        background: rgba(15, 23, 42, 0.7);
+        background: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
       }
       .spotlight-glow:hover {
-        box-shadow: 0 0 25px rgba(251, 191, 36, 0.2);
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); border-color: rgba(212, 175, 55, 0.5);
       }
       .profile-ring {
         background: linear-gradient(45deg, var(--stage-primary), var(--stage-secondary));
@@ -54,7 +55,7 @@
     </style>
 </head>
 
-<body class="bg-stage-bg text-stage-text font-sans pb-24">
+<body class="bg-stage-bg text-stage-text font-sans pb-24" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
 
   <!-- Header -->
   <header class="fixed top-0 left-0 w-full z-50 glass-nav">
@@ -62,7 +63,7 @@
       <a href="javascript:history.back();" class="text-2xl hover:text-stage-secondary transition-colors">
         <i class="bi bi-chevron-left"></i>
       </a>
-      <span class="text-xl font-serif text-stage-primary tracking-tighter">WIEVER</span>
+      <span class="text-xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
       <div class="w-8"></div> <!-- Spacer -->
     </div>
   </header>
@@ -98,13 +99,13 @@
     <section>
       <div class="flex items-center gap-4 mb-8">
         <h2 class="text-2xl font-bold">출연 작품</h2>
-        <div class="flex-1 h-px bg-slate-800"></div>
+        <div class="flex-1 h-px bg-stage-surface"></div>
         <span class="text-stage-text-sub text-sm font-medium">${requestScope.musicalList.size()} Projects</span>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
         <c:forEach items="${requestScope.musicalList}" var="musical">
-          <a href="${baseURL}/musicalDetail/${musical.id}" class="group block relative aspect-[3/4] rounded-2xl overflow-hidden bg-stage-surface spotlight-glow transition-all duration-500 border border-slate-800">
+          <a href="${baseURL}/musical-detail/${musical.id}" class="group block relative aspect-[3/4] rounded-2xl overflow-hidden bg-stage-surface spotlight-glow transition-all duration-500 border border-white/10">
             <img src="${musical.posterImage}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="${musical.title}">
             
             <!-- Overlay Info -->
@@ -117,7 +118,7 @@
       </div>
       
       <c:if test="${empty requestScope.musicalList}">
-        <div class="py-20 text-center space-y-4 bg-stage-surface/30 rounded-3xl border border-dashed border-slate-700">
+        <div class="py-20 text-center space-y-4 bg-stage-surface/30 rounded-3xl border border-dashed border-white/20">
           <i class="bi bi-journal-x text-5xl text-stage-text-sub"></i>
           <p class="text-stage-text-sub">등록된 출연 작품이 없습니다.</p>
         </div>
@@ -144,8 +145,8 @@
     </div>
   </nav>
 
-  <footer class="mt-20">
-    <p>&copy; Weiver 2023. All Rights Reserved.</p>
+  <footer class="mt-20 mb-10 text-center text-[10px] text-center">
+    <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">&copy; Weiver 2023. THE STAGE IS YOURS.</p>
   </footer>
 
 </body>
