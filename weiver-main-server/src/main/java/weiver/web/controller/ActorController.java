@@ -17,7 +17,7 @@ import weiver.service.ActorService;
 public class ActorController {
     private final ActorService actorService;
 
-    @GetMapping(value = "/actorDetail/{actorId}")
+    @GetMapping(value = "/actor-detail/{actorId}")
     public String getActorDetailPage(@PathVariable String actorId, Model model) {
 
             Actor actor = actorService.getActorInfo(actorId);

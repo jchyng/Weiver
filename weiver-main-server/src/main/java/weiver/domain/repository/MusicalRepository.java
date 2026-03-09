@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface MusicalRepository extends JpaRepository<Musical, String> {
 	//공연 중인 뮤지컬 조회
-    @Query("SELECT m.id as id, m.posterImage as posterImage FROM Musical m WHERE m.stDate <= ?1 AND m.edDate >= ?1")
+    @Query("SELECT m.id as id, m.title as title, m.posterImage as posterImage FROM Musical m WHERE m.stDate <= ?1 AND m.edDate >= ?1")
     List<PerformingMusical> findPerformingMusicals(Date today);
 
 	/*
@@ -24,9 +24,13 @@ public interface MusicalRepository extends JpaRepository<Musical, String> {
 	 */
     @Query("SELECT m.id as id, m.title as title, m.posterImage as posterImage, m.stDate as stDate, m.edDate as edDate FROM Musical m WHERE UPPER(m.title) LIKE CONCAT('%', UPPER(?1), '%') ORDER BY m.edDate DESC")
     List<SimpleMusicalDTO> findMusicalsByTitleKeyword(String keyword);
+
+    // 모든 뮤지컬 조회 (SimpleMusicalDTO 버전)
+    @Query("SELECT m.id as id, m.title as title, m.posterImage as posterImage, m.stDate as stDate, m.edDate as edDate FROM Musical m ORDER BY m.edDate DESC")
+    List<SimpleMusicalDTO> findAllSimpleMusicals();
     
     // 배우 상세 페이지 해당 뮤지컬 포스터 조회
-    @Query("SELECT DISTINCT m.id as id, m.posterImage as posterImage, m.edDate as edDate FROM Musical m JOIN Casting c ON c.musicalId.id = m.id WHERE c.actorId.id = :actorId ORDER BY m.edDate DESC")
+    @Query("SELECT DISTINCT m.id as id, m.title as title, m.posterImage as posterImage, m.edDate as edDate FROM Musical m JOIN Casting c ON c.musicalId.id = m.id WHERE c.actorId.id = :actorId ORDER BY m.edDate DESC")
 	List<PerformingMusical> findMusicalsByActorId(@Param("actorId") String actorId);
 
 	Musical getMusicalById(String id);

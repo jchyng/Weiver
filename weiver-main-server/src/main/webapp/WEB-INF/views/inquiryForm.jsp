@@ -100,7 +100,7 @@
   <!-- Bottom Nav -->
   <nav class="fixed bottom-0 left-0 w-full glass-nav z-50">
     <div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between text-stage-text-sub text-[10px] font-bold">
-      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
+      <a href="${baseURL}/" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
         <i class="bi bi-house-door text-xl"></i>
         <span>HOME</span>
       </a>

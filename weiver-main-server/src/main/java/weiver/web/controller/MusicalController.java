@@ -17,7 +17,6 @@ import weiver.domain.entity.Subscribe;
 import weiver.service.*;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +28,7 @@ public class MusicalController {
     private final CommunityService communityService;
 	private final SubscribeService subscribeService;
     
-    @GetMapping("/main")
+    @GetMapping({"/", "/main"})
     public String getMainPage(Model model){
         List<PoPularMusicalDTO> poPularMusicalDTOs = musicalService.getLikedMusical();
         List<PerformingMusical> performingMusicals = musicalService.getPerformingMusical();
@@ -77,25 +76,8 @@ public class MusicalController {
                 model.addAttribute("castingList", limitedCastingList);
             }
 
-            // Youtube API 가져오기
-            try {
-                String title = musical.get().getTitle();
-                // 제목에서 괄호 및 특수문자 제거하여 검색 정확도 향상
-                String searchQuery = title.replaceAll("\\(.*?\\)", "").trim();
-                // 제목이 이미 "뮤지컬"로 시작하지 않는 경우에만 접두어 추가
-                if (!searchQuery.startsWith("뮤지컬")) {
-                    searchQuery = "뮤지컬 " + searchQuery;
-                }
-                List<String> clips = GoogleAPIService.search(searchQuery);
-                model.addAttribute("clips", clips);
-
-            } catch (Exception e) {
-                // YouTube API 실패 시에도 페이지는 정상 로드
-                e.printStackTrace();
-                model.addAttribute("clips", new java.util.ArrayList<String>());
-            }
     } else {
-            return "redirect:/main";
+            return "redirect:/";
         }
 
     if(session.getAttribute("userId") != null) {
@@ -110,10 +92,13 @@ public class MusicalController {
     
     @GetMapping("/musical-search")
     public String getMusicalSearch(@RequestParam(required = false) String keyword, Model model){
-		if(keyword != null) {
+		if(keyword != null && !keyword.isEmpty()) {
 			List<SimpleMusicalDTO> musicals = musicalService.getMusicalByKeyword(keyword);
 			model.addAttribute("musicals", musicals);
-		}
+		} else {
+            List<SimpleMusicalDTO> allMusicals = musicalService.getAllSimpleMusical();
+            model.addAttribute("musicals", allMusicals);
+        }
 
 		return "musicalSearch";
     }

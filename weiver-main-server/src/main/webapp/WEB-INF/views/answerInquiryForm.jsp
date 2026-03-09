@@ -1,148 +1,121 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="config.jsp" %>
+<c:set var="pageName" value="inquiries" scope="request"/>
+<c:set var="title" value="Resolve Ticket" scope="request"/>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>WIEVER Admin - 문의 답변</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-              'stage-gold-glow': '#FFD700',
-            'stage-primary': '#BE123C', 'stage-secondary': '#D4AF37',
-            'stage-bg': '#0a0a0a', 'stage-surface': '#1a1a1a',
-            'stage-text': '#F8FAFC', 'stage-text-sub': '#a1a1aa',
-          },
-          fontFamily: { sans: ['Pretendard', 'sans-serif'] },
-        }
-      }
-    }
-  </script>
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-  <style>
-    body { display: flex; min-height: 100vh; }
-    #sidebar { width: 240px; min-height: 100vh; flex-shrink: 0; }
-    #main-content { flex: 1; min-height: 100vh; }
-    .nav-link-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; color: #94A3B8; transition: all 0.15s; margin: 2px 8px; }
-    .nav-link-item:hover { background: rgba(255,255,255,0.06); color: #F8FAFC; border-left: 3px solid rgba(212,175,55,0.3); }
-    .nav-link-item.active { background: rgba(190,18,60,0.15); color: #BE123C; border-left: 3px solid #D4AF37; }
-  </style>
+  <title>WIEVER Admin - Answer Inquiry</title>
+  <%@ include file="admin/layout/head.jsp" %>
 </head>
 
-<body class="bg-stage-bg text-stage-text font-sans" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
+<body class="flex min-h-screen bg-admin-bg font-sans">
+  <%@ include file="admin/layout/sidebar.jsp" %>
 
-  <aside id="sidebar" class="bg-stage-surface border-r border-white/10 flex flex-col">
-    <div class="px-6 py-6 border-b border-stage-secondary/30">
-      <h1 class="text-2xl font-serif text-stage-primary tracking-tighter">WIEVER</h1>
-      <p class="text-[10px] text-stage-text-sub font-bold tracking-widest uppercase mt-0.5">Admin Dashboard</p>
-    </div>
-    <nav class="flex-1 py-4 overflow-y-auto">
-      <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest px-6 mb-3 mt-2">데이터 관리</p>
-      <a href="${baseURL}/admin/getAllActors" class="nav-link-item"><i class="bi bi-person-video3"></i> 배우</a>
-      <a href="${baseURL}/admin/getAllMusicals" class="nav-link-item"><i class="bi bi-music-note-beamed"></i> 뮤지컬</a>
-      <a href="${baseURL}/admin/getAllUsers" class="nav-link-item"><i class="bi bi-people"></i> 유저</a>
-      <a href="${baseURL}/admin/getAllAdmins" class="nav-link-item"><i class="bi bi-shield-check"></i> 관리자</a>
-      <a href="${baseURL}/admin/getAllPosts" class="nav-link-item"><i class="bi bi-journals"></i> 게시글</a>
-      <a href="${baseURL}/admin/getAllInquirys" class="nav-link-item active"><i class="bi bi-question-circle"></i> 문의</a>
-      <a href="${baseURL}/admin/crawling" class="nav-link-item"><i class="bi bi-arrow-repeat"></i> 크롤링 상태</a>
-    </nav>
-    <div class="px-4 py-4 border-t border-stage-secondary/20">
-      <div class="flex items-center gap-3 p-3 rounded-xl bg-black/60">
-        <div class="w-8 h-8 rounded-full bg-stage-primary/20 flex items-center justify-center border border-stage-primary/30 flex-shrink-0">
-          <i class="bi bi-person-fill text-stage-primary text-sm"></i>
+  <div class="flex-1 flex flex-col min-w-0">
+    <%@ include file="admin/layout/topbar.jsp" %>
+
+    <main class="flex-1 p-8 overflow-y-auto animate-slide-in">
+      
+      <div class="max-w-4xl mx-auto space-y-8 pb-20">
+        
+        <!-- Header Actions -->
+        <div class="flex items-center justify-between">
+          <a href="${baseURL}/admin/getAllInquirys" class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-admin-text-sub hover:text-white transition-colors group">
+            <i class="bi bi-arrow-left transition-transform group-hover:-translate-x-1"></i>
+            Back to Ticket List
+          </a>
+          <span class="px-3 py-1 rounded-full bg-admin-primary/10 border border-admin-primary/20 text-[10px] font-black text-admin-primary uppercase tracking-widest">Priority Support</span>
         </div>
-        <div class="overflow-hidden">
-          <p class="text-[10px] text-stage-text-sub font-bold uppercase leading-none mb-0.5">Logged in</p>
-          <p class="text-sm font-bold truncate">${sessionScope.adminId}</p>
-        </div>
-      </div>
-      <a href="${baseURL}/admin/logout" class="flex items-center gap-2 mt-3 px-3 py-2 rounded-xl text-stage-text-sub hover:text-rose-400 hover:bg-rose-900/10 transition-all text-sm font-bold">
-        <i class="bi bi-box-arrow-right"></i> 로그아웃
-      </a>
-    </div>
-  </aside>
 
-  <div id="main-content" class="flex flex-col">
-    <header class="h-16 bg-stage-surface/50 border-b border-stage-secondary/20 flex items-center justify-between px-6 flex-shrink-0">
-      <div class="flex items-center gap-3">
-        <a href="${baseURL}/admin/getAllInquirys" class="text-stage-text-sub hover:text-stage-secondary transition-colors text-xl mr-1">
-          <i class="bi bi-chevron-left"></i>
-        </a>
-        <i class="bi bi-reply text-stage-secondary text-xl"></i>
-        <div>
-          <h2 class="text-lg font-bold leading-none">문의 답변</h2>
-          <p class="text-[11px] text-stage-text-sub mt-0.5">Answer Inquiry</p>
-        </div>
-      </div>
-      <span class="text-sm text-stage-text-sub font-bold">안녕하세요, <span class="text-stage-text">${sessionScope.adminName}</span>님</span>
-    </header>
-
-    <main class="flex-1 p-6">
-      <div class="max-w-2xl space-y-5">
-
-        <!-- Inquiry Info -->
-        <div class="bg-stage-surface/40 border border-white/10 rounded-2xl overflow-hidden">
-          <div class="p-4 border-b border-white/10 flex items-center gap-2">
-            <i class="bi bi-chat-left-text text-stage-text-sub"></i>
-            <span class="text-xs font-bold text-stage-text-sub uppercase tracking-widest">문의 내용</span>
-          </div>
-          <div class="p-5 space-y-4">
-            <div class="grid grid-cols-3 gap-4">
-              <div class="space-y-1">
-                <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest">문의 제목</p>
-                <p class="font-bold text-sm">${inquiry.title}</p>
+        <!-- Inquiry Content View -->
+        <div class="glass-effect rounded-[2.5rem] border border-admin-border overflow-hidden shadow-premium">
+          <div class="px-10 py-8 border-b border-admin-border bg-white/[0.02] flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-admin-surface border border-white/5 flex items-center justify-center shadow-inner">
+                <i class="bi bi-chat-left-dots-fill text-admin-primary text-xl"></i>
               </div>
-              <div class="space-y-1">
-                <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest">작성자</p>
-                <p class="text-sm text-stage-text-sub">${inquiry.userId}</p>
-              </div>
-              <div class="space-y-1">
-                <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest">문의 시각</p>
-                <p class="text-sm text-stage-text-sub">${inquiry.createdTime}</p>
+              <div>
+                <h3 class="text-xl font-bold text-white tracking-tight">${inquiry.title}</h3>
+                <p class="text-[10px] text-admin-text-sub font-black uppercase tracking-[0.2em] mt-1 opacity-50">Original Inquiry Payload</p>
               </div>
             </div>
-            <div class="space-y-2">
-              <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest">문의 내용</p>
-              <div class="bg-black/60 border border-white/20 rounded-xl p-4 text-sm text-stage-text-sub leading-relaxed whitespace-pre-wrap">${inquiry.content}</div>
+            <div class="text-right">
+              <p class="text-[10px] font-black text-admin-text-sub uppercase tracking-widest mb-1 opacity-40">Reference ID</p>
+              <p class="text-xs font-bold text-white uppercase tracking-tighter">TK-${inquiry.id}</p>
+            </div>
+          </div>
+
+          <div class="p-10 space-y-10">
+            <!-- Metadata Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div class="space-y-1.5">
+                <p class="text-[9px] font-black text-admin-text-sub uppercase tracking-[0.2em] opacity-40">Requesting User</p>
+                <div class="flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 rounded-full bg-admin-primary"></div>
+                  <p class="text-sm font-bold text-white">${inquiry.userId}</p>
+                </div>
+              </div>
+              <div class="space-y-1.5">
+                <p class="text-[9px] font-black text-admin-text-sub uppercase tracking-[0.2em] opacity-40">Submission Time</p>
+                <p class="text-sm font-bold text-white">${inquiry.createdTime}</p>
+              </div>
+              <div class="space-y-1.5">
+                <p class="text-[9px] font-black text-admin-text-sub uppercase tracking-[0.2em] opacity-40">Ticket Status</p>
+                <span class="inline-block px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[9px] font-black uppercase tracking-widest">Pending Review</span>
+              </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="bg-admin-bg/50 border border-white/5 rounded-[2rem] p-8 relative">
+              <i class="bi bi-quote absolute top-6 left-6 text-4xl text-white/5"></i>
+              <p class="text-sm text-admin-text-sub leading-relaxed whitespace-pre-wrap relative z-10 pl-4 border-l border-admin-primary/20">
+                ${inquiry.content}
+              </p>
             </div>
           </div>
         </div>
 
-        <!-- Answer Form -->
-        <form action="${baseURL}/answerInquiry" method="POST" class="bg-stage-surface/40 border border-stage-secondary/20 rounded-2xl overflow-hidden">
+        <!-- Resolution Form -->
+        <form action="${baseURL}/answerInquiry" method="POST" class="glass-effect rounded-[2.5rem] border border-admin-primary/20 overflow-hidden shadow-premium">
           <input type="hidden" name="id" value="${inquiry.id}">
-          <div class="p-4 border-b border-stage-secondary/10 flex items-center gap-2 bg-stage-secondary/5">
-            <i class="bi bi-shield-check text-stage-secondary"></i>
-            <span class="text-xs font-bold text-stage-secondary uppercase tracking-widest">관리자 답변 작성</span>
+          
+          <div class="px-10 py-8 border-b border-admin-border bg-admin-primary/5 flex items-center gap-4">
+             <div class="w-10 h-10 rounded-xl bg-admin-primary flex items-center justify-center shadow-glow">
+                <i class="bi bi-shield-check text-white text-lg"></i>
+             </div>
+             <div>
+                <h4 class="text-sm font-black text-white uppercase tracking-[0.2em]">Administrative Response</h4>
+                <p class="text-[10px] text-admin-primary font-bold mt-1">이 답변은 사용자에게 즉시 전송됩니다.</p>
+             </div>
           </div>
-          <div class="p-5 space-y-4">
-            <div class="space-y-2">
-              <label class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest">답변 내용</label>
-              <textarea name="answerContent" rows="8" placeholder="문의에 대한 답변을 입력하세요..." required
-                class="w-full bg-black/60 border border-white/20 rounded-xl py-4 px-4 focus:outline-none focus:border-stage-secondary transition-all resize-none leading-relaxed text-sm placeholder-stage-text-sub/40"></textarea>
+
+          <div class="p-10 space-y-8">
+            <div class="space-y-4">
+               <label class="text-[10px] font-black text-admin-text-sub uppercase tracking-[0.2em] opacity-50 ml-1">Resolution Protocol</label>
+               <textarea name="answerContent" rows="10" 
+                 class="w-full bg-admin-bg/50 border border-white/10 rounded-3xl p-8 focus:outline-none focus:border-admin-primary transition-all text-sm text-white leading-relaxed placeholder-white/10" 
+                 placeholder="여기에 답변 내용을 상세히 입력하십시오. 전문적이고 정중한 어조를 유지하십시오..." required></textarea>
             </div>
-            <button type="submit" class="w-full bg-stage-secondary hover:bg-amber-400 text-black font-bold py-3.5 rounded-xl transition-all transform active:scale-[0.98] shadow-lg shadow-amber-900/20">
-              <i class="bi bi-send mr-2"></i>답변 등록하기
-            </button>
+
+            <div class="flex items-center justify-end gap-4">
+               <button type="reset" class="px-8 py-4 text-[10px] font-black text-admin-text-sub uppercase tracking-widest hover:text-white transition-colors">
+                  Reset Form
+               </button>
+               <button type="submit" class="px-10 py-4 bg-admin-primary hover:bg-rose-700 text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all shadow-glow flex items-center gap-3 group">
+                  <span>Commit Response</span>
+                  <i class="bi bi-send-fill transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
+               </button>
+            </div>
           </div>
         </form>
 
       </div>
+
     </main>
 
-    <footer class="py-4 px-6 text-center text-[10px] text-stage-text-sub font-bold uppercase tracking-[0.15em] border-t border-stage-secondary/20">
-      &copy; Weiver 2023. Admin Panel.
-    </footer>
+    <%@ include file="admin/layout/footer.jsp" %>
   </div>
-
 </body>
 </html>

@@ -397,6 +397,16 @@ public class CommunityService {
 		public PostLike checkPostLike(String userId, Long postId) {
 			return postlikeRepository.checkPostLike(userId, postId);
 		}
+
+		// 이전 게시글 가져오기
+		public Post getPrevPost(Long id) {
+			return communityRepository.findFirstByIdLessThanOrderByIdDesc(id);
+		}
+
+		// 다음 게시글 가져오기
+		public Post getNextPost(Long id) {
+			return communityRepository.findFirstByIdGreaterThanOrderByIdAsc(id);
+		}
 		
 
 

@@ -98,6 +98,17 @@ public class CommunityController {
         //id에 따라 게시글 가져오기
         Post post = communityService.getPostById(id);
 
+        if (post == null) {
+            return "error";
+        }
+
+        // 이전 게시글, 다음 게시글 가져오기
+        Post prevPost = communityService.getPrevPost(id);
+        Post nextPost = communityService.getNextPost(id);
+
+        model.addAttribute("prevPost", prevPost);
+        model.addAttribute("nextPost", nextPost);
+
         //post_id에 따라 댓글 가져오기
         List<Reply> replies = communityService.findReplyByPostId(post.getId());
 
