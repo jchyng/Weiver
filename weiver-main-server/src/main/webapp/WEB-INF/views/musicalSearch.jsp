@@ -52,14 +52,24 @@
 
 <body class="bg-stage-bg text-stage-text font-sans pb-24 min-h-screen" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
 
-  <!-- Header -->
-  <header class="fixed top-0 left-0 w-full z-50 glass-nav">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <a href="${baseURL}/main" class="text-2xl hover:text-stage-secondary transition-colors">
-        <i class="bi bi-chevron-left"></i>
-      </a>
-      <span class="text-xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
-      <div class="w-8"></div>
+  <!-- Top Navigation -->
+  <header class="fixed top-0 left-0 w-full z-[100] glass-nav">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="${baseURL}/" class="text-2xl font-serif font-bold text-stage-secondary tracking-tighter">WIEVER</a>
+        <nav class="hidden md:flex items-center gap-6">
+          <a href="${baseURL}/musical-search" class="font-serif text-sm text-stage-secondary hover:text-stage-gold-glow transition-colors">Musical DB</a>
+          <a href="${baseURL}/community" class="font-serif text-sm text-stage-secondary hover:text-stage-gold-glow transition-colors">Community</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-5 text-stage-secondary">
+        <a href="${baseURL}/musical-search" class="hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-search text-xl"></i>
+        </a>
+        <a href="${baseURL}/mypage/myinfo" class="hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-person-circle text-xl"></i>
+        </a>
+      </div>
     </div>
   </header>
 
@@ -68,7 +78,12 @@
     <!-- Page Title -->
     <div>
       <span class="text-stage-secondary font-bold tracking-[0.2em] uppercase text-xs">Discover</span>
-      <h1 class="text-3xl font-bold mt-1">뮤지컬 검색</h1>
+      <h1 class="text-3xl font-bold mt-1">
+        <c:choose>
+          <c:when test="${empty param.keyword}">모든 뮤지컬</c:when>
+          <c:otherwise>'${param.keyword}' 검색 결과</c:otherwise>
+        </c:choose>
+      </h1>
     </div>
 
     <!-- Search Form -->
@@ -122,24 +137,6 @@
     </c:choose>
 
   </main>
-
-  <!-- Bottom Nav -->
-  <nav class="fixed bottom-0 left-0 w-full glass-nav z-50">
-    <div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between text-stage-text-sub text-[10px] font-bold">
-      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-house-door text-xl"></i>
-        <span>HOME</span>
-      </a>
-      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-chat-dots text-xl"></i>
-        <span>COMMUNITY</span>
-      </a>
-      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-person text-xl"></i>
-        <span>MY PAGE</span>
-      </a>
-    </div>
-  </nav>
 
   <footer class="mt-10 mb-10 text-center text-[10px] text-center">
     <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">&copy; Weiver 2023. THE STAGE IS YOURS.</p>

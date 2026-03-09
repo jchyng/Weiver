@@ -18,7 +18,7 @@ public class LoginViewController {
     @GetMapping(value = "/login")
     public String loginPage(HttpSession session, Model model) {
         if(session.getAttribute("userId") != null) {
-            return "redirect:/main";
+            return "redirect:/";
         }        
         return "login";
     }
@@ -36,7 +36,7 @@ public class LoginViewController {
             session.invalidate();
             log.info("로그 아웃 완료");
         }
-        return "redirect:/main";
+        return "redirect:/";
     }
     
     // 회원 탈퇴
@@ -52,6 +52,6 @@ public class LoginViewController {
             log.error("회원 탈퇴 중 오류 발생: {}", e.getMessage());
         }
         
-        return "redirect:/main";
+        return "redirect:/";
     }
 }

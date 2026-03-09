@@ -78,16 +78,27 @@
 
 <body class="text-stage-text font-sans pb-24">
 
-  <!-- Header -->
-  <header class="fixed top-0 left-0 w-full z-50 glass-nav">
+  <!-- Top Navigation -->
+  <header class="fixed top-0 left-0 w-full z-[100] glass-nav">
     <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <a href="javascript:history.back();" class="text-2xl text-stage-secondary hover:text-stage-gold-glow transition-colors">
+      <div class="flex items-center gap-4 md:gap-8">
+        <a href="javascript:history.back();" class="text-xl text-stage-secondary hover:text-stage-gold-glow transition-colors">
           <i class="bi bi-chevron-left"></i>
         </a>
-        <span class="text-xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
+        <a href="${baseURL}/" class="text-2xl font-serif font-bold text-stage-secondary tracking-tighter">WIEVER</a>
+        <nav class="hidden md:flex items-center gap-6">
+          <a href="${baseURL}/musical-search" class="font-serif text-sm text-stage-secondary hover:text-stage-gold-glow transition-colors">Musical DB</a>
+          <a href="${baseURL}/community" class="font-serif text-sm text-stage-secondary hover:text-stage-gold-glow transition-colors">Community</a>
+        </nav>
       </div>
-      <div class="w-8"></div>
+      <div class="flex items-center gap-5 text-stage-secondary">
+        <a href="${baseURL}/musical-search" class="hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-search text-xl"></i>
+        </a>
+        <a href="${baseURL}/mypage/myinfo" class="hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-person-circle text-xl"></i>
+        </a>
+      </div>
     </div>
   </header>
 
@@ -154,7 +165,7 @@
             <span class="text-stage-text-sub uppercase text-xs font-bold tracking-widest mb-3 block"><i class="bi bi-people-fill metadata-icon"></i>주요 출연진</span>
             <div class="flex flex-wrap gap-4">
               <c:forEach items="${castingList}" var="casting" end="4">
-                <a href="${baseURL}/actorDetail/${casting.id}" class="flex items-center gap-2 bg-stage-surface/50 border border-white/10 pr-4 rounded-full hover:border-stage-secondary transition-colors">
+                <a href="${baseURL}/actor-detail/${casting.id}" class="flex items-center gap-2 bg-stage-surface/50 border border-white/10 pr-4 rounded-full hover:border-stage-secondary transition-colors">
                   <img src="${casting.profileImage}" class="w-8 h-8 rounded-full object-cover bg-stage-bg" alt="${casting.name}">
                   <span class="text-sm font-medium text-white">${casting.name}</span>
                 </a>
@@ -245,24 +256,6 @@
     </section>
 
   </main>
-
-  <!-- Bottom Nav Mobile -->
-  <div class="md:hidden fixed bottom-0 left-0 w-full z-50 glass-nav">
-    <div class="flex items-center justify-around h-16 px-4">
-      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 text-stage-text-sub hover:text-stage-secondary transition-colors">
-        <i class="bi bi-house-door-fill text-xl"></i>
-        <span class="text-[9px] font-bold">HOME</span>
-      </a>
-      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-text-sub hover:text-stage-secondary transition-colors">
-        <i class="bi bi-chat-right-text-fill text-xl"></i>
-        <span class="text-[9px] font-bold">COMMUNITY</span>
-      </a>
-      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 text-stage-text-sub hover:text-stage-secondary transition-colors">
-        <i class="bi bi-person-circle text-xl"></i>
-        <span class="text-[9px] font-bold">MY PAGE</span>
-      </a>
-    </div>
-  </div>
 
   <footer class="mt-32 mb-10 text-center opacity-50">
     <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">© Weiver 2023. THE STAGE IS YOURS.</p>

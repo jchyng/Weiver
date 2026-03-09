@@ -106,7 +106,7 @@
              class="w-full bg-stage-primary hover:bg-rose-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-900/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
             <i class="bi bi-box-arrow-right"></i> 로그아웃
           </a>
-          <a href="${baseURL}/main"
+          <a href="${baseURL}/"
              class="w-full bg-stage-surface hover:bg-white/10 text-stage-text font-bold py-3.5 rounded-xl border border-white/20 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
             <i class="bi bi-house-door"></i> 홈으로 이동
           </a>

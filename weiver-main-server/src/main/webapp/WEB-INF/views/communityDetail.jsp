@@ -65,14 +65,27 @@
 
 <body class="bg-stage-bg text-stage-text font-sans pb-32" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
 
-  <!-- Header -->
-  <header class="fixed top-0 left-0 w-full z-50 glass-nav">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <a href="${baseURL}/community" class="text-2xl hover:text-stage-secondary transition-colors">
-        <i class="bi bi-chevron-left"></i>
-      </a>
-      <span class="text-xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
-      <div class="w-8"></div>
+  <!-- Top Navigation -->
+  <header class="fixed top-0 left-0 w-full z-[100] glass-nav">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-4 md:gap-8">
+        <a href="javascript:history.back();" class="text-xl text-stage-secondary hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-chevron-left"></i>
+        </a>
+        <a href="${baseURL}/" class="text-2xl font-serif font-bold text-stage-secondary tracking-tighter">WIEVER</a>
+        <nav class="hidden md:flex items-center gap-6">
+          <a href="${baseURL}/musical-search" class="font-serif text-sm text-stage-secondary hover:text-stage-gold-glow transition-colors">Musical DB</a>
+          <a href="${baseURL}/community" class="font-serif text-sm text-stage-secondary hover:text-stage-gold-glow transition-colors">Community</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-5 text-stage-secondary">
+        <a href="${baseURL}/musical-search" class="hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-search text-xl"></i>
+        </a>
+        <a href="${baseURL}/mypage/myinfo" class="hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-person-circle text-xl"></i>
+        </a>
+      </div>
     </div>
   </header>
 
@@ -141,6 +154,51 @@
           <button onclick="deletePost(${posts.id})" class="text-xs font-bold px-4 py-2 rounded-lg bg-rose-900/20 text-rose-500 hover:bg-rose-900/40 transition-colors">삭제하기</button>
         </div>
       </c:if>
+
+      <!-- Prev/Next Navigation -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-10 border-b border-white/10">
+        <c:choose>
+          <c:when test="${not empty prevPost}">
+            <a href="${baseURL}/community/${prevPost.id}" class="group flex items-center gap-4 bg-stage-surface/30 hover:bg-stage-surface/50 p-4 rounded-2xl border border-white/5 transition-all">
+              <i class="bi bi-chevron-left text-stage-secondary text-xl"></i>
+              <div class="min-w-0">
+                <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest mb-1">Previous Post</p>
+                <h4 class="text-sm font-bold text-white truncate group-hover:text-stage-secondary transition-colors">${prevPost.title}</h4>
+              </div>
+            </a>
+          </c:when>
+          <c:otherwise>
+            <div class="flex items-center gap-4 bg-stage-surface/10 p-4 rounded-2xl border border-white/5 opacity-50">
+              <i class="bi bi-chevron-left text-xl"></i>
+              <div>
+                <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest mb-1">Previous Post</p>
+                <h4 class="text-sm font-bold text-stage-text-sub">이전 게시글이 없습니다.</h4>
+              </div>
+            </div>
+          </c:otherwise>
+        </c:choose>
+
+        <c:choose>
+          <c:when test="${not empty nextPost}">
+            <a href="${baseURL}/community/${nextPost.id}" class="group flex items-center justify-between gap-4 bg-stage-surface/30 hover:bg-stage-surface/50 p-4 rounded-2xl border border-white/5 transition-all text-right">
+              <div class="min-w-0 flex-1">
+                <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest mb-1">Next Post</p>
+                <h4 class="text-sm font-bold text-white truncate group-hover:text-stage-secondary transition-colors">${nextPost.title}</h4>
+              </div>
+              <i class="bi bi-chevron-right text-stage-secondary text-xl"></i>
+            </a>
+          </c:when>
+          <c:otherwise>
+            <div class="flex items-center justify-between gap-4 bg-stage-surface/10 p-4 rounded-2xl border border-white/5 opacity-50 text-right">
+              <div class="flex-1">
+                <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest mb-1">Next Post</p>
+                <h4 class="text-sm font-bold text-stage-text-sub">다음 게시글이 없습니다.</h4>
+              </div>
+              <i class="bi bi-chevron-right text-xl"></i>
+            </div>
+          </c:otherwise>
+        </c:choose>
+      </div>
     </article>
 
     <!-- Comments Section -->
@@ -196,11 +254,11 @@
   </main>
 
   <!-- Comment Input (Fixed Bottom) -->
-  <div class="fixed bottom-16 left-0 w-full glass-nav px-4 py-4 z-40 border-t border-white/10">
+  <div class="fixed bottom-0 left-0 w-full glass-nav px-4 py-4 z-40 border-t border-white/10">
     <div class="max-w-4xl mx-auto">
       <form action="/community/insert/reply/${posts.id}" method="post" onsubmit="return checkLogin()" class="flex gap-3">
         <input name="content" type="text" placeholder="작품에 대한 생각을 나눠보세요..." required
-          class="flex-1 bg-black/60 border border-white/20 rounded-xl py-3 px-4 focus:outline-none focus:border-stage-secondary transition-all text-sm">
+          class="flex-1 bg-black/60 border border-white/20 rounded-xl py-3 px-4 focus:outline-none focus:border-stage-secondary transition-all text-sm text-white">
         <button type="submit" class="bg-stage-primary hover:bg-rose-700 text-white px-6 rounded-xl font-bold text-sm transition-all shadow-lg shadow-rose-900/20 shrink-0">
           등록
         </button>
@@ -208,25 +266,7 @@
     </div>
   </div>
 
-  <!-- Bottom Nav -->
-  <nav class="fixed bottom-0 left-0 w-full glass-nav z-50">
-    <div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between text-stage-text-sub text-[10px] font-bold">
-      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-house-door text-xl"></i>
-        <span>HOME</span>
-      </a>
-      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-secondary">
-        <i class="bi bi-chat-dots-fill text-xl"></i>
-        <span>COMMUNITY</span>
-      </a>
-      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-person text-xl"></i>
-        <span>MY PAGE</span>
-      </a>
-    </div>
-  </nav>
-
-  <footer class="mt-20 mb-10 text-center">
+  <footer class="mt-20 mb-24 text-center">
     <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">&copy; Weiver 2023. THE STAGE IS YOURS.</p>
   </footer>
 

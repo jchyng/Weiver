@@ -53,6 +53,11 @@ public class MusicalService {
 		return musicalRepository.findAll();
 	}
 
+	/*모든 뮤지컬 조회 (SimpleMusicalDTO 버전)*/
+	public List<SimpleMusicalDTO> getAllSimpleMusical(){
+		return musicalRepository.findAllSimpleMusicals();
+	}
+
 	/*배우 출연작 조회*/
 	public List<PerformingMusical> getMusicalByActor(Long actorId){
 		List<PerformingMusical> performingMusicals = castingRepository.findMusicalIdAndPosterByActorId(actorId);

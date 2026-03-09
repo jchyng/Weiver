@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="config.jsp" %>
+<c:set var="pageName" value="admins" scope="request"/>
+<c:set var="title" value="Access Control" scope="request"/>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<<<<<<< Updated upstream
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>WIEVER Admin - 관리자</title>
@@ -31,76 +33,90 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <%@ include file="adminStyles.jsp" %>
+=======
+  <title>WIEVER Admin - System Access</title>
+  <%@ include file="admin/layout/head.jsp" %>
+>>>>>>> Stashed changes
 </head>
 
-<body class="bg-stage-bg text-stage-text font-sans" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
+<body class="flex min-h-screen bg-admin-bg font-sans">
+  <%@ include file="admin/layout/sidebar.jsp" %>
 
-  <aside id="sidebar" class="bg-stage-surface border-r border-white/10 flex flex-col">
-    <div class="px-6 py-6 border-b border-stage-secondary/30">
-      <h1 class="text-2xl font-serif text-stage-primary tracking-tighter">WIEVER</h1>
-      <p class="text-[10px] text-stage-text-sub font-bold tracking-widest uppercase mt-0.5">Admin Dashboard</p>
-    </div>
-    <nav class="flex-1 py-4 overflow-y-auto">
-      <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest px-6 mb-3 mt-2">데이터 관리</p>
-      <a href="${baseURL}/admin/getAllActors" class="nav-link-item"><i class="bi bi-person-video3"></i> 배우</a>
-      <a href="${baseURL}/admin/getAllMusicals" class="nav-link-item"><i class="bi bi-music-note-beamed"></i> 뮤지컬</a>
-      <a href="${baseURL}/admin/getAllUsers" class="nav-link-item"><i class="bi bi-people"></i> 유저</a>
-      <a href="${baseURL}/admin/getAllAdmins" class="nav-link-item active"><i class="bi bi-shield-check"></i> 관리자</a>
-      <a href="${baseURL}/admin/getAllPosts" class="nav-link-item"><i class="bi bi-journals"></i> 게시글</a>
-      <a href="${baseURL}/admin/getAllInquirys" class="nav-link-item"><i class="bi bi-question-circle"></i> 문의</a>
-      <a href="${baseURL}/admin/crawling" class="nav-link-item"><i class="bi bi-arrow-repeat"></i> 크롤링 상태</a>
-    </nav>
-    <div class="px-4 py-4 border-t border-stage-secondary/20">
-      <div class="flex items-center gap-3 p-3 rounded-xl bg-black/60">
-        <div class="w-8 h-8 rounded-full bg-stage-primary/20 flex items-center justify-center border border-stage-primary/30 flex-shrink-0">
-          <i class="bi bi-person-fill text-stage-primary text-sm"></i>
-        </div>
-        <div class="overflow-hidden">
-          <p class="text-[10px] text-stage-text-sub font-bold uppercase leading-none mb-0.5">Logged in</p>
-          <p class="text-sm font-bold truncate">${sessionScope.adminId}</p>
-        </div>
-      </div>
-      <a href="${baseURL}/admin/logout" class="flex items-center gap-2 mt-3 px-3 py-2 rounded-xl text-stage-text-sub hover:text-rose-400 hover:bg-rose-900/10 transition-all text-sm font-bold">
-        <i class="bi bi-box-arrow-right"></i> 로그아웃
-      </a>
-    </div>
-  </aside>
+  <div class="flex-1 flex flex-col min-w-0">
+    <%@ include file="admin/layout/topbar.jsp" %>
 
-  <div id="main-content" class="flex flex-col">
-    <header class="h-16 bg-stage-surface/50 border-b border-stage-secondary/20 flex items-center justify-between px-6 flex-shrink-0">
-      <div class="flex items-center gap-3">
-        <i class="bi bi-shield-check text-stage-secondary text-xl"></i>
+    <main class="flex-1 p-8 overflow-y-auto animate-slide-in">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
-          <h2 class="text-lg font-bold leading-none">관리자 목록</h2>
-          <p class="text-[11px] text-stage-text-sub mt-0.5">Admin Management</p>
+          <h3 class="text-3xl font-bold text-white tracking-tight">운영진 설정</h3>
+          <p class="text-admin-text-sub mt-2 max-w-md">관리자 계정을 생성하고 권한을 부여합니다. 승인되지 않은 접근을 철저히 차단하십시오.</p>
         </div>
-      </div>
-      <span class="text-sm text-stage-text-sub font-bold">안녕하세요, <span class="text-stage-text">${sessionScope.adminName}</span>님</span>
-    </header>
-
-    <main class="flex-1 p-6">
-      <div class="bg-stage-surface/40 border border-white/10 rounded-2xl overflow-hidden">
-        <div class="p-5 border-b border-white/10 flex items-center justify-between">
-          <span class="text-xs font-bold text-stage-text-sub uppercase tracking-widest">Administrators</span>
-          <a href="${baseURL}/admin/signup" class="flex items-center gap-1.5 bg-stage-primary/10 hover:bg-stage-primary/20 text-stage-primary border border-stage-primary/30 px-4 py-2 rounded-xl text-xs font-bold transition-all">
-            <i class="bi bi-person-plus"></i> 관리자 추가
+        <div class="flex gap-3">
+          <div class="px-5 py-3 glass-effect rounded-2xl border border-admin-border flex items-center gap-4">
+            <div class="text-right">
+              <p class="text-[10px] text-admin-text-sub font-black uppercase tracking-widest">Authorized Staff</p>
+              <p class="text-xl font-black text-white leading-none mt-1">${admins.size()}</p>
+            </div>
+            <div class="w-10 h-10 bg-admin-primary/10 rounded-xl flex items-center justify-center border border-admin-primary/20">
+              <i class="bi bi-shield-lock-fill text-admin-primary text-xl"></i>
+            </div>
+          </div>
+          <a href="${baseURL}/admin/signup" class="h-full px-6 bg-admin-primary hover:bg-rose-700 text-white font-bold rounded-2xl transition-all shadow-glow flex items-center gap-2 group">
+            <i class="bi bi-person-plus-fill transition-transform group-hover:scale-110"></i>
+            <span>Add Admin</span>
           </a>
         </div>
-        <div class="p-5 overflow-x-auto">
-          <table id="datatablesSimple">
+      </div>
+
+      <div class="glass-effect rounded-[2rem] border border-admin-border shadow-premium overflow-hidden">
+        <div class="p-8 border-b border-admin-border bg-white/[0.02] flex items-center justify-between">
+          <h4 class="text-sm font-bold uppercase tracking-widest text-admin-text-sub flex items-center gap-2">
+            <i class="bi bi-key-fill text-admin-primary"></i>
+            Privilege Matrix
+          </h4>
+        </div>
+
+        <div class="p-6">
+          <table id="datatablesSimple" class="premium-table w-full">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>이름</th>
-                <th>삭제</th>
+                <th>Admin Identity</th>
+                <th>Role & Scope</th>
+                <th class="text-center">Action</th>
               </tr>
             </thead>
             <tbody>
               <c:forEach var="admin" items="${admins}">
-                <tr>
-                  <td class="text-stage-text-sub text-sm font-mono">${admin.id}</td>
-                  <td class="font-bold">${admin.name}</td>
-                  <td><button class="btn-delete" onclick="deleteAdmin('${admin.id}')"><i class="bi bi-trash3 mr-1"></i>삭제</button></td>
+                <tr class="group hover:bg-white/[0.02] transition-colors">
+                  <td>
+                    <div class="flex items-center gap-4">
+                      <div class="w-10 h-10 bg-admin-surface rounded-xl flex items-center justify-center border border-white/5 group-hover:border-admin-primary/40 transition-all">
+                        <i class="bi bi-person-badge text-admin-text-sub group-hover:text-admin-primary"></i>
+                      </div>
+                      <div class="flex flex-col">
+                        <span class="text-sm font-bold text-white">${admin.id}</span>
+                        <span class="text-[9px] text-admin-text-sub font-black uppercase tracking-widest mt-0.5">Verified Principal</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <span class="px-3 py-1 rounded-lg bg-admin-primary/10 border border-admin-primary/20 text-admin-primary text-[10px] font-black uppercase tracking-widest">Full Access</span>
+                      <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                      <span class="text-[10px] text-admin-text-sub font-bold uppercase tracking-widest">Active Status</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex items-center justify-center gap-2">
+                      <button class="w-9 h-9 flex items-center justify-center bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-admin-text-sub hover:text-white transition-all shadow-sm">
+                        <i class="bi bi-gear-fill text-xs"></i>
+                      </button>
+                      <button onclick="deleteAdmin('${admin.id}')" class="w-9 h-9 flex items-center justify-center bg-rose-500/10 border border-rose-500/20 rounded-xl hover:bg-rose-500 text-rose-500 hover:text-white transition-all shadow-sm">
+                        <i class="bi bi-shield-slash-fill text-xs"></i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               </c:forEach>
             </tbody>
@@ -109,13 +125,11 @@
       </div>
     </main>
 
-    <footer class="py-4 px-6 text-center text-[10px] text-stage-text-sub font-bold uppercase tracking-[0.15em] border-t border-stage-secondary/20">
-      &copy; Weiver 2023. Admin Panel.
-    </footer>
+    <%@ include file="admin/layout/footer.jsp" %>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
   <script>
+<<<<<<< Updated upstream
     const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
       searchable: true, fixedHeight: false,
       labels: { placeholder: "검색...", perPage: "개씩 보기", noRows: "데이터가 없습니다", info: "{start}~{end} / 총 {rows}건" }
@@ -124,6 +138,29 @@
       if (!confirm(adminId + " 관리자를 삭제하시겠습니까?")) return;
       $.ajax({ type: 'GET', url: '${baseURL}/admin/deleteAdmin/' + adminId, contentType: 'application/json' });
       setTimeout(() => location.href = "${baseURL}/admin/getAllAdmins", 100);
+=======
+    window.addEventListener('DOMContentLoaded', event => {
+      new simpleDatatables.DataTable("#datatablesSimple", {
+        searchable: true,
+        perPage: 10,
+        labels: {
+          placeholder: "Search access...",
+          perPage: "표시 개수",
+          noRows: "No admin records found",
+          info: "Showing {start} to {end} of {rows}",
+        }
+      });
+    });
+
+    function deleteAdmin(id) {
+      if(!confirm("DANGER: " + id + " 관리자의 모든 권한을 회수하시겠습니까?")) return;
+      axios.get('${baseURL}/admin/deleteAdmin/' + id)
+        .then(() => {
+          alert('권한이 회수되었습니다.');
+          location.reload();
+        })
+        .catch(err => alert('처리 실패: ' + err.message));
+>>>>>>> Stashed changes
     }
   </script>
 </body>

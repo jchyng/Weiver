@@ -38,6 +38,11 @@ public class AdminController {
     @Value("${crawling.schedule.enabled:false}")
     private boolean scheduleEnabled;
 
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String adminRoot() {
+        return "redirect:/admin/login";
+    }
+
     @RequestMapping(value = "/main", method = RequestMethod.GET)
     public String getAdminMainPage(Model model) {
         model.addAttribute("inquiries", adminService.getAllInquirys());

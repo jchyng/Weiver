@@ -63,7 +63,7 @@ public class LoginService {
 	public User loginTest(String id, String userPw) throws Exception{
 		User user = userRepository.getUserById(id);
 		
-		if(BCrypt.checkpw(userPw, user.getPassword())) {
+		if(user != null && BCrypt.checkpw(userPw, user.getPassword())) {
 			System.out.println("패스워드 일치 결과 true");
 			return user;
 		}

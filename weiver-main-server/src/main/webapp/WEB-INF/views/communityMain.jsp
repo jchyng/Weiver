@@ -69,27 +69,26 @@
 <body class="bg-stage-bg text-stage-text font-sans pb-24" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
 
   <!-- Header -->
-  <header class="fixed top-0 left-0 w-full z-50 glass-nav">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
-        <span class="hidden md:block text-xs text-stage-text-sub font-bold tracking-widest ml-2 uppercase">Community</span>
+  <header class="fixed top-0 left-0 w-full z-[100] glass-nav">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-8">
+        <a href="${baseURL}/" class="text-2xl font-serif font-bold text-stage-secondary tracking-tighter">WIEVER</a>
+        <nav class="hidden md:flex items-center gap-6">
+          <a href="${baseURL}/musical-search" class="font-serif text-sm text-stage-secondary hover:text-stage-gold-glow transition-colors">Musical DB</a>
+          <a href="${baseURL}/community" class="font-serif text-sm text-stage-secondary hover:text-stage-gold-glow transition-colors">Community</a>
+        </nav>
       </div>
-      
-      <!-- Search Bar -->
-      <form action="${baseURL}/community/search" method="get" class="flex-1 max-w-md mx-4 relative hidden sm:block">
-        <input type="text" name="keyword" placeholder="게시글 검색..." class="w-full bg-stage-surface/50 border border-white/20 text-sm rounded-full py-2 px-10 focus:outline-none focus:border-stage-secondary transition-all">
-        <i class="bi bi-search absolute left-4 top-1/2 -translate-y-1/2 text-stage-text-sub"></i>
-      </form>
-
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-5 text-stage-secondary">
+        <a href="${baseURL}/musical-search" class="hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-search text-xl"></i>
+        </a>
         <c:choose>
           <c:when test="${empty user}">
             <a href="${baseURL}/login" class="text-sm font-bold hover:text-stage-secondary transition-colors">LOGIN</a>
           </c:when>
           <c:otherwise>
-            <a href="${baseURL}/mypage/myinfo" class="w-8 h-8 rounded-full bg-stage-surface border border-white/20 flex items-center justify-center hover:border-stage-secondary transition-all">
-              <i class="bi bi-person text-lg"></i>
+            <a href="${baseURL}/mypage/myinfo" class="hover:text-stage-gold-glow transition-colors">
+              <i class="bi bi-person-circle text-xl"></i>
             </a>
           </c:otherwise>
         </c:choose>
@@ -228,24 +227,6 @@
 
     </div>
   </main>
-
-  <!-- Navigation Bar (Fixed Bottom) -->
-  <nav class="fixed bottom-0 left-0 w-full glass-nav z-50">
-    <div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between text-stage-text-sub text-[10px] font-bold">
-      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-house-door text-xl"></i>
-        <span>HOME</span>
-      </a>
-      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-secondary">
-        <i class="bi bi-chat-dots-fill text-xl"></i>
-        <span>COMMUNITY</span>
-      </a>
-      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-person text-xl"></i>
-        <span>MY PAGE</span>
-      </a>
-    </div>
-  </nav>
 
   <footer class="mt-20 mb-10 text-center">
     <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">&copy; Weiver 2023. THE STAGE IS YOURS.</p>

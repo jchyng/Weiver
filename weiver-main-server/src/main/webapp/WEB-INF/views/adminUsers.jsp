@@ -1,10 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ include file="config.jsp" %>
+<c:set var="pageName" value="users" scope="request"/>
+<c:set var="title" value="User Base" scope="request"/>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<<<<<<< Updated upstream
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>WIEVER Admin - 유저</title>
@@ -31,98 +33,165 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <%@ include file="adminStyles.jsp" %>
+=======
+  <title>WIEVER Admin - User Management</title>
+  <%@ include file="admin/layout/head.jsp" %>
+>>>>>>> Stashed changes
 </head>
 
-<body class="bg-stage-bg text-stage-text font-sans" style="background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%); min-height: 100vh;">
+<body class="flex min-h-screen bg-admin-bg font-sans">
 
-  <aside id="sidebar" class="bg-stage-surface border-r border-white/10 flex flex-col">
-    <div class="px-6 py-6 border-b border-stage-secondary/30">
-      <h1 class="text-2xl font-serif text-stage-primary tracking-tighter">WIEVER</h1>
-      <p class="text-[10px] text-stage-text-sub font-bold tracking-widest uppercase mt-0.5">Admin Dashboard</p>
-    </div>
-    <nav class="flex-1 py-4 overflow-y-auto">
-      <p class="text-[10px] text-stage-text-sub font-bold uppercase tracking-widest px-6 mb-3 mt-2">데이터 관리</p>
-      <a href="${baseURL}/admin/getAllActors" class="nav-link-item"><i class="bi bi-person-video3"></i> 배우</a>
-      <a href="${baseURL}/admin/getAllMusicals" class="nav-link-item"><i class="bi bi-music-note-beamed"></i> 뮤지컬</a>
-      <a href="${baseURL}/admin/getAllUsers" class="nav-link-item active"><i class="bi bi-people"></i> 유저</a>
-      <a href="${baseURL}/admin/getAllAdmins" class="nav-link-item"><i class="bi bi-shield-check"></i> 관리자</a>
-      <a href="${baseURL}/admin/getAllPosts" class="nav-link-item"><i class="bi bi-journals"></i> 게시글</a>
-      <a href="${baseURL}/admin/getAllInquirys" class="nav-link-item"><i class="bi bi-question-circle"></i> 문의</a>
-      <a href="${baseURL}/admin/crawling" class="nav-link-item"><i class="bi bi-arrow-repeat"></i> 크롤링 상태</a>
-    </nav>
-    <div class="px-4 py-4 border-t border-stage-secondary/20">
-      <div class="flex items-center gap-3 p-3 rounded-xl bg-black/60">
-        <div class="w-8 h-8 rounded-full bg-stage-primary/20 flex items-center justify-center border border-stage-primary/30 flex-shrink-0">
-          <i class="bi bi-person-fill text-stage-primary text-sm"></i>
-        </div>
-        <div class="overflow-hidden">
-          <p class="text-[10px] text-stage-text-sub font-bold uppercase leading-none mb-0.5">Logged in</p>
-          <p class="text-sm font-bold truncate">${sessionScope.adminId}</p>
-        </div>
-      </div>
-      <a href="${baseURL}/admin/logout" class="flex items-center gap-2 mt-3 px-3 py-2 rounded-xl text-stage-text-sub hover:text-rose-400 hover:bg-rose-900/10 transition-all text-sm font-bold">
-        <i class="bi bi-box-arrow-right"></i> 로그아웃
-      </a>
-    </div>
-  </aside>
+  <!-- Sidebar Component -->
+  <%@ include file="admin/layout/sidebar.jsp" %>
 
-  <div id="main-content" class="flex flex-col">
-    <header class="h-16 bg-stage-surface/50 border-b border-stage-secondary/20 flex items-center justify-between px-6 flex-shrink-0">
-      <div class="flex items-center gap-3">
-        <i class="bi bi-people text-stage-secondary text-xl"></i>
+  <!-- Main Content Layout -->
+  <div class="flex-1 flex flex-col min-w-0">
+    
+    <!-- Top Header -->
+    <%@ include file="admin/layout/topbar.jsp" %>
+
+    <!-- Content Area -->
+    <main class="flex-1 p-8 overflow-y-auto animate-slide-in">
+      
+      <!-- Statistics / Header Actions -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
         <div>
-          <h2 class="text-lg font-bold leading-none">유저 목록</h2>
-          <p class="text-[11px] text-stage-text-sub mt-0.5">User Management</p>
+          <h3 class="text-3xl font-bold text-white tracking-tight">유저 베이스</h3>
+          <p class="text-admin-text-sub mt-2 max-w-md">시스템에 등록된 전체 사용자 데이터를 관리합니다. 보안을 위해 민감한 데이터 노출에 주의하십시오.</p>
+        </div>
+        <div class="flex gap-3">
+          <div class="px-5 py-3 glass-effect rounded-2xl border border-admin-border flex items-center gap-4">
+            <div class="text-right">
+              <p class="text-[10px] text-admin-text-sub font-black uppercase tracking-widest">Active Users</p>
+              <p class="text-xl font-black text-white leading-none mt-1">${users.size()}</p>
+            </div>
+            <div class="w-10 h-10 bg-admin-primary/10 rounded-xl flex items-center justify-center border border-admin-primary/20">
+              <i class="bi bi-people-fill text-admin-primary text-xl"></i>
+            </div>
+          </div>
+          <button class="h-full px-6 bg-admin-primary hover:bg-rose-700 text-white font-bold rounded-2xl transition-all shadow-glow flex items-center gap-2 group">
+            <i class="bi bi-file-earmark-spreadsheet-fill transition-transform group-hover:scale-110"></i>
+            <span>Export CSV</span>
+          </button>
         </div>
       </div>
-      <span class="text-sm text-stage-text-sub font-bold">안녕하세요, <span class="text-stage-text">${sessionScope.adminName}</span>님</span>
-    </header>
 
-    <main class="flex-1 p-6">
-      <div class="bg-stage-surface/40 border border-white/10 rounded-2xl overflow-hidden">
-        <div class="p-5 border-b border-white/10">
-          <span class="text-xs font-bold text-stage-text-sub uppercase tracking-widest">Total Users</span>
+      <!-- Main Data Card -->
+      <div class="glass-effect rounded-[2rem] border border-admin-border shadow-premium overflow-hidden">
+        
+        <!-- Search & Filter Bar -->
+        <div class="p-8 border-b border-admin-border bg-white/[0.02] flex items-center justify-between">
+          <h4 class="text-sm font-bold uppercase tracking-widest text-admin-text-sub flex items-center gap-2">
+            <i class="bi bi-table text-admin-primary"></i>
+            User Directory
+          </h4>
+          <div class="flex items-center gap-4">
+             <!-- DataTables search will be injected here automatically if used with default label mapping -->
+          </div>
         </div>
-        <div class="p-5 overflow-x-auto">
-          <table id="datatablesSimple">
+
+        <!-- Table Implementation -->
+        <div class="p-6">
+          <table id="datatablesSimple" class="premium-table w-full">
             <thead>
               <tr>
-                <th>프로필</th>
-                <th>이메일 (ID)</th>
-                <th>닉네임</th>
-                <th>삭제</th>
+                <th class="w-20">Identity</th>
+                <th>Credential ID</th>
+                <th>Public Profile</th>
+                <th>Security Level</th>
+                <th class="text-center">System Action</th>
               </tr>
             </thead>
             <tbody>
               <c:forEach var="user" items="${users}">
-                <tr>
-                  <td><img src="${user.profileImg}" class="rounded-full object-cover border-2 border-white/20" height="48" width="48" alt="profile"></td>
-                  <td class="text-stage-text-sub text-sm">${user.id}</td>
-                  <td class="font-bold">${user.nickname}</td>
-                  <td><button class="btn-delete" onclick="deleteUser('${user.id}')"><i class="bi bi-trash3 mr-1"></i>삭제</button></td>
+                <tr class="group hover:bg-white/[0.02] transition-colors">
+                  <td>
+                    <div class="relative w-12 h-12">
+                      <img src="${user.profileImg != null ? user.profileImg : '/img/Default_Profile.png'}" 
+                           class="w-full h-full rounded-2xl object-cover border border-white/5 shadow-lg group-hover:border-admin-primary/40 transition-all duration-300" alt="profile">
+                      <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-4 border-admin-surface rounded-full"></div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex flex-col">
+                      <span class="text-white font-black text-sm tracking-tight">${user.id}</span>
+                      <div class="flex items-center gap-2 mt-1">
+                        <span class="text-[9px] uppercase tracking-widest text-admin-text-sub font-bold px-1.5 py-0.5 bg-white/5 rounded-md border border-white/5">Primary key</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-bold text-white/90 group-hover:text-admin-primary transition-colors">${user.nickname}</span>
+                      <div class="w-1 h-1 rounded-full bg-white/20"></div>
+                      <span class="text-[10px] text-admin-text-sub uppercase font-bold tracking-widest">Active Member</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-blue-500/5 border border-blue-500/10">
+                      <i class="bi bi-shield-check text-blue-400 text-xs"></i>
+                      <span class="text-blue-400 text-[10px] font-black uppercase tracking-widest">Level 1 User</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="flex items-center justify-center gap-2">
+                      <button class="w-9 h-9 flex items-center justify-center bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 text-admin-text-sub hover:text-white transition-all">
+                        <i class="bi bi-pencil-square"></i>
+                      </button>
+                      <button onclick="deleteUser('${user.id}')" class="w-9 h-9 flex items-center justify-center bg-rose-500/10 border border-rose-500/20 rounded-xl hover:bg-rose-500 text-rose-500 hover:text-white transition-all shadow-sm hover:shadow-rose-500/20">
+                        <i class="bi bi-trash3-fill text-xs"></i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               </c:forEach>
             </tbody>
           </table>
         </div>
       </div>
+
     </main>
 
-    <footer class="py-4 px-6 text-center text-[10px] text-stage-text-sub font-bold uppercase tracking-[0.15em] border-t border-stage-secondary/20">
-      &copy; Weiver 2023. Admin Panel.
-    </footer>
+    <!-- Global Footer -->
+    <%@ include file="admin/layout/footer.jsp" %>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
   <script>
+<<<<<<< Updated upstream
     const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
       searchable: true, fixedHeight: false,
       labels: { placeholder: "검색...", perPage: "개씩 보기", noRows: "데이터가 없습니다", info: "{start}~{end} / 총 {rows}건" }
     });
+=======
+    window.addEventListener('DOMContentLoaded', event => {
+      const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
+        searchable: true,
+        fixedHeight: false,
+        perPage: 10,
+        labels: {
+          placeholder: "Search identity...",
+          perPage: "표시 개수",
+          noRows: "No matches found",
+          info: "Showing {start} to {end} of {rows}",
+        }
+      });
+    });
+
+>>>>>>> Stashed changes
     function deleteUser(userId) {
-      if (!confirm(userId + " 유저를 삭제하시겠습니까?")) return;
-      $.ajax({ type: 'GET', url: '${baseURL}/admin/deleteUser/' + userId, contentType: 'application/json' });
-      setTimeout(() => location.href = "${baseURL}/admin/getAllUsers", 100);
+      if (!confirm("CRITICAL: " + userId + " 유저의 모든 데이터가 영구 삭제됩니다. 계속하시겠습니까?")) return;
+      
+      // Axios for better UX/Error handling
+      axios.get('${baseURL}/admin/deleteUser/' + userId)
+        .then(() => {
+          // You could replace alert with a toast here
+          alert('사용자가 성공적으로 삭제되었습니다.');
+          location.reload();
+        })
+        .catch(err => {
+          console.error(err);
+          alert('처리 중 오류가 발생했습니다.');
+        });
     }
   </script>
 </body>
