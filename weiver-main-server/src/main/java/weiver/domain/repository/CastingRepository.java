@@ -19,6 +19,6 @@ public interface CastingRepository extends JpaRepository<Casting, Long> {
     List<PerformingMusical> findMusicalIdAndPosterByActorId(Long actorId);
 
     // 뮤지컬 상세 페이지에 사용될 캐스팅, 배우 정보 조회   
-    @Query("SELECT a.id, c.role, a.name, a.profileImage FROM Casting c JOIN Actor a ON c.actorId.id = a.id WHERE c.musicalId.id = :id")
+    @Query("SELECT a.id AS id, c.role AS role, a.name AS name, a.profileImage AS profileImage FROM Casting c JOIN Actor a ON c.actorId.id = a.id WHERE c.musicalId.id = :id")
     List<ResponseCastingDTO> getCastingByMusicalId(@Param(value = "id") String id);
 }

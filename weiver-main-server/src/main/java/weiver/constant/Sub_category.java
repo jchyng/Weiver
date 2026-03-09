@@ -1,4 +1,4 @@
-package com.example.constant;
+package weiver.constant;
 
 public final class Sub_category {
     //============뮤지컬 장르==============//

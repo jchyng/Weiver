@@ -18,15 +18,16 @@
           extend: {
             colors: {
               'stage-primary': '#BE123C',
-              'stage-secondary': '#FBBF24',
-              'stage-bg': '#0F172A',
-              'stage-surface': '#1E293B',
+              'stage-secondary': '#D4AF37',
+              'stage-bg': '#0a0a0a',
+              'stage-surface': '#1a1a1a',
               'stage-text': '#F8FAFC',
-              'stage-text-sub': '#94A3B8',
+              'stage-text-sub': '#a1a1aa',
+              'stage-gold-glow': '#FFD700',
             },
             fontFamily: {
               sans: ['Pretendard', 'sans-serif'],
-              serif: ['Playfair Display', 'serif'],
+              serif: ['Cinzel', 'Playfair Display', 'serif'],
             },
           }
         }
@@ -35,7 +36,7 @@
 
     <!-- Fonts & Icons -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <!-- SWIPER -->
@@ -46,169 +47,228 @@
     <script src="http://code.jquery.com/jquery-latest.js"></script>
 
     <style>
+      body {
+        background: linear-gradient(180deg, #0f0f0f 0%, #000000 100%);
+        min-height: 100vh;
+      }
       .glass-nav {
-        background: rgba(15, 23, 42, 0.7);
+        background: rgba(0, 0, 0, 0.4);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(212, 175, 55, 0.2);
       }
-      .spotlight-glow:hover {
-        box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+      .poster-shadow {
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.2);
+      }
+      .metadata-icon {
+        color: #D4AF37;
+        margin-right: 0.5rem;
+      }
+      .review-forum-card {
+        background: #1a1a1a;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
       }
       .subscribed {
-        color: var(--stage-secondary) !important;
+        color: #D4AF37 !important;
         transform: scale(1.1);
       }
     </style>
 </head>
 
-<body class="bg-stage-bg text-stage-text font-sans pb-24">
+<body class="text-stage-text font-sans pb-24">
 
   <!-- Header -->
   <header class="fixed top-0 left-0 w-full z-50 glass-nav">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <a href="javascript:history.back();" class="text-2xl hover:text-stage-secondary transition-colors">
-        <i class="bi bi-chevron-left"></i>
-      </a>
-      <span class="text-xl font-serif text-stage-primary tracking-tighter">WIEVER</span>
-      <div class="w-8"></div> <!-- Spacer -->
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="javascript:history.back();" class="text-2xl text-stage-secondary hover:text-stage-gold-glow transition-colors">
+          <i class="bi bi-chevron-left"></i>
+        </a>
+        <span class="text-xl font-serif text-stage-secondary tracking-tighter">WIEVER</span>
+      </div>
+      <div class="w-8"></div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="relative pt-24 pb-12 px-6 overflow-hidden">
-    <!-- Blurry Background Poster -->
+  <section class="relative pt-28 pb-16 px-6">
     <div class="absolute inset-0 z-0">
-      <img src="${musical.posterImage}" class="w-full h-full object-cover blur-3xl opacity-20 scale-110" alt="bg">
-      <div class="absolute inset-0 bg-gradient-to-b from-stage-bg/50 via-stage-bg to-stage-bg"></div>
+      <img src="${musical.posterImage}" class="w-full h-full object-cover blur-3xl opacity-10" alt="bg">
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black"></div>
     </div>
 
-    <div class="relative z-10 max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left">
-      <!-- Main Poster -->
-      <div class="w-48 md:w-64 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/10 transform transition-transform hover:scale-105 duration-500">
-        <img src="${musical.posterImage}" class="w-full h-full object-cover" alt="${musical.title}">
+    <div class="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row gap-12 items-start">
+      <!-- Left side: Large high-res musical poster -->
+      <div class="w-full md:w-1/3 flex justify-center md:justify-end shrink-0">
+        <div class="w-64 md:w-80 aspect-[2/3] rounded-sm overflow-hidden poster-shadow border border-stage-secondary/20 bg-stage-surface">
+          <img src="${musical.posterImage}" class="w-full h-full object-cover" alt="${musical.title}">
+        </div>
       </div>
 
-      <!-- Musical Main Info -->
-      <div class="flex-1 space-y-6">
+      <!-- Right side: Organized metadata -->
+      <div class="w-full md:w-2/3 space-y-8 pt-4">
         <div>
-          <h1 class="text-3xl md:text-5xl font-bold mb-2 leading-tight">${musical.title}</h1>
-          <p class="text-stage-secondary font-medium tracking-wide"><i class="bi bi-geo-alt-fill"></i> ${musical.theater}</p>
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 leading-tight text-white drop-shadow-md">${musical.title}</h1>
+          <p class="text-stage-text-sub text-lg font-light tracking-wide flex items-center">
+            <i class="bi bi-geo-alt-fill metadata-icon"></i> ${musical.theater}
+          </p>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-stage-surface/40 backdrop-blur-md p-6 rounded-2xl border border-white/5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
           <c:if test="${not empty musical.stDate}">
-            <div class="flex flex-col gap-1">
-              <span class="text-stage-text-sub uppercase text-[10px] font-bold tracking-widest">공연 기간</span>
-              <span class="font-medium">
-                <fmt:formatDate value="${musical.stDate}" pattern="yyyy.MM.dd" /> ~
-                <fmt:formatDate value="${musical.edDate}" pattern="yyyy.MM.dd" />
-              </span>
+            <div class="flex items-start gap-3">
+              <i class="bi bi-calendar-event metadata-icon text-xl"></i>
+              <div class="flex flex-col gap-1">
+                <span class="text-stage-text-sub uppercase text-xs font-bold tracking-widest">공연 기간</span>
+                <span class="font-medium text-white text-base">
+                  <fmt:formatDate value="${musical.stDate}" pattern="yyyy.MM.dd" /> ~
+                  <fmt:formatDate value="${musical.edDate}" pattern="yyyy.MM.dd" />
+                </span>
+              </div>
             </div>
           </c:if>
           <c:if test="${not empty musical.runningTime}">
-            <div class="flex flex-col gap-1">
-              <span class="text-stage-text-sub uppercase text-[10px] font-bold tracking-widest">러닝 타임</span>
-              <span class="font-medium">${musical.runningTime}</span>
+            <div class="flex items-start gap-3">
+              <i class="bi bi-clock-history metadata-icon text-xl"></i>
+              <div class="flex flex-col gap-1">
+                <span class="text-stage-text-sub uppercase text-xs font-bold tracking-widest">러닝 타임</span>
+                <span class="font-medium text-white text-base">${musical.runningTime}</span>
+              </div>
             </div>
           </c:if>
           <c:if test="${not empty musical.viewAge}">
-            <div class="flex flex-col gap-1">
-              <span class="text-stage-text-sub uppercase text-[10px] font-bold tracking-widest">관람 연령</span>
-              <span class="font-medium">${musical.viewAge}</span>
+            <div class="flex items-start gap-3">
+              <i class="bi bi-person-badge metadata-icon text-xl"></i>
+              <div class="flex flex-col gap-1">
+                <span class="text-stage-text-sub uppercase text-xs font-bold tracking-widest">관람 연령</span>
+                <span class="font-medium text-white text-base">${musical.viewAge}</span>
+              </div>
             </div>
           </c:if>
         </div>
 
+        <!-- Casting Compact View -->
+        <c:if test="${not empty castingList}">
+          <div>
+            <span class="text-stage-text-sub uppercase text-xs font-bold tracking-widest mb-3 block"><i class="bi bi-people-fill metadata-icon"></i>주요 출연진</span>
+            <div class="flex flex-wrap gap-4">
+              <c:forEach items="${castingList}" var="casting" end="4">
+                <a href="${baseURL}/actorDetail/${casting.id}" class="flex items-center gap-2 bg-stage-surface/50 border border-white/10 pr-4 rounded-full hover:border-stage-secondary transition-colors">
+                  <img src="${casting.profileImage}" class="w-8 h-8 rounded-full object-cover bg-stage-bg" alt="${casting.name}">
+                  <span class="text-sm font-medium text-white">${casting.name}</span>
+                </a>
+              </c:forEach>
+              <c:if test="${castingList.size() > 5}">
+                <button class="flex items-center gap-2 bg-stage-surface/50 border border-white/10 px-4 rounded-full text-sm hover:text-stage-secondary transition-colors h-8">
+                  + 더보기
+                </button>
+              </c:if>
+            </div>
+          </div>
+        </c:if>
+
         <!-- Action Buttons -->
-        <div class="flex gap-4 justify-center md:justify-start">
-          <button onclick="addSubscirbe(${musical.id}, '찜했어요')" class="group flex items-center gap-2 bg-white/10 hover:bg-white/20 px-6 py-3 rounded-xl border border-white/10 transition-all active:scale-95">
-            <i class="bi bi-bookmark-star-fill icon1 transition-all text-xl"></i>
-            <span class="font-bold">찜하기</span>
+        <div class="flex gap-4 pt-4 border-t border-stage-secondary/20">
+          <button onclick="addSubscirbe('${musical.id}', '찜했어요')" class="group flex-1 md:flex-none flex items-center justify-center gap-2 bg-transparent hover:bg-stage-secondary/10 px-8 py-3 rounded-sm border border-stage-secondary transition-all active:scale-[0.98]">
+            <i class="bi bi-bookmark-star icon1 text-stage-secondary text-lg"></i>
+            <span class="font-bold text-stage-secondary tracking-widest">찜하기</span>
           </button>
-          <button onclick="addSubscirbe(${musical.id}, '봤어요')" class="group flex items-center gap-2 bg-stage-primary hover:bg-rose-700 px-6 py-3 rounded-xl shadow-lg shadow-rose-900/20 transition-all active:scale-95">
-            <i class="bi bi-check-circle-fill icon2 transition-all text-xl"></i>
-            <span class="font-bold text-white">봤어요</span>
+          <button onclick="addSubscirbe('${musical.id}', '봤어요')" class="group flex-1 md:flex-none flex items-center justify-center gap-2 bg-transparent hover:bg-stage-secondary/10 px-8 py-3 rounded-sm border border-stage-secondary transition-all active:scale-[0.98]">
+            <i class="bi bi-check2-circle icon2 text-stage-secondary text-lg"></i>
+            <span class="font-bold text-stage-secondary tracking-widest">봤어요</span>
           </button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Content Sections -->
-  <main class="max-w-5xl mx-auto px-6 space-y-16">
+  <main class="max-w-6xl mx-auto px-6 space-y-16 mt-10">
     
-    <!-- Casting Section -->
+    <!-- User Reviews Area -->
     <section>
-      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-        출연진 정보 <span class="text-stage-secondary">✨</span>
-      </h2>
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-        <c:forEach items="${castingList}" var="casting">
-          <a href="${baseURL}/actorDetail/${casting.id}" class="group text-center">
-            <div class="aspect-square rounded-full overflow-hidden border-2 border-slate-700 group-hover:border-stage-secondary transition-all mb-3 relative spotlight-glow">
-              <img src="${casting.profileImage}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="${casting.name}">
+      <div class="flex items-end justify-between border-b border-stage-secondary/30 pb-4 mb-8">
+        <div>
+          <h2 class="text-3xl font-serif font-bold text-stage-secondary">Stage Reviews</h2>
+          <p class="text-stage-text-sub text-sm mt-1">관객들의 생생한 리뷰를 확인하세요.</p>
+        </div>
+        <!-- Write Review Button -->
+        <a href="${baseURL}/community?type=Review" class="bg-stage-primary hover:bg-rose-800 text-white px-6 py-2.5 rounded-sm font-bold text-sm transition-all shadow-[0_0_15px_rgba(190,18,60,0.4)] flex items-center gap-2">
+          <i class="bi bi-pencil-square"></i> 리뷰 작성
+        </a>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Static review cards for layout demo -->
+        <div class="review-forum-card p-6 rounded-md flex gap-6">
+          <div class="shrink-0 flex flex-col items-center gap-2 w-20">
+            <img src="/img/Default_Profile.png" class="w-12 h-12 rounded-full border border-stage-secondary object-cover bg-stage-bg" alt="user">
+            <span class="text-xs font-bold text-center break-all text-stage-text-sub">뮤지컬매니아</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <div class="flex text-stage-secondary text-xs">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+              </div>
+              <span class="text-xs text-stage-text-sub">2023.10.15</span>
             </div>
-            <p class="font-bold text-sm group-hover:text-stage-secondary transition-colors">${casting.name}</p>
-            <p class="text-[10px] text-stage-text-sub uppercase tracking-wider">${casting.role}</p>
-          </a>
-        </c:forEach>
+            <h4 class="font-bold text-white mb-2 text-lg">최고의 무대였습니다!</h4>
+            <p class="text-sm text-stage-text-sub leading-relaxed">
+              무대 장치와 조명, 배우들의 연기까지 모든 것이 완벽했습니다. 좌석이 조금 멀었지만 오페라 글라스를 챙겨가서 표정 연기까지 놓치지 않고 볼 수 있었어요.
+            </p>
+          </div>
+        </div>
+
+        <div class="review-forum-card p-6 rounded-md flex gap-6">
+          <div class="shrink-0 flex flex-col items-center gap-2 w-20">
+            <img src="/img/Default_Profile.png" class="w-12 h-12 rounded-full border border-stage-secondary object-cover bg-stage-bg" alt="user">
+            <span class="text-xs font-bold text-center break-all text-stage-text-sub">StageLover</span>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-start mb-2">
+              <div class="flex text-stage-secondary text-xs">
+                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+              </div>
+              <span class="text-xs text-stage-text-sub">2023.10.12</span>
+            </div>
+            <h4 class="font-bold text-white mb-2 text-lg">음향이 아쉬웠지만 배우들이 하드캐리</h4>
+            <p class="text-sm text-stage-text-sub leading-relaxed">
+              극장의 음향 시스템이 약간 울리는 감이 있었지만, 주연 배우의 압도적인 성량으로 극복해냈습니다. 앙상블 합창도 훌륭했어요.
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center mt-6">
+          <a href="${baseURL}/community" class="inline-block text-stage-secondary hover:text-stage-gold-glow text-sm font-bold border-b border-stage-secondary pb-1 transition-colors">리뷰 더보기</a>
+        </div>
       </div>
     </section>
 
-    <!-- YouTube Clips Section -->
-    <c:if test="${not empty clips}">
-      <section>
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-          공연 하이라이트 <i class="bi bi-youtube text-red-600"></i>
-        </h2>
-        <div class="swiper mySwiper rounded-2xl overflow-hidden border border-white/10 aspect-video">
-          <div class="swiper-wrapper">
-            <c:forEach var="clip" items="${clips}">
-              <div class="swiper-slide">
-                <iframe class="w-full h-full" src="https://www.youtube.com/embed/${clip}" frameborder="0" allowfullscreen></iframe>
-              </div>
-            </c:forEach>
-          </div>
-          <div class="swiper-pagination"></div>
-          <div class="swiper-button-next text-stage-secondary"></div>
-          <div class="swiper-button-prev text-stage-secondary"></div>
-        </div>
-      </section>
-    </c:if>
-
   </main>
 
-  <!-- Bottom Nav -->
-  <nav class="fixed bottom-0 left-0 w-full glass-nav z-50">
-    <div class="max-w-md mx-auto px-6 h-16 flex items-center justify-between text-stage-text-sub text-[10px] font-bold">
-      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-house-door text-xl"></i>
-        <span>HOME</span>
+  <!-- Bottom Nav Mobile -->
+  <div class="md:hidden fixed bottom-0 left-0 w-full z-50 glass-nav">
+    <div class="flex items-center justify-around h-16 px-4">
+      <a href="${baseURL}/main" class="flex flex-col items-center gap-1 text-stage-text-sub hover:text-stage-secondary transition-colors">
+        <i class="bi bi-house-door-fill text-xl"></i>
+        <span class="text-[9px] font-bold">HOME</span>
       </a>
-      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-chat-dots text-xl"></i>
-        <span>COMMUNITY</span>
+      <a href="${baseURL}/community" class="flex flex-col items-center gap-1 text-stage-text-sub hover:text-stage-secondary transition-colors">
+        <i class="bi bi-chat-right-text-fill text-xl"></i>
+        <span class="text-[9px] font-bold">COMMUNITY</span>
       </a>
-      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 hover:text-stage-text transition-colors">
-        <i class="bi bi-person text-xl"></i>
-        <span>MY PAGE</span>
+      <a href="${baseURL}/mypage/myinfo" class="flex flex-col items-center gap-1 text-stage-text-sub hover:text-stage-secondary transition-colors">
+        <i class="bi bi-person-circle text-xl"></i>
+        <span class="text-[9px] font-bold">MY PAGE</span>
       </a>
     </div>
-  </nav>
+  </div>
 
-  <footer class="mt-20">
-    <p>&copy; Weiver 2023. All Rights Reserved.</p>
+  <footer class="mt-32 mb-10 text-center opacity-50">
+    <p class="text-[10px] font-serif font-bold tracking-[0.4em] uppercase text-stage-secondary">© Weiver 2023. THE STAGE IS YOURS.</p>
   </footer>
 
   <script>
-    // Swiper Init
-    var swiper = new Swiper(".mySwiper", {
-      pagination: { el: ".swiper-pagination", clickable: true },
-      navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-    });
-
-    // Subscribe State Management
     let isSubscribed1 = false;
     let isSubscribed2 = false;
 
@@ -216,8 +276,12 @@
       isSubscribed1 = ${not empty subscribeJjim ? "true" : "false"};
       isSubscribed2 = ${not empty subscribeWatched ? "true" : "false"};
       
-      $('.icon1').toggleClass('subscribed', isSubscribed1);
-      $('.icon2').toggleClass('text-stage-secondary', isSubscribed2);
+      if(isSubscribed1) {
+        $('.icon1').removeClass('bi-bookmark-star').addClass('bi-bookmark-star-fill subscribed');
+      }
+      if(isSubscribed2) {
+        $('.icon2').removeClass('bi-check2-circle').addClass('bi-check-circle-fill subscribed');
+      }
     });
 
     function addSubscirbe(musicalId, type) {
@@ -227,10 +291,18 @@
         success: function () {
           if (type === '찜했어요') {
             isSubscribed1 = !isSubscribed1;
-            $('.icon1').toggleClass('subscribed', isSubscribed1);
+            if(isSubscribed1) {
+              $('.icon1').removeClass('bi-bookmark-star').addClass('bi-bookmark-star-fill subscribed');
+            } else {
+              $('.icon1').removeClass('bi-bookmark-star-fill subscribed').addClass('bi-bookmark-star');
+            }
           } else if (type === '봤어요') {
             isSubscribed2 = !isSubscribed2;
-            $('.icon2').toggleClass('text-stage-secondary', isSubscribed2);
+            if(isSubscribed2) {
+              $('.icon2').removeClass('bi-check2-circle').addClass('bi-check-circle-fill subscribed');
+            } else {
+              $('.icon2').removeClass('bi-check-circle-fill subscribed').addClass('bi-check2-circle');
+            }
           }
         },
         error: function () {
@@ -239,6 +311,5 @@
       });
     }
   </script>
-
 </body>
 </html>

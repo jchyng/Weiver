@@ -1,4 +1,4 @@
-package com.example.constant;
+package weiver.constant;
 
 public final class URLs {
     //===========뮤지컬 목록 페이지============//

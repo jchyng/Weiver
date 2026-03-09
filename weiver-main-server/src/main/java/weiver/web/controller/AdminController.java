@@ -2,14 +2,23 @@ package weiver.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import weiver.domain.entity.*;
 import weiver.service.AdminService;
+import weiver.service.CrawlingService;
+import weiver.service.CrawlingStatus;
+
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,10 +29,70 @@ import javax.servlet.http.HttpSession;
 public class AdminController {
 
     private final AdminService adminService;
+    private final CrawlingStatus crawlingStatus;
+    private final CrawlingService crawlingService;
+
+    @Value("${crawling.startup.enabled:false}")
+    private boolean startupEnabled;
+
+    @Value("${crawling.schedule.enabled:false}")
+    private boolean scheduleEnabled;
+
     @RequestMapping(value = "/main", method = RequestMethod.GET)
     public String getAdminMainPage(Model model) {
         model.addAttribute("inquiries", adminService.getAllInquirys());
         return "adminInquiries";
+    }
+
+    /*============================        Crawling         ===================================*/
+
+    @RequestMapping(value = "/crawling", method = RequestMethod.GET)
+    public String getCrawlingPage() {
+        return "adminCrawling";
+    }
+
+    @RequestMapping(value = "/crawling/status", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> getCrawlingStatus() {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("running", crawlingStatus.isRunning());
+        map.put("crawlingType", crawlingStatus.getCrawlingType());
+        map.put("currentGenre", crawlingStatus.getCurrentGenre());
+        map.put("genreIndex", crawlingStatus.getGenreIndex());
+        map.put("genreTotal", crawlingStatus.getGenreTotal());
+        map.put("startedAt", crawlingStatus.getStartedAt() != null ? crawlingStatus.getStartedAt().format(fmt) : "-");
+        map.put("startedAtEpoch", crawlingStatus.getStartedAt() != null
+                ? crawlingStatus.getStartedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                : -1);
+        map.put("finishedAt", crawlingStatus.getFinishedAt() != null ? crawlingStatus.getFinishedAt().format(fmt) : "-");
+        long dur = crawlingStatus.getLastDurationSeconds();
+        map.put("lastDurationSeconds", dur);
+        map.put("lastDuration", dur > 0 ? String.format("%dh %dm %ds", dur / 3600, (dur % 3600) / 60, dur % 60) : "-");
+        map.put("startupEnabled", startupEnabled);
+        map.put("scheduleEnabled", scheduleEnabled);
+        return map;
+    }
+
+    @RequestMapping(value = "/crawling/trigger", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> triggerCrawling() {
+        Map<String, Object> result = new LinkedHashMap<>();
+        if (crawlingStatus.isRunning()) {
+            result.put("success", false);
+            result.put("message", "이미 크롤링이 실행 중입니다.");
+        } else {
+            new Thread(() -> {
+                try {
+                    crawlingService.task();
+                } catch (Exception e) {
+                    log.error("수동 크롤링 실행 중 오류 발생", e);
+                }
+            }, "manual-crawling-thread").start();
+            result.put("success", true);
+            result.put("message", "크롤링을 시작했습니다.");
+        }
+        return result;
     }
 
     /*============================        Admin         ===================================*/
@@ -214,12 +283,12 @@ public class AdminController {
 
     @RequestMapping(value = "/getAllInquirys", method = RequestMethod.GET)
     public String getAllInquirys(Model model) {
-        model.addAttribute("inquirys", adminService.getAllInquirys());
+        model.addAttribute("inquiries", adminService.getAllInquirys());
 
         return "adminInquiries";
     }
 
-    @RequestMapping(value = "/getInquiryDetail/{inquriyId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getInquiryDetail/{inquiryId}", method = RequestMethod.GET)
     public String getInquiryDetail(@PathVariable Long inquiryId, Model model) {
         model.addAttribute("inquiry", adminService.getInquiry(inquiryId));
 

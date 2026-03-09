@@ -1,15 +1,15 @@
-package com.example.service;
+package weiver.service;
 
-import com.example.constant.Sub_category;
-import com.example.constant.URLs;
-import com.example.domain.actor.Actor;
-import com.example.domain.actor.ActorRepository;
-import com.example.domain.casting.Casting;
-import com.example.domain.casting.CastingRepository;
-import com.example.domain.musical.Musical;
-import com.example.domain.musical.MusicalRepository;
-import com.example.dto.ActorsByRoleDto;
-import com.example.dto.MusicalActorDto;
+import weiver.constant.Sub_category;
+import weiver.constant.URLs;
+import weiver.domain.entity.Actor;
+import weiver.domain.repository.ActorRepository;
+import weiver.domain.entity.Casting;
+import weiver.domain.repository.CastingRepository;
+import weiver.domain.entity.Musical;
+import weiver.domain.repository.MusicalRepository;
+import weiver.web.dto.ActorsByRoleDto;
+import weiver.web.dto.MusicalActorDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +33,7 @@ public class CrawlingService {
     private final MusicalRepository musicalRepository;
     private final ActorRepository actorRepository;
     private final CastingRepository castingRepository;
+    private final CrawlingStatus crawlingStatus;
     private boolean isFirst = true;
 
 
@@ -48,47 +50,52 @@ public class CrawlingService {
         long startTime = System.currentTimeMillis();
 
         String[] genres = {Sub_category.LICENSE, Sub_category.ORIGINAL, Sub_category.CREATIVE, Sub_category.MUSICAL};
-        String CrawlingType = "";
-
+        String[] genreNames = {"라이센스", "오리지널", "창작", "뮤지컬"};
+        String crawlingType;
 
         if (isFirst) {
-            CrawlingType = Sub_category.ALL;
+            crawlingType = Sub_category.ALL;
             isFirst = false;
         } else {
-            CrawlingType = Sub_category.LATER;
+            crawlingType = Sub_category.LATER;
         }
 
-        for (String genre : genres) {
-            switch (genre) {
-                case Sub_category.LICENSE:
-                    log.info("현재 크롤링 중인 뮤지컬 장르: 라이센스");
-                    break;
-                case Sub_category.ORIGINAL:
-                    log.info("현재 크롤링 중인 뮤지컬 장르: 오리지널");
-                    break;
-                case Sub_category.CREATIVE:
-                    log.info("현재 크롤링 중인 뮤지컬 장르: 창작");
-                    break;
-                case Sub_category.MUSICAL:
-                    log.info("현재 크롤링 중인 뮤지컬 장르: 뮤지컬");
-                    break;
-            }
+        String crawlingTypeLabel = Sub_category.ALL.equals(crawlingType) ? "전체" : "예정 공연";
+        log.info("[크롤링 시작] 유형: {} (isFirst={})", crawlingTypeLabel, Sub_category.ALL.equals(crawlingType));
 
-            int maxPage = setMaxPage(genre, CrawlingType);
+        crawlingStatus.setRunning(true);
+        crawlingStatus.setCrawlingType(crawlingTypeLabel);
+        crawlingStatus.setGenreTotal(genres.length);
+        crawlingStatus.setStartedAt(LocalDateTime.now());
 
-            List<String> musicalIds = setMusicalIds(genre, CrawlingType, maxPage);
-            log.info("가져온 MUSICAL ID 개수: " + musicalIds.size());
+        for (int gi = 0; gi < genres.length; gi++) {
+            String genre = genres[gi];
+            String genreName = genreNames[gi];
+            int genreNum = gi + 1;
+
+            crawlingStatus.setGenreIndex(genreNum);
+            crawlingStatus.setCurrentGenre(genreName);
+
+            int maxPage = setMaxPage(genre, crawlingType);
+
+            List<String> musicalIds = setMusicalIds(genre, crawlingType, maxPage);
+            log.info("[{}/{}] {} — 최대 {}페이지 | {}개 ID 수집 완료", genreNum, genres.length, genreName, maxPage, musicalIds.size());
 
             getMusicalActorDtoAndSaveAll(musicalIds);
         }
 
         long endTime = System.currentTimeMillis();
-        long elapsedTime = endTime - startTime;
-        int minute = (int) (elapsedTime / 60000);
-        int hour = minute / 60;
-        minute = minute % 60;
+        long elapsedSeconds = (endTime - startTime) / 1000;
+        long hour = elapsedSeconds / 3600;
+        long minute = (elapsedSeconds % 3600) / 60;
+        long second = elapsedSeconds % 60;
 
-        log.info("크롤링 경과 시간: " + hour + "시간" + minute + "분");
+        log.info("[크롤링 완료] 소요: {}h {}m {}s", hour, minute, second);
+
+        crawlingStatus.setRunning(false);
+        crawlingStatus.setCurrentGenre("-");
+        crawlingStatus.setFinishedAt(LocalDateTime.now());
+        crawlingStatus.setLastDurationSeconds(elapsedSeconds);
     }
 
 
@@ -105,7 +112,7 @@ public class CrawlingService {
 
                 if ((musicalActorDtoList.size() != 0 && musicalActorDtoList.size() % 1000 == 0) || i == musicalIds.size() - 1) {
                     saveAll(musicalActorDtoList);
-                    log.info("데이저 저장(" + (i + 1) + "/" + musicalIds.size() + ")");
+                    log.info("데이터 저장({}/{})", (i + 1), musicalIds.size());
                     musicalActorDtoList.clear();
                     retries = 0;
                 }
@@ -155,7 +162,7 @@ public class CrawlingService {
     @SneakyThrows
     public MusicalActorDto getMusicalActorDto(String musicalId) {
         String url = URLs.MUSICAL_DETAIL_URL + musicalId;
-        Document doc = Jsoup.connect(url).timeout(60000).get();
+        Document doc = getConnection(url).get();
 
         Musical musical = getMusical(doc, musicalId);
         List<ActorsByRoleDto> ActorsByRoleDtoList = getActors(doc);
@@ -239,13 +246,19 @@ public class CrawlingService {
 
             for (int i = 0; i < profileImages.size(); i++) {
                 String src = profileImages.get(i).attr("src");
+                
+                // 썸네일(_s.jpg)을 원본 고화질 이미지(.jpg)로 변환
+                if (src != null && src.contains("_s.")) {
+                    src = src.replace("_s.", ".");
+                }
+                
                 String id = IdAndName.get(i).attr("href").split("=")[1];
                 String name = IdAndName.get(i).text();
 
                 actorsByRoleDto.getActor().add(new Actor(id, name, src));
             }
 
-            actorsByRoleDtos.add(actorsByRoleDto);
+            actorsByRoleDtos.add(actorsByRoleDtos.size(), actorsByRoleDto);
         }
 
         return actorsByRoleDtos;
@@ -258,16 +271,29 @@ public class CrawlingService {
         List<String> musicalIds = new ArrayList<>();
 
         for (int currentPage=1; currentPage <= maxPage; currentPage++) {
-            Document doc = Jsoup.connect(url + currentPage).timeout(60000).get();
-            log.info("크롤링 중인 페이지: " + currentPage);
+            int retries = 0;
+            String currentUrl = url + currentPage;
+            while (retries < 3) {
+                try {
+                    Document doc = getConnection(currentUrl).get();
 
-            Element musicalElement = doc.selectFirst("#contents .container1 > table > tbody > tr:last-child");
+                    Element musicalElement = doc.selectFirst("#contents .container1 > table > tbody > tr:last-child");
 
-            List<String> idTags = musicalElement.select("a[onclick^=goDetail]").eachAttr("onclick");
+                    if (musicalElement != null) {
+                        List<String> idTags = musicalElement.select("a[onclick^=goDetail]").eachAttr("onclick");
 
-            for (String idTag : idTags) {
-                String id = idTag.substring(idTag.indexOf("'") + 1, idTag.lastIndexOf("'"));
-                musicalIds.add(id);
+                        for (String idTag : idTags) {
+                            String id = idTag.substring(idTag.indexOf("'") + 1, idTag.lastIndexOf("'"));
+                            musicalIds.add(id);
+                        }
+                    }
+                    break;
+                } catch (Exception e) {
+                    retries++;
+                    log.error("페이지 " + currentPage + " (" + currentUrl + ") 크롤링 실패. 재시도 중... (" + retries + "/3): " + e.getMessage());
+                    Thread.sleep(2000); // 재시도 전 대기 시간 증가
+                    if (retries == 3) throw e;
+                }
             }
         }
 
@@ -278,12 +304,39 @@ public class CrawlingService {
     public int setMaxPage(String subCategory, String type) {
         String MUSICAL_URL = URLs.MUSICAL_URL + type + URLs.SUB_CATEGORY + subCategory + URLs.PAGE;
 
-        Document doc = Jsoup.connect(MUSICAL_URL).timeout(60000).get();
-        Elements pageElements = doc.select("#contents .container1 > table > tbody > tr:last-child");
+        int retries = 0;
+        while (retries < 3) {
+            try {
+                Document doc = getConnection(MUSICAL_URL).get();
+                Elements pageElements = doc.select("#contents .container1 > table > tbody > tr:last-child");
 
-        String[] pageNums = pageElements.get(pageElements.size() - 1).text().split("/");
-        int maxPage = Integer.parseInt(pageNums[1].replaceAll("\\D+", ""));
+                if (pageElements.isEmpty()) return 1;
 
-        return maxPage;
+                String[] pageNums = pageElements.get(pageElements.size() - 1).text().split("/");
+                if (pageNums.length < 2) return 1;
+
+                int maxPage = Integer.parseInt(pageNums[1].replaceAll("\\D+", ""));
+
+                return maxPage;
+            } catch (Exception e) {
+                retries++;
+                log.error("최대 페이지 가져오기 실패 (" + MUSICAL_URL + "). 재시도 중... (" + retries + "/3): " + e.getMessage());
+                Thread.sleep(2000);
+                if (retries == 3) throw e;
+            }
+        }
+        return 1;
+    }
+
+    private org.jsoup.Connection getConnection(String url) {
+        return Jsoup.connect(url)
+                .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+                .header("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7")
+                .header("Accept-Encoding", "identity") // GZIP 압축 해제 오류 방지를 위해 압축 사용 안함
+                .header("Cache-Control", "no-cache")
+                .header("Pragma", "no-cache")
+                .maxBodySize(0) // 무제한 바디 사이즈 허용 (데이터 잘림 방지)
+                .timeout(60000);
     }
 }

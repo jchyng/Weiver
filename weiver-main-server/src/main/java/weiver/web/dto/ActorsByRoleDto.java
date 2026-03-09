@@ -1,6 +1,6 @@
-package com.example.dto;
+package weiver.web.dto;
 
-import com.example.domain.actor.Actor;
+import weiver.domain.entity.Actor;
 import lombok.*;
 
 import java.util.ArrayList;

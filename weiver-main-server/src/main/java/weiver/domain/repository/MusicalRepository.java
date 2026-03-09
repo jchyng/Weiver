@@ -26,7 +26,7 @@ public interface MusicalRepository extends JpaRepository<Musical, String> {
     List<SimpleMusicalDTO> findMusicalsByTitleKeyword(String keyword);
     
     // 배우 상세 페이지 해당 뮤지컬 포스터 조회
-    @Query("SELECT m.id as id, m.posterImage as posterImage FROM Musical m JOIN Casting c ON c.musicalId.id = m.id WHERE c.actorId.id = :actorId ORDER BY m.edDate DESC")
+    @Query("SELECT DISTINCT m.id as id, m.posterImage as posterImage, m.edDate as edDate FROM Musical m JOIN Casting c ON c.musicalId.id = m.id WHERE c.actorId.id = :actorId ORDER BY m.edDate DESC")
 	List<PerformingMusical> findMusicalsByActorId(@Param("actorId") String actorId);
 
 	Musical getMusicalById(String id);

@@ -1,6 +1,6 @@
-package com.example.dto;
+package weiver.web.dto;
 
-import com.example.domain.musical.Musical;
+import weiver.domain.entity.Musical;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,4 +14,3 @@ public class MusicalActorDto {
     private Musical musical;
     private List<ActorsByRoleDto> actorsByRoleDtoList;
 }
-
