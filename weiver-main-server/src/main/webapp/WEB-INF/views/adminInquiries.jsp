@@ -6,37 +6,8 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<<<<<<< Updated upstream
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>WIEVER Admin - 문의</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-              'stage-gold-glow': '#FFD700',
-            'stage-primary': '#BE123C', 'stage-secondary': '#D4AF37',
-            'stage-bg': '#0a0a0a', 'stage-surface': '#1a1a1a',
-            'stage-text': '#F8FAFC', 'stage-text-sub': '#a1a1aa',
-          },
-          fontFamily: { sans: ['Pretendard', 'sans-serif'] },
-        }
-      }
-    }
-  </script>
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-  <%@ include file="adminStyles.jsp" %>
-=======
   <title>WIEVER Admin - Inquiry Management</title>
   <%@ include file="admin/layout/head.jsp" %>
->>>>>>> Stashed changes
 </head>
 
 <body class="flex min-h-screen bg-admin-bg font-sans">
@@ -126,16 +97,6 @@
   </div>
 
   <script>
-<<<<<<< Updated upstream
-    const dataTable = new simpleDatatables.DataTable("#datatablesSimple", {
-      searchable: true, fixedHeight: false,
-      labels: { placeholder: "검색...", perPage: "개씩 보기", noRows: "데이터가 없습니다", info: "{start}~{end} / 총 {rows}건" }
-    });
-    function deleteInquiry(inquiryId) {
-      if (!confirm("문의 #" + inquiryId + "을 삭제하시겠습니까?")) return;
-      $.ajax({ type: 'GET', url: '${baseURL}/admin/deleteInquiry/' + inquiryId, contentType: 'application/json' });
-      setTimeout(() => location.href = "${baseURL}/admin/getAllInquirys", 100);
-=======
     window.addEventListener('DOMContentLoaded', event => {
       new simpleDatatables.DataTable("#datatablesSimple", {
         searchable: true,
@@ -157,7 +118,6 @@
           location.reload();
         })
         .catch(err => alert('오류 발생: ' + err.message));
->>>>>>> Stashed changes
     }
   </script>
 </body>

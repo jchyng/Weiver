@@ -149,12 +149,14 @@ public class CrawlingService {
             actorRepository.saveAll(actors);
 
             for (Actor actor : actors) {
-                Casting casting = Casting.builder()
-                        .actorId(actor)
-                        .role(role)
-                        .musicalId(musical)
-                        .build();
-                castingRepository.save(casting);
+                if (castingRepository.findByMusicalIdIdAndActorIdIdAndRole(musical.getId(), actor.getId(), role).isEmpty()) {
+                    Casting casting = Casting.builder()
+                            .actorId(actor)
+                            .role(role)
+                            .musicalId(musical)
+                            .build();
+                    castingRepository.save(casting);
+                }
             }
         }
     }

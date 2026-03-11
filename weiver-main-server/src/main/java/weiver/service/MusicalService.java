@@ -59,7 +59,7 @@ public class MusicalService {
 	}
 
 	/*배우 출연작 조회*/
-	public List<PerformingMusical> getMusicalByActor(Long actorId){
+	public List<PerformingMusical> getMusicalByActor(String actorId){
 		List<PerformingMusical> performingMusicals = castingRepository.findMusicalIdAndPosterByActorId(actorId);
 		return performingMusicals;
 	}
